@@ -7,18 +7,14 @@ package sistemarecomendacion.DAO;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-
 import java.sql.SQLException;
 import java.util.Iterator;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
 /**
- *
+ *Clase que proporciona el acceso a una fuente de datos mysql para cargar en memoria
+ *los datos
+ * 
  * @author bogdan
  */
 public class AccesoJDBC extends AccesoDatos {
@@ -35,33 +31,58 @@ public class AccesoJDBC extends AccesoDatos {
     //provides access to the database of events.(ratings)
     private ArrayList eventsDAO=new ArrayList<Events>();
     
-    //Metodos selectores
+    /**
+     * Método que devuelve los usuarios 
+     * @return los usuarios del sistema
+     */
     public ArrayList<Integer> getUserDAO(){return userDAO;}
+    /**
+     * Método que devuelve los elementos del sistema (peliculas)
+     * @return las peliculas del sistems
+     */
     public ArrayList<Movie> getItemsDAO(){return itemsDAO;}
+    /**
+     * Devuelve los eventos (ratings de cada pelicula)
+     * @return  Los eventos de cada peliculas (rating)
+     */
     public HashMap<Integer,List<Events> > getItemEventDAO(){return itemEventDAO;}
+    /**
+     * Devuelve los eventos (ratings de cada usuario)
+     * @return  Los eventos de cada usuario (rating)
+     */
     public HashMap<Integer,List<Events> > getUserEventDAO(){return userEventDAO;}
+    /**
+     * Método que devuelve los ratings 
+     * @return  Los ratings
+     */
     public ArrayList<Events> getEventsDAO(){return eventsDAO;}
-    //constructor
+    
+    
+    /**
+     * Constructor con párametros
+     * 
+     * @param ho
+     * @param baseded
+     * @param puer
+     * @param use
+     * @param pass 
+     */
     public AccesoJDBC(String ho,String baseded,int puer,String use,String pass)
     {
         super(ho,baseded,puer,use,pass);
     }
     
     /**
-     * 
+     * Método para realizar una consulta en la base de datos
      * @param consulta
-     * @return 
+     * @return El resultado de la consulta
      */
     public ResultSet consultaBD(String consulta){
         ResultSet rset=null;
         try{
-             // Step 1: Allocate a database "Connection" object
-            //Connection conn = DriverManager.getConnection(
              //      "jdbc:mysql://localhost:3306/sistemasderecomendaciontfg", "root", ""); // MySQL
              String consu=getHost()+":"+getPuerto()+"/"+getBaseDatos();
-             //System.out.println(consu);
              Connection conn=DriverManager.getConnection(consu,getUser(),"");
-             // Step 2: Allocate a "Statement" object in the Connection
              Statement stmt = conn.createStatement();
              rset = stmt.executeQuery(consulta);
              
@@ -71,6 +92,7 @@ public class AccesoJDBC extends AccesoDatos {
         return rset;
         
     }
+    
     /**
      * Carga en memoria los usuarios de la base de datos
      * 
@@ -85,13 +107,14 @@ public class AccesoJDBC extends AccesoDatos {
                 getUserDAO().add(Integer.parseInt(rset.getString("userId")));
             }//fin while
              
-        }catch(Exception e)
+        }catch(SQLException | NumberFormatException e)
         {
-            
+            System.out.println("error en cargar los usuarios de la base de datos" );
         }
     }
+    
     /**
-     * @return Carga las peliculas en memoria 
+     *  Carga las peliculas en memoria 
      */
     public void cargarMoviesDao(){
         try {
@@ -108,13 +131,14 @@ public class AccesoJDBC extends AccesoDatos {
             }//fin while
                 
 	} catch (SQLException e) {
-		System.out.println("Connection Failed! Check output console");
-		e.printStackTrace();
-		return;
+		System.out.println("Error en cargar las peliculas en memoria");
 	}
                
     }
     
+    /**
+     * Carga lo eventos(ratings) de la base de datos en memoria
+     */
     public void cargarEventosDao()
     {
         try{
@@ -131,14 +155,14 @@ public class AccesoJDBC extends AccesoDatos {
                 getEventsDAO().add(evento);
                 
             }
-        }catch(Exception e)
+        }catch(SQLException | NumberFormatException e)
         {
             System.out.println("error en cargar eventos dao");
         }
     }
 
     /**
-     * @Carga en memoria los eventos generados por cada usuario usuario
+     * Carga en memoria los eventos(ratings) generados por cada usuario
      */
     public void cargarUserEventDao()
     { 
@@ -148,46 +172,21 @@ public class AccesoJDBC extends AccesoDatos {
             {
                 //para cada usuario obtener sus eventos
                 Integer elemento=itUser.next();
-                //System.out.println("userId="+elemento);
-                //recorrer los eventos
                 List<Events> resEvent=new ArrayList<>();
                 Iterator<Events> itEvent = getEventsDAO().iterator();
-                /*
-                for(int i=0;i<eventsDAO.size();i++){
-                    Events evento=(Events)eventsDAO.get(i);
-                    //System.out.println(evento.getUserID());
-                    if(elemento==evento.getUserID())
-                    {
-                        resEvent.add(itEvent.next()); 
-                    }
-                    
-                }
-                
-                */
                 
 		while (itEvent.hasNext()) {
-                   //System.out.println("contador ="+itEvent.next().getUserID());
                     if ((itEvent.next().getUserID())==elemento)
                     {
-                    //System.out.println(" events:="+itEvent.next().getUserID()+" "+itEvent.next().getMovieID());
-                        //System.out.println("userId + event userId "+elemento+ " " +itEvent.next().getUserID());
                         resEvent.add(itEvent.next());
-                     //   System.out.println("tamanio de eventos "+resEvent.size());
                     }
-		}
-                
-                //System.out.println("->"+resEvent.size());
-                //System.out.println("tamanio events ="+resEvent.size());
-                //insertamos 
+		} 
                 getUserEventDAO().put(elemento,resEvent);
-                //System.out.println("ususario = "+elemento);
                 
             }
         }catch(Exception e ){
             
         }
-        
-        
     }//fin metodo
 
     /**
@@ -200,7 +199,6 @@ public class AccesoJDBC extends AccesoDatos {
             while (itMovie.hasNext())
             {
                 Integer elemento=(Integer)itMovie.next().getId();
-                
                 //recorrer los eventos
                 List<Events> resEvent=new ArrayList<>();
                 Iterator<Events> itEvent = getEventsDAO().iterator();
@@ -218,6 +216,10 @@ public class AccesoJDBC extends AccesoDatos {
         }
     }//fin metodo
  
+    
+    /**
+     * Método que carga en memoria todos los datos de la base de datos
+     */
     @Override
     public void cargarDatos() {
         try{
@@ -228,11 +230,20 @@ public class AccesoJDBC extends AccesoDatos {
             cargarItemEventDao();
         }catch(Exception e )
         {
-            e.printStackTrace();
+            System.out.print("eror en cargar los datos ");
         }
         
     }
 
+    /**
+     * Método modificador para confgurar la conexión con la base de datos
+     * 
+     * @param newhost
+     * @param newbasededatos
+     * @param newpuerto
+     * @param newuser
+     * @param newpassword 
+     */
     @Override
     public void configurarConexionBD(String newhost, String newbasededatos, int newpuerto, String newuser, String newpassword) {
         setHost(newhost);
@@ -242,7 +253,4 @@ public class AccesoJDBC extends AccesoDatos {
         setPassword(newpassword);
     }
 
-  
-    
-   
 }

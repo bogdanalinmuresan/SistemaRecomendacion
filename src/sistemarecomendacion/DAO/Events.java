@@ -6,7 +6,7 @@
 package sistemarecomendacion.DAO;
 
 /**
- *
+ *Clase que representa un rating de la base de datos 
  * @author bogdan
  * 
  */

@@ -11,7 +11,6 @@ import com.mongodb.MongoClientURI;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -23,13 +22,13 @@ import java.util.logging.Logger;
 import org.bson.Document;
 import org.json.*;
 /**
- *
+ *Clase para acceder a una base de datos no SQL en concreto MongoDb
  * @author bogdan
  */
 public class AccesoNOSQL extends AccesoDatos {
     
     /**
-     * Constructor por defecto
+     * Constructor con parametros
      * @param ho
      * @param baseded
      * @param puer
@@ -52,17 +51,39 @@ public class AccesoNOSQL extends AccesoDatos {
     //provides access to the database of events.(ratings)
     private ArrayList eventsDAO=new ArrayList<Events>();
     
-    //Metodos selectores
+    /**
+     * Método selector 
+     * @return Devuelve los usuarios 
+     */
     public Set<Integer> getUserDAO(){return userDAO;}
+    /**
+     * Método selector 
+     * @return devuelve las peliculas
+     */
     public ArrayList<Movie> getItemsDAO(){return itemsDAO;}
+    /**
+     * Método selector
+     * @return los eventos de cada pelicula(ratings)
+     */
     public HashMap<Integer,List<Events> > getItemEventDAO(){return itemEventDAO;}
+    /**
+     * Método selector
+     * @return devuelve los eventos de cada usuario
+     */
     public HashMap<Integer,List<Events> > getUserEventDAO(){return userEventDAO;}
+    /**
+     * Método selector 
+     * @return devuelve los eventos (ratings)
+     */
     public ArrayList<Events> getEventsDAO(){return eventsDAO;}
     
    
 
     
-    
+    /**
+     * Metodo para cargar en memoria las peliculas
+     * @throws JSONException 
+     */
     @SuppressWarnings("empty-statement")
     public void cargarMovieDao() throws JSONException  
     {
@@ -97,7 +118,7 @@ public class AccesoNOSQL extends AccesoDatos {
     }
 
     /**
-     * carga en memoria los usuarios
+     * Método para cargar en memoria los usuarios
      */
     public void cargarUsersDao(){
         String direccion="mongodb://"+getUser()+":"+getPassword()+"@"+getHost()+":"+getPuerto()+"/"+getBaseDatos();
@@ -126,6 +147,9 @@ public class AccesoNOSQL extends AccesoDatos {
         cursor.close();
     }
 
+    /**
+     * Método para cargar en memoria los eventos 
+     */
     public void cargarEventosDao()
     {
         String direccion="mongodb://"+getUser()+":"+getPassword()+"@"+getHost()+":"+getPuerto()+"/"+getBaseDatos();
@@ -164,7 +188,7 @@ public class AccesoNOSQL extends AccesoDatos {
     }
     
     /**
-     * @Carga en memoria los eventos generados por cada usuario usuario
+     * Carga en memoria los eventos generados por cada usuario
      */
     public void cargarUserEventDao()
     {
@@ -189,6 +213,9 @@ public class AccesoNOSQL extends AccesoDatos {
         }
     }
     
+    /**
+     * Método para cargar en memoria los eventos de cada pelicula
+     */
     public void cargarItemEventDao()
     {
         try
@@ -213,6 +240,15 @@ public class AccesoNOSQL extends AccesoDatos {
             
         }
     }
+    
+    /**
+     * Método para configurar la conexión con la base de datos
+     * @param newhost
+     * @param newbasededatos
+     * @param newpuerto
+     * @param newuser
+     * @param newpassword 
+     */
     @Override
     public void configurarConexionBD(String newhost, String newbasededatos, int newpuerto, String newuser, String newpassword) {
         setHost(newhost);
@@ -222,6 +258,9 @@ public class AccesoNOSQL extends AccesoDatos {
         setPassword(newpassword);
     }
 
+    /**
+     * Método para cargar en memoria los datos de la base de datos 
+     */
     @Override
     public void cargarDatos() {
         try {

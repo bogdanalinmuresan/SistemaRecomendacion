@@ -5,11 +5,8 @@
  */
 package sistemarecomendacion.DAO;
 
-import java.util.HashSet;
-import java.util.Set;
-
 /**
- *
+ *Clase que representa un pelicula 
  * @author bogdan
  */
 class Movie {
