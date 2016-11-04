@@ -12,7 +12,7 @@ package sistemarecomendacion.DAO;
  * @author bogdan
  * 
  */
-public abstract class AccesoDatos {
+public abstract class InterfazCliente implements ConsultasBD {
 
     //atributos 
     private String host;
@@ -30,7 +30,7 @@ public abstract class AccesoDatos {
      * @param use
      * @param pass 
      */
-    public AccesoDatos(String ho,String baseded,int puer,String use,String pass)
+    public InterfazCliente(String ho,String baseded,int puer,String use,String pass)
     {
         this.host=ho;
         this.basededatos=baseded;
@@ -95,7 +95,7 @@ public abstract class AccesoDatos {
     /**
      * Método para cargar todos los datos en memoria de la fuente de datos proporcionada
      */
-    abstract public void cargarDatos();
+    //abstract public void cargarDatos();
     
     
     /**

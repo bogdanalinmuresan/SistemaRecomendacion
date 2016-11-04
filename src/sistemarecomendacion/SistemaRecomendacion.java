@@ -22,6 +22,7 @@ public class SistemaRecomendacion {
 
     /**
      * @param args the command line arguments
+     * @throws org.json.JSONException
      */
     public static void main(String[] args) throws JSONException {
         // TODO code application logic here
@@ -29,7 +30,7 @@ public class SistemaRecomendacion {
         
         
         /***********************Acceso  SQL****************************/
-        //AccesoJDBC nuevoacceso= new AccesoJDBC("jdbc:mysql://localhost","sistemasderecomendaciontfg",3306,"root","");
+        AccesoJDBC nuevoacceso= new AccesoJDBC("jdbc:mysql://localhost","sistemasderecomendaciontfg",3306,"root","");
         /*
         System.out.println("host = " +nuevoacceso.getHost());
         System.out.println("base de datos  = " +nuevoacceso.getBaseDatos());
@@ -41,18 +42,18 @@ public class SistemaRecomendacion {
         
         //nuevoacceso.cargarMoviesDao();
         //nuevoacceso.cargarEventosDao();
-        //nuevoacceso.cargarDatos();
+       //nuevoacceso.cargarDatosDAO();
         
         
-        /*
-        System.out.println("tamanio movies  "+nuevoacceso.itemsDAO.size());
-        System.out.println("tamanio eventos  "+nuevoacceso.eventsDAO.size());
-        System.out.println("tamanio usuarios  "+nuevoacceso.userDAO.size());
-        System.out.println("tamanio itemEventDao  "+nuevoacceso.itemEventDAO.size());
-        System.out.println("tamanio userEventDao  "+nuevoacceso.userEventDAO.size());
-        //System.out.println("tamanio userEventDao  "+nuevoacceso.userEventDAO.keySet().size());
         
-        */
+        //System.out.println("tamanio movies sql  "+nuevoacceso.getItemsDAO().size());
+        //System.out.println("tamanio eventos sql  "+nuevoacceso.getEventsDAO().size());
+        //System.out.println("tamanio usuarios sql  "+nuevoacceso.getUserDAO().size());
+        //System.out.println("tamanio itemEventDao sql  "+nuevoacceso.getItemEventDAO().size());
+        //System.out.println("tamanio userEventDao sql  "+nuevoacceso.getUserEventDAO().size());
+       // System.out.println("tamanio userEventDao sql  "+nuevoacceso.userEventDAO.keySet().size());
+        
+        
         
         /*Cuenta el nr de eventos que tiene cada item*/
         
@@ -105,17 +106,17 @@ public class SistemaRecomendacion {
         AccesoNOSQL nosql=new AccesoNOSQL(host, bd, puerto, user, pass);
        
         
-        nosql.cargarDatos();
+        //nosql.cargarDatosDAO();
         //--------------------------------------------------------------------*/
         
         
         
         
-        System.out.println("tamanio peliculas" +nosql.getItemsDAO().size());
-        //System.out.println("tamanio usuarios" +nosql.getUserDAO().size());
-        //System.out.println("tamanio evento" +nosql.getEventsDAO().size());
-        //System.out.println("tamanio userEventDao" +nosql.getUserEventDAO().size());
-        //System.out.println("tamanio itemEventDao" +nosql.getItemEventDAO().size());
+        //System.out.println("tamanio peliculas Nosql" +nosql.getItemsDAO().size());
+        //System.out.println("tamanio usuarios Nosqll" +nosql.getUserDAO().size());
+        //System.out.println("tamanio evento Nosql" +nosql.getEventsDAO().size());
+        // System.out.println("tamanio userEventDao Nosql" +nosql.getUserEventDAO().size());
+        //System.out.println("tamanio itemEventDao Nosql" +nosql.getItemEventDAO().size());
         
         
         /*****Muestra los userId y el tamaño de los eventos de cada uno*************/

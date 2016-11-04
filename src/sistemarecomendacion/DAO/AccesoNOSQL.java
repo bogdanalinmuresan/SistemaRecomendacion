@@ -25,7 +25,7 @@ import org.json.*;
  *Clase para acceder a una base de datos no SQL en concreto MongoDb
  * @author bogdan
  */
-public class AccesoNOSQL extends AccesoDatos {
+public class AccesoNOSQL extends InterfazCliente {
     
     /**
      * Constructor con parametros
@@ -77,7 +77,8 @@ public class AccesoNOSQL extends AccesoDatos {
      */
     public ArrayList<Events> getEventsDAO(){return eventsDAO;}
     
-   
+   /*--------------------------------------------------------------------------*/
+    
     /**
      * Metodo que se conecta a una coleccion de una base de datos no sql 
      * @param baseDatos la base de datos a la que se conecta
@@ -97,65 +98,43 @@ public class AccesoNOSQL extends AccesoDatos {
         
         return collec;
     }
+   
     
     /**
-     * Metodo para cargar en memoria las peliculas
-     * @throws JSONException 
+     * Método para configurar la conexión con la base de datos
+     * @param newhost
+     * @param newbasededatos
+     * @param newpuerto
+     * @param newuser
+     * @param newpassword 
      */
-    @SuppressWarnings("empty-statement")
-    public void cargarMovieDao() throws JSONException  
-    {
-        MongoCollection<Document> collec=consultaBD("nosql","movies");
-         
-        MongoCursor<Document> cursor = collec.find().iterator();
-        while (cursor.hasNext()) 
-        {
-            String stringjson=cursor.next().toJson();
-            //JsonReader jr=new JsonReader(stringjson);
-            JSONObject obj1=new JSONObject(stringjson);
-            String movieId=obj1.getString("movieId");
-            String title=obj1.getString("title");
-            String genres=obj1.getString("genres");
-
-            Movie peli=new Movie();
-            peli.setId(Integer.parseInt(movieId));
-            peli.setTitle(title);
-            peli.setGenre(genres);
-
-            getItemsDAO().add(peli);
-        }
-    cursor.close();
+    @Override
+    public void configurarConexionBD(String newhost, String newbasededatos, int newpuerto, String newuser, String newpassword) {
+        setHost(newhost);
+        setBaseDatos(newbasededatos);
+        setPuerto(newpuerto);
+        setUser(newuser);
+        setPassword(newpassword);
     }
 
     /**
-     * Método para cargar en memoria los usuarios
+     * Método para cargar en memoria los datos de la base de datos 
      */
-    public void cargarUsersDao(){
+    @Override
+    public void cargarDatosDAO() {
+        cargarUserDAO();
+        cargarItemsDAO();
+        cargarEventosDAO();
+        cargarUserEventDAO();
+        cargarItemEventDAO();
         
-        MongoCollection<Document> collec=consultaBD("nosql","ratings");
-        MongoCursor<Document> cursor =collec.find().iterator();
-        
-        while(cursor.hasNext())
-        {
-            try {
-                String stringjson=cursor.next().toJson();
-                JSONObject obj1=new JSONObject(stringjson);
-                
-                String userId=obj1.getString("userId");
-                getUserDAO().add(Integer.parseInt(userId));
-                
-            } catch (JSONException ex) {
-                Logger.getLogger(AccesoNOSQL.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-        cursor.close();
     }
 
     /**
      * Método para cargar en memoria los eventos 
      */
-    public void cargarEventosDao()
-    {
+    @Override
+    public void cargarEventosDAO() {
         MongoCollection<Document> collec=consultaBD("nosql","ratings");
         MongoCursor<Document> cursor =collec.find().iterator();
         
@@ -182,14 +161,72 @@ public class AccesoNOSQL extends AccesoDatos {
                 Logger.getLogger(AccesoNOSQL.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+        cursor.close();    
+    }
+
+    /**
+     * Metodo para cargar en memoria las peliculas
+     *
+     */
+    @Override
+    public void cargarItemsDAO()  
+    {
+        MongoCollection<Document> collec=consultaBD("nosql","movies");
+         
+        MongoCursor<Document> cursor = collec.find().iterator();
+        while (cursor.hasNext()) 
+        {
+            try {
+                String stringjson=cursor.next().toJson();
+                //JsonReader jr=new JsonReader(stringjson);
+                JSONObject obj1=new JSONObject(stringjson);
+                String movieId=obj1.getString("movieId");
+                String title=obj1.getString("title");
+                String genres=obj1.getString("genres");
+                
+                Movie peli=new Movie();
+                peli.setId(Integer.parseInt(movieId));
+                peli.setTitle(title);
+                peli.setGenre(genres);
+                
+                getItemsDAO().add(peli);
+            } catch (JSONException ex) {
+                Logger.getLogger(AccesoNOSQL.class.getName()).log(Level.SEVERE, null, ex);
+                System.err.print("error en cargarItemsDAO en AccesoNoSQL");
+            }
+        }
+    cursor.close();
+    }
+
+    /**
+     * Método para cargar en memoria los usuarios
+     */
+    @Override
+    public void cargarUserDAO() {
+        MongoCollection<Document> collec=consultaBD("nosql","ratings");
+        MongoCursor<Document> cursor =collec.find().iterator();
+        
+        while(cursor.hasNext())
+        {
+            try {
+                String stringjson=cursor.next().toJson();
+                JSONObject obj1=new JSONObject(stringjson);
+                
+                String userId=obj1.getString("userId");
+                getUserDAO().add(Integer.parseInt(userId));
+                
+            } catch (JSONException ex) {
+                Logger.getLogger(AccesoNOSQL.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
         cursor.close();
     }
-    
+
     /**
      * Carga en memoria los eventos generados por cada usuario
      */
-    public void cargarUserEventDao()
-    {
+    @Override
+    public void cargarUserEventDAO() {
         try{
             Iterator<Integer> itUser = getUserDAO().iterator();
             while (itUser.hasNext())
@@ -210,12 +247,13 @@ public class AccesoNOSQL extends AccesoDatos {
            System.out.println("no carga los datos en el metodo ");
         }
     }
+
     
     /**
      * Método para cargar en memoria los eventos de cada pelicula
      */
-    public void cargarItemEventDao()
-    {
+    @Override
+    public void cargarItemEventDAO() {
         try
         {
             Iterator<Movie> itItem = getItemsDAO().iterator();
@@ -237,40 +275,6 @@ public class AccesoNOSQL extends AccesoDatos {
         {
             
         }
-    }
-    
-    /**
-     * Método para configurar la conexión con la base de datos
-     * @param newhost
-     * @param newbasededatos
-     * @param newpuerto
-     * @param newuser
-     * @param newpassword 
-     */
-    @Override
-    public void configurarConexionBD(String newhost, String newbasededatos, int newpuerto, String newuser, String newpassword) {
-        setHost(newhost);
-        setBaseDatos(newbasededatos);
-        setPuerto(newpuerto);
-        setUser(newuser);
-        setPassword(newpassword);
-    }
-
-    /**
-     * Método para cargar en memoria los datos de la base de datos 
-     */
-    @Override
-    public void cargarDatos() {
-        try {
-            cargarUsersDao();
-            cargarMovieDao();
-            cargarEventosDao();
-            cargarUserEventDao();
-            cargarItemEventDao();
-        } catch (JSONException ex) {
-            Logger.getLogger(AccesoNOSQL.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
     }
 
 }

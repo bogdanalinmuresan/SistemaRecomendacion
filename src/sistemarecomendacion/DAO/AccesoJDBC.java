@@ -17,7 +17,7 @@ import java.util.Iterator;
  * 
  * @author bogdan
  */
-public class AccesoJDBC extends AccesoDatos {
+public class AccesoJDBC extends InterfazCliente {
    
    //**************** Atributos de la clase **********************************// 
     //users 
@@ -57,6 +57,7 @@ public class AccesoJDBC extends AccesoDatos {
      */
     public ArrayList<Events> getEventsDAO(){return eventsDAO;}
     
+    /*-------------------------------------------------------------------------*/
     
     /**
      * Constructor con párametros
@@ -93,54 +94,47 @@ public class AccesoJDBC extends AccesoDatos {
         
     }
     
+ 
     /**
-     * Carga en memoria los usuarios de la base de datos
+     * Método modificador para confgurar la conexión con la base de datos
      * 
+     * @param newhost
+     * @param newbasededatos
+     * @param newpuerto
+     * @param newuser
+     * @param newpassword 
      */
-    public void cargarUsuariosDao()
-    {
-        try
+    @Override
+    public void configurarConexionBD(String newhost, String newbasededatos, int newpuerto, String newuser, String newpassword) {
+        setHost(newhost);
+        setBaseDatos(newbasededatos);
+        setPuerto(newpuerto);
+        setUser(newuser);
+        setPassword(newpassword);
+    }
+
+    /**
+     * Método que carga en memoria todos los datos de la base de datos
+     */
+    @Override
+    public void cargarDatosDAO() {
+        try{
+            cargarEventosDAO();
+            cargarItemsDAO();
+            cargarUserDAO();
+            cargarUserEventDAO();
+            cargarItemEventDAO();
+        }catch(Exception e )
         {
-             ResultSet rset=consultaBD("SELECT DISTINCT userId FROM `ratings` ORDER BY `userId` ASC");
-            
-            while(rset.next()) {   // Move the cursor to the next row
-                getUserDAO().add(Integer.parseInt(rset.getString("userId")));
-            }//fin while
-             
-        }catch(SQLException | NumberFormatException e)
-        {
-            System.out.println("error en cargar los usuarios de la base de datos" );
+            System.out.print("error en cargar los datos ");
         }
     }
-    
-    /**
-     *  Carga las peliculas en memoria 
-     */
-    public void cargarMoviesDao(){
-        try {
-            ResultSet rset=consultaBD("SELECT * FROM `movies`");
-            
-            while(rset.next()) {   // Move the cursor to the next row
-                Movie peli=new Movie();
-                
-                peli.setId( Integer.parseInt(rset.getString("movieid")));
-                peli.setGenre(rset.getString("genres"));
-                peli.setTitle(rset.getString("title"));
 
-                getItemsDAO().add(peli);
-            }//fin while
-                
-	} catch (SQLException e) {
-		System.out.println("Error en cargar las peliculas en memoria");
-	}
-               
-    }
-    
     /**
      * Carga lo eventos(ratings) de la base de datos en memoria
      */
-    public void cargarEventosDao()
-    {
+    @Override
+    public void cargarEventosDAO() {
         try{
             ResultSet rset=consultaBD("SELECT * FROM `ratings`");
             
@@ -162,10 +156,53 @@ public class AccesoJDBC extends AccesoDatos {
     }
 
     /**
+     *  Carga las peliculas en memoria 
+     */
+    @Override
+    public void cargarItemsDAO() {
+        try {
+            ResultSet rset=consultaBD("SELECT * FROM `movies`");
+            
+            while(rset.next()) {   // Move the cursor to the next row
+                Movie peli=new Movie();
+                
+                peli.setId( Integer.parseInt(rset.getString("movieid")));
+                peli.setGenre(rset.getString("genres"));
+                peli.setTitle(rset.getString("title"));
+
+                getItemsDAO().add(peli);
+            }//fin while
+                
+	} catch (SQLException e) {
+		System.out.println("Error en cargar las peliculas en memoria");
+	}
+    }
+
+    /**
+     * Carga en memoria los usuarios de la base de datos
+     * 
+     */
+    @Override
+    public void cargarUserDAO() {
+        try
+        {
+             ResultSet rset=consultaBD("SELECT DISTINCT userId FROM `ratings` ORDER BY `userId` ASC");
+            
+            while(rset.next()) {   // Move the cursor to the next row
+                getUserDAO().add(Integer.parseInt(rset.getString("userId")));
+            }//fin while
+             
+        }catch(SQLException | NumberFormatException e)
+        {
+            System.out.println("error en cargar los usuarios de la base de datos" );
+        }
+    }
+
+    /**
      * Carga en memoria los eventos(ratings) generados por cada usuario
      */
-    public void cargarUserEventDao()
-    { 
+    @Override
+    public void cargarUserEventDAO() {
         try{
             Iterator<Integer> itUser = getUserDAO().iterator();
             while (itUser.hasNext())
@@ -187,13 +224,13 @@ public class AccesoJDBC extends AccesoDatos {
         }catch(Exception e ){
             
         }
-    }//fin metodo
+    }
 
     /**
      * Carga en memoria los eventos generados por cada pelicula
      */
-    public void cargarItemEventDao()
-    {
+    @Override
+    public void cargarItemEventDAO() {
         try{
              Iterator<Movie> itMovie = getItemsDAO().iterator();
             while (itMovie.hasNext())
@@ -214,43 +251,6 @@ public class AccesoJDBC extends AccesoDatos {
         }catch(Exception e ){
             
         }
-    }//fin metodo
- 
-    
-    /**
-     * Método que carga en memoria todos los datos de la base de datos
-     */
-    @Override
-    public void cargarDatos() {
-        try{
-            cargarEventosDao();
-            cargarMoviesDao();
-            cargarUsuariosDao();
-            cargarUserEventDao();
-            cargarItemEventDao();
-        }catch(Exception e )
-        {
-            System.out.print("eror en cargar los datos ");
-        }
-        
-    }
-
-    /**
-     * Método modificador para confgurar la conexión con la base de datos
-     * 
-     * @param newhost
-     * @param newbasededatos
-     * @param newpuerto
-     * @param newuser
-     * @param newpassword 
-     */
-    @Override
-    public void configurarConexionBD(String newhost, String newbasededatos, int newpuerto, String newuser, String newpassword) {
-        setHost(newhost);
-        setBaseDatos(newbasededatos);
-        setPuerto(newpuerto);
-        setUser(newuser);
-        setPassword(newpassword);
     }
 
 }
