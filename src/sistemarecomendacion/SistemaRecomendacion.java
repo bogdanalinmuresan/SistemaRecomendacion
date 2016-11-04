@@ -29,7 +29,7 @@ public class SistemaRecomendacion {
         
         
         /***********************Acceso  SQL****************************/
-        AccesoJDBC nuevoacceso= new AccesoJDBC("jdbc:mysql://localhost","sistemasderecomendaciontfg",3306,"root","");
+        //AccesoJDBC nuevoacceso= new AccesoJDBC("jdbc:mysql://localhost","sistemasderecomendaciontfg",3306,"root","");
         /*
         System.out.println("host = " +nuevoacceso.getHost());
         System.out.println("base de datos  = " +nuevoacceso.getBaseDatos());
@@ -57,6 +57,7 @@ public class SistemaRecomendacion {
         /*Cuenta el nr de eventos que tiene cada item*/
         
         //Integer contador=0;
+        /*
         Iterator entries = nuevoacceso.getItemEventDAO().entrySet().iterator();
         while (entries.hasNext()) {
           Entry thisEntry = (Entry) entries.next();
@@ -68,7 +69,7 @@ public class SistemaRecomendacion {
           
         }
         //System.out.println("contador =" +contador);
-       
+       */
         
         
       /*Cuenta el numero de eventos que tiene cada user
@@ -92,6 +93,8 @@ public class SistemaRecomendacion {
         
         /***********************Acceso No SQL****************************/
         
+        /*comando para arrancar mongo local : brew services start/stop/restart mongo */
+        
         
         //*--------------------------------------------------------------------
         String host="ds033337.mongolab.com";
@@ -100,7 +103,7 @@ public class SistemaRecomendacion {
         String user="bogdan";
         String pass="ar03pbo";
         AccesoNOSQL nosql=new AccesoNOSQL(host, bd, puerto, user, pass);
-       /*comando para arrancar mongo local : brew services start/stop/restart mongo */
+       
         
         nosql.cargarDatos();
         //--------------------------------------------------------------------*/
@@ -109,10 +112,10 @@ public class SistemaRecomendacion {
         
         
         System.out.println("tamanio peliculas" +nosql.getItemsDAO().size());
-        System.out.println("tamanio usuarios" +nosql.getUserDAO().size());
-        System.out.println("tamanio evento" +nosql.getEventsDAO().size());
-        System.out.println("tamanio userEventDao" +nosql.getUserEventDAO().size());
-        System.out.println("tamanio itemEventDao" +nosql.getItemEventDAO().size());
+        //System.out.println("tamanio usuarios" +nosql.getUserDAO().size());
+        //System.out.println("tamanio evento" +nosql.getEventsDAO().size());
+        //System.out.println("tamanio userEventDao" +nosql.getUserEventDAO().size());
+        //System.out.println("tamanio itemEventDao" +nosql.getItemEventDAO().size());
         
         
         /*****Muestra los userId y el tamaño de los eventos de cada uno*************/
@@ -127,7 +130,7 @@ public class SistemaRecomendacion {
             System.out.println("tamanios="+eventos.size());
         }
         ----------------------------------------------------------------------*/
-        
+        /*
         Iterator it = nosql.getItemEventDAO().entrySet().iterator();
         while (it.hasNext()) {
             Map.Entry pair = (Map.Entry)it.next();
@@ -136,6 +139,7 @@ public class SistemaRecomendacion {
             eventos=(ArrayList<Events>) pair.getValue();
             System.out.println("tamanios="+eventos.size());
         }
+                */
     }
  
 }

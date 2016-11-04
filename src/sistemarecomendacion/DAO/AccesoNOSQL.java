@@ -78,7 +78,25 @@ public class AccesoNOSQL extends AccesoDatos {
     public ArrayList<Events> getEventsDAO(){return eventsDAO;}
     
    
+    /**
+     * Metodo que se conecta a una coleccion de una base de datos no sql 
+     * @param baseDatos la base de datos a la que se conecta
+     * @param coleccion coleccion de la base de datos 
+     * @return  devuelve la coleccion de la base de datos a la que se conecta 
+     */
+    public MongoCollection<Document> consultaBD(String baseDatos ,String coleccion)
+    {
+        String direccion="mongodb://"+getUser()+":"+getPassword()+"@"+getHost()+":"+getPuerto()+"/"+getBaseDatos();
+        //mongodb://bogdan:ar03pbo@ds033337.mongolab.com:33337/nosql
+        MongoClientURI connectionString = new MongoClientURI(direccion);
+        MongoClient mongoClient = new MongoClient(connectionString);
 
+        MongoDatabase database = mongoClient.getDatabase(baseDatos);//nosql
+
+        MongoCollection<Document> collec = database.getCollection(coleccion);
+        
+        return collec;
+    }
     
     /**
      * Metodo para cargar en memoria las peliculas
@@ -87,15 +105,7 @@ public class AccesoNOSQL extends AccesoDatos {
     @SuppressWarnings("empty-statement")
     public void cargarMovieDao() throws JSONException  
     {
-        
-        String direccion="mongodb://"+getUser()+":"+getPassword()+"@"+getHost()+":"+getPuerto()+"/"+getBaseDatos();
-        //mongodb://bogdan:ar03pbo@ds033337.mongolab.com:33337/nosql
-        MongoClientURI connectionString = new MongoClientURI(direccion);
-        MongoClient mongoClient = new MongoClient(connectionString);
-
-        MongoDatabase database = mongoClient.getDatabase("nosql");
-
-        MongoCollection<Document> collec = database.getCollection("movies");
+        MongoCollection<Document> collec=consultaBD("nosql","movies");
          
         MongoCursor<Document> cursor = collec.find().iterator();
         while (cursor.hasNext()) 
@@ -121,13 +131,8 @@ public class AccesoNOSQL extends AccesoDatos {
      * Método para cargar en memoria los usuarios
      */
     public void cargarUsersDao(){
-        String direccion="mongodb://"+getUser()+":"+getPassword()+"@"+getHost()+":"+getPuerto()+"/"+getBaseDatos();
-        //mongodb://bogdan:ar03pbo@ds033337.mongolab.com:33337/nosql
-        MongoClientURI connectionString = new MongoClientURI(direccion);
-        MongoClient mongoClient = new MongoClient(connectionString);
-
-        MongoDatabase database = mongoClient.getDatabase("nosql");
-        MongoCollection<Document> collec = database.getCollection("ratings");
+        
+        MongoCollection<Document> collec=consultaBD("nosql","ratings");
         MongoCursor<Document> cursor =collec.find().iterator();
         
         while(cursor.hasNext())
@@ -137,7 +142,6 @@ public class AccesoNOSQL extends AccesoDatos {
                 JSONObject obj1=new JSONObject(stringjson);
                 
                 String userId=obj1.getString("userId");
-                //System.out.print(userId);
                 getUserDAO().add(Integer.parseInt(userId));
                 
             } catch (JSONException ex) {
@@ -152,13 +156,7 @@ public class AccesoNOSQL extends AccesoDatos {
      */
     public void cargarEventosDao()
     {
-        String direccion="mongodb://"+getUser()+":"+getPassword()+"@"+getHost()+":"+getPuerto()+"/"+getBaseDatos();
-        //mongodb://bogdan:ar03pbo@ds033337.mongolab.com:33337/nosql
-        MongoClientURI connectionString = new MongoClientURI(direccion);
-        MongoClient mongoClient = new MongoClient(connectionString);
-
-        MongoDatabase database = mongoClient.getDatabase("nosql");
-        MongoCollection<Document> collec = database.getCollection("ratings");
+        MongoCollection<Document> collec=consultaBD("nosql","ratings");
         MongoCursor<Document> cursor =collec.find().iterator();
         
         while(cursor.hasNext())

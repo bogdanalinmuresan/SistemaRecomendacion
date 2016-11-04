@@ -109,6 +109,5 @@ public abstract class AccesoDatos {
      * @param newpassword 
      */
     abstract public void configurarConexionBD(String newhost,String newbasededatos,int newpuerto,String newuser,String newpassword);
-    
-    
+ 
 }

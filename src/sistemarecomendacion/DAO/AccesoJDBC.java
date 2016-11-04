@@ -74,7 +74,7 @@ public class AccesoJDBC extends AccesoDatos {
     
     /**
      * Método para realizar una consulta en la base de datos
-     * @param consulta
+     * @param consulta La consulta en mysql
      * @return El resultado de la consulta
      */
     public ResultSet consultaBD(String consulta){
