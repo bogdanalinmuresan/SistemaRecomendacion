@@ -12,7 +12,7 @@ package sistemarecomendacion.DAO;
  * @author bogdan
  * 
  */
-public abstract class InterfazCliente implements ConsultasBD {
+public abstract class InterfazCliente extends DAO {
 
     //atributos 
     private String host;

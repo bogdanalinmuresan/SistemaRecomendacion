@@ -55,26 +55,31 @@ public class AccesoNOSQL extends InterfazCliente {
      * Método selector 
      * @return Devuelve los usuarios 
      */
+    @Override
     public Set<Integer> getUserDAO(){return userDAO;}
     /**
      * Método selector 
      * @return devuelve las peliculas
      */
+    @Override
     public ArrayList<Movie> getItemsDAO(){return itemsDAO;}
     /**
      * Método selector
      * @return los eventos de cada pelicula(ratings)
      */
+    @Override
     public HashMap<Integer,List<Events> > getItemEventDAO(){return itemEventDAO;}
     /**
      * Método selector
      * @return devuelve los eventos de cada usuario
      */
+    @Override
     public HashMap<Integer,List<Events> > getUserEventDAO(){return userEventDAO;}
     /**
      * Método selector 
      * @return devuelve los eventos (ratings)
      */
+    @Override
     public ArrayList<Events> getEventsDAO(){return eventsDAO;}
     
    /*--------------------------------------------------------------------------*/

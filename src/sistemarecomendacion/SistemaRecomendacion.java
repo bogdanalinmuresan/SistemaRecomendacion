@@ -42,15 +42,15 @@ public class SistemaRecomendacion {
         
         //nuevoacceso.cargarMoviesDao();
         //nuevoacceso.cargarEventosDao();
-       //nuevoacceso.cargarDatosDAO();
+       nuevoacceso.cargarDatosDAO();
         
         
         
-        //System.out.println("tamanio movies sql  "+nuevoacceso.getItemsDAO().size());
-        //System.out.println("tamanio eventos sql  "+nuevoacceso.getEventsDAO().size());
-        //System.out.println("tamanio usuarios sql  "+nuevoacceso.getUserDAO().size());
-        //System.out.println("tamanio itemEventDao sql  "+nuevoacceso.getItemEventDAO().size());
-        //System.out.println("tamanio userEventDao sql  "+nuevoacceso.getUserEventDAO().size());
+        System.out.println("tamanio movies sql  "+nuevoacceso.getItemsDAO().size());
+        System.out.println("tamanio eventos sql  "+nuevoacceso.getEventsDAO().size());
+        System.out.println("tamanio usuarios sql  "+nuevoacceso.getUserDAO().size());
+        System.out.println("tamanio itemEventDao sql  "+nuevoacceso.getItemEventDAO().size());
+        System.out.println("tamanio userEventDao sql  "+nuevoacceso.getUserEventDAO().size());
        // System.out.println("tamanio userEventDao sql  "+nuevoacceso.userEventDAO.keySet().size());
         
         

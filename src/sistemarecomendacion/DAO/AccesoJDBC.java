@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.sql.SQLException;
 import java.util.Iterator;
+import java.util.Set;
 
 /**
  *Clase que proporciona el acceso a una fuente de datos mysql para cargar en memoria
@@ -19,7 +20,9 @@ import java.util.Iterator;
  */
 public class AccesoJDBC extends InterfazCliente {
    
+    
    //**************** Atributos de la clase **********************************// 
+   /*
     //users 
     private ArrayList<Integer> userDAO=new ArrayList<Integer>();
     //items
@@ -30,12 +33,13 @@ public class AccesoJDBC extends InterfazCliente {
     private HashMap userEventDAO =new HashMap<Integer,List<Events> >();
     //provides access to the database of events.(ratings)
     private ArrayList eventsDAO=new ArrayList<Events>();
-    
+    */
     /**
      * Método que devuelve los usuarios 
      * @return los usuarios del sistema
      */
-    public ArrayList<Integer> getUserDAO(){return userDAO;}
+    
+    public Set<Integer> getUserDAO(){return userDAO;}
     /**
      * Método que devuelve los elementos del sistema (peliculas)
      * @return las peliculas del sistems
