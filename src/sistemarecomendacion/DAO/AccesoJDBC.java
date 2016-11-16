@@ -39,28 +39,7 @@ public class AccesoJDBC extends InterfazCliente {
      * @return los usuarios del sistema
      */
     
-    public Set<Integer> getUserDAO(){return userDAO;}
-    /**
-     * Método que devuelve los elementos del sistema (peliculas)
-     * @return las peliculas del sistems
-     */
-    public ArrayList<Movie> getItemsDAO(){return itemsDAO;}
-    /**
-     * Devuelve los eventos (ratings de cada pelicula)
-     * @return  Los eventos de cada peliculas (rating)
-     */
-    public HashMap<Integer,List<Events> > getItemEventDAO(){return itemEventDAO;}
-    /**
-     * Devuelve los eventos (ratings de cada usuario)
-     * @return  Los eventos de cada usuario (rating)
-     */
-    public HashMap<Integer,List<Events> > getUserEventDAO(){return userEventDAO;}
-    /**
-     * Método que devuelve los ratings 
-     * @return  Los ratings
-     */
-    public ArrayList<Events> getEventsDAO(){return eventsDAO;}
-    
+
     /*-------------------------------------------------------------------------*/
     
     /**

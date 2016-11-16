@@ -39,48 +39,8 @@ public class AccesoNOSQL extends InterfazCliente {
         super(ho, baseded, puer, use, pass);
     }
     
-    //**************** Atributos de la clase **********************************// 
-    //users 
-    private Set<Integer> userDAO=new HashSet();
-    //items
-    private ArrayList<Movie> itemsDAO=new ArrayList<Movie>();
-    //provides access to events by item ID.
-    private HashMap itemEventDAO =new HashMap<Integer,List<Events> >();
-    //provides access to events by user ID.
-    private HashMap userEventDAO =new HashMap<Integer,List<Events> >();
-    //provides access to the database of events.(ratings)
-    private ArrayList eventsDAO=new ArrayList<Events>();
-    
-    /**
-     * Método selector 
-     * @return Devuelve los usuarios 
-     */
-    @Override
-    public Set<Integer> getUserDAO(){return userDAO;}
-    /**
-     * Método selector 
-     * @return devuelve las peliculas
-     */
-    @Override
-    public ArrayList<Movie> getItemsDAO(){return itemsDAO;}
-    /**
-     * Método selector
-     * @return los eventos de cada pelicula(ratings)
-     */
-    @Override
-    public HashMap<Integer,List<Events> > getItemEventDAO(){return itemEventDAO;}
-    /**
-     * Método selector
-     * @return devuelve los eventos de cada usuario
-     */
-    @Override
-    public HashMap<Integer,List<Events> > getUserEventDAO(){return userEventDAO;}
-    /**
-     * Método selector 
-     * @return devuelve los eventos (ratings)
-     */
-    @Override
-    public ArrayList<Events> getEventsDAO(){return eventsDAO;}
+ 
+  
     
    /*--------------------------------------------------------------------------*/
     

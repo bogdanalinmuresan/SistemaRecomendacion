@@ -13,6 +13,9 @@ import org.json.JSONException;
 import sistemarecomendacion.DAO.AccesoJDBC;
 import sistemarecomendacion.DAO.AccesoNOSQL;
 import sistemarecomendacion.DAO.Events;
+import algoritmosClasicos.itemItemCF;
+import java.util.List;
+import static sistemarecomendacion.DAO.DAO.getItemEventDAO;
 
 /**
  *
@@ -52,6 +55,14 @@ public class SistemaRecomendacion {
         System.out.println("tamanio itemEventDao sql  "+nuevoacceso.getItemEventDAO().size());
         System.out.println("tamanio userEventDao sql  "+nuevoacceso.getUserEventDAO().size());
        // System.out.println("tamanio userEventDao sql  "+nuevoacceso.userEventDAO.keySet().size());
+        itemItemCF itemItem=new itemItemCF();
+        Iterator< Map.Entry<Integer,List<Events> > > it = getItemEventDAO().entrySet().iterator();
+        while(it.hasNext())
+        {
+            
+        }
+      
+        itemItem.itemVectorSimilarity(1, null, 2, null);
         
         
         
