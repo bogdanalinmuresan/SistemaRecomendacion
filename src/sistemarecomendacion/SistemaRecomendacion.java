@@ -46,7 +46,7 @@ public class SistemaRecomendacion {
         //nuevoacceso.cargarMoviesDao();
         //nuevoacceso.cargarEventosDao();
        nuevoacceso.cargarDatosDAO();
-        
+        System.out.println("Se han cargado los datos correctamente");
         
         
         System.out.println("tamanio movies sql  "+nuevoacceso.getItemsDAO().size());
@@ -56,14 +56,10 @@ public class SistemaRecomendacion {
         System.out.println("tamanio userEventDao sql  "+nuevoacceso.getUserEventDAO().size());
        // System.out.println("tamanio userEventDao sql  "+nuevoacceso.userEventDAO.keySet().size());
         itemItemCF itemItem=new itemItemCF();
-        Iterator< Map.Entry<Integer,List<Events> > > it = getItemEventDAO().entrySet().iterator();
-        while(it.hasNext())
-        {
-            
-        }
+        itemItem.buildModel();
+       
       
-        itemItem.itemVectorSimilarity(1, null, 2, null);
-        
+        //System.out.println("value "+itemItem.itemVectorSimilarity(it.next().getValue(), it.next().getValue()));
         
         
         /*Cuenta el nr de eventos que tiene cada item*/

@@ -8,14 +8,9 @@ package algoritmosClasicos;
 import static java.lang.Math.sqrt;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.PriorityQueue;
-import sistemarecomendacion.DAO.AccesoJDBC;
 import sistemarecomendacion.DAO.Events;
-import sistemarecomendacion.DAO.AccesoJDBC;
-import sistemarecomendacion.DAO.DAO;
 import static sistemarecomendacion.DAO.DAO.getItemEventDAO;
 
 /**
@@ -24,15 +19,40 @@ import static sistemarecomendacion.DAO.DAO.getItemEventDAO;
  */
 public class itemItemCF {
     
+    public  HashMap<Integer, HashMap<Integer, Double>> buildModel()
+    {
+        HashMap<Integer, HashMap<Integer, Double>> similarityMatrixModel=new HashMap<>();
+        
+        for (Map.Entry<Integer, List<Events>> entry : getItemEventDAO().entrySet()) {
+        Integer item1=entry.getKey();
+        List<Events> ratingsA=entry.getValue();
+        
+            HashMap itemSimilarity=new HashMap<Integer,Double>();
+            for (Map.Entry<Integer, List<Events>> entryB : getItemEventDAO().entrySet()) {
+                Integer item2=entryB.getKey();
+                List<Events> ratingsB=entryB.getValue();
+            
+                double similitud=determineSimilarity(ratingsA, ratingsB);
+                
+                itemSimilarity.put(item2, similitud);
+            }
+            
+            similarityMatrixModel.put(item1, (HashMap<Integer, Double>) itemSimilarity);
+        }
+        System.out.println("tam  = "+similarityMatrixModel.size());
+        return similarityMatrixModel;
+    }
+    
+    
+    
+    
     /**
-     * Computa la similaridad entre dos elementos
-     * @param itemID1
+     * Computa la similaridad entre los vectores de ratings de dos elementoss
      * @param eventos1
-     * @param itemID2
      * @param eventos2 
      * @return  devuelve la similitud entre dos items
      */
-    public double itemVectorSimilarity(int itemID1 ,List<Events> eventos1,int itemID2,List<Events> eventos2)
+    public double itemVectorSimilarity(List<Events> eventos1,List<Events> eventos2)
     {
         /*
         double similitud=0;
@@ -79,12 +99,12 @@ public class itemItemCF {
              System.out.println("Value "+head.getSimilitud());
              */
         
-             return determineSimilarity(eventos1, eventos2);
+            return determineSimilarity(eventos1, eventos2);
         }
        
         
     
-    private double determineSimilarity(final List<Events> event1,final List<Events>event2)
+    private double determineSimilarity(final List<Events> ratingsA,final List<Events>ratingsB)
     {
       float dotProduct=0;
       float magnitudeA=0;
@@ -93,11 +113,11 @@ public class itemItemCF {
       double ratingA=0;
       double ratingB=0;
       
-      if(event1.size()>event2.size()){
-        for(int i=0;i<event2.size();i++)
+      if(ratingsA.size()>ratingsB.size()){
+        for(int i=0;i<ratingsB.size();i++)
         {
-            ratingA=event2.get(i).getRating();
-            ratingB=event1.get(i).getRating();
+            ratingA=ratingsA.get(i).getRating();
+            ratingB=ratingsB.get(i).getRating();
 
             dotProduct+=ratingA*ratingB;
             magnitudeA+=ratingA*ratingA;
@@ -105,10 +125,10 @@ public class itemItemCF {
           
         }
       }else{
-          for(int i=0;i<event1.size();i++)
+          for(int i=0;i<ratingsA.size();i++)
         {
-            ratingA=event1.get(i).getRating();
-            ratingB=event2.get(i).getRating();
+            ratingA=ratingsA.get(i).getRating();
+            ratingB=ratingsB.get(i).getRating();
 
             dotProduct+=ratingA*ratingB;
             magnitudeA+=ratingA*ratingA;
