@@ -5,6 +5,7 @@
  */
 package sistemarecomendacion;
 
+import algoritmosClasicos.Pair;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Map;
@@ -14,6 +15,7 @@ import sistemarecomendacion.DAO.AccesoJDBC;
 import sistemarecomendacion.DAO.AccesoNOSQL;
 import sistemarecomendacion.DAO.Events;
 import algoritmosClasicos.itemItemCF;
+import java.util.HashMap;
 import java.util.List;
 import static sistemarecomendacion.DAO.DAO.getItemEventDAO;
 
@@ -27,6 +29,7 @@ public class SistemaRecomendacion {
      * @param args the command line arguments
      * @throws org.json.JSONException
      */
+    @SuppressWarnings("empty-statement")
     public static void main(String[] args) throws JSONException {
         // TODO code application logic here
         //"jdbc:mysql://localhost:3306/sistemasderecomendaciontfg", "root", ""); //
@@ -56,7 +59,16 @@ public class SistemaRecomendacion {
         System.out.println("tamanio userEventDao sql  "+nuevoacceso.getUserEventDAO().size());
        // System.out.println("tamanio userEventDao sql  "+nuevoacceso.userEventDAO.keySet().size());
         itemItemCF itemItem=new itemItemCF();
-        itemItem.buildModel();
+        HashMap<Integer, ArrayList<Pair> > res=new HashMap<Integer, ArrayList<Pair> >();
+        res=itemItem.buildModel();
+        
+            //ArrayList<Pair> ratings= new ArrayList<>();
+           // ratings=(ArrayList<Pair>) entry.getValue();
+            for(Pair p:res.entrySet().iterator().next().getValue())
+            {
+                System.out.println(""+p.getSimilitud());
+            }
+        
        
       
         //System.out.println("value "+itemItem.itemVectorSimilarity(it.next().getValue(), it.next().getValue()));
