@@ -10,130 +10,84 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import sistemarecomendacion.DAO.Events;
+import sistemarecomendacion.DAO.*;
 import static sistemarecomendacion.DAO.DAO.getItemEventDAO;
 import algoritmosClasicos.Pair;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import static sistemarecomendacion.DAO.DAO.getEventsDAO;
 /**
  *
  * @author bogdan
  */
-public class itemItemCF {
+public class itemItemCF implements knn{
+    ItemItemModel modelo=new ItemItemModel();
     
-    public  HashMap<Integer, ArrayList<Pair>> buildModel()
-    {/*
-        HashMap<Integer, HashMap<Integer, Double>> similarityMatrixModel=new HashMap<>();
+    /**
+     * constructor
+     */
+    public itemItemCF(ItemItemModel model){
+        this.modelo=model;
         
-        //for each item get ratings 
-        for (Map.Entry<Integer, List<Events>> entry : getItemEventDAO().entrySet()) {
-        Integer item1=entry.getKey();
-        List<Events> ratingsA=entry.getValue();
-            
-            //for each item get ratings 
-            HashMap itemSimilarity=new HashMap<Integer,Double>();
-            for (Map.Entry<Integer, List<Events>> entryB : getItemEventDAO().entrySet()) {
-                Integer item2=entryB.getKey();
-                List<Events> ratingsB=entryB.getValue();
-            
-                //calculate the similarity between items 
-                double similitud=determineSimilarity(ratingsA, ratingsB);
-                //System.out.println("simiitud ="+similitud);
-                itemSimilarity.put(item2, similitud);
-            }
-            
-            similarityMatrixModel.put(item1, (HashMap<Integer, Double>) itemSimilarity);
-        }
-        System.out.println("tam  = "+similarityMatrixModel.size());
-        return similarityMatrixModel;
-        */
-        
-        HashMap<Integer, ArrayList<Pair> > similarityMatrixModel=new HashMap<>();
-        
-        //for each item get ratings 
-        for (Map.Entry<Integer, List<Events>> entry : getItemEventDAO().entrySet()) {
-        Integer item1=entry.getKey();
-        List<Events> ratingsA=entry.getValue();
-            
-            //for each item get ratings 
-            ArrayList itemSimilarity=new ArrayList<Pair>();
-            for (Map.Entry<Integer, List<Events>> entryB : getItemEventDAO().entrySet()) {
-                Integer item2=entryB.getKey();
-                List<Events> ratingsB=entryB.getValue();
-            
-                //calculate the similarity between items 
-                double similitud=determineSimilarity(ratingsA, ratingsB);
-                //System.out.println("simiitud ="+similitud);
-                Pair p=new Pair(item2, similitud);
-                itemSimilarity.add(p);
-            }
-            
-            similarityMatrixModel.put(item1, itemSimilarity);
-        }
-        System.out.println("tam  = "+similarityMatrixModel.size());
-        return similarityMatrixModel;
     }
+    
     /**
      * Item scorer
+     * @param userId
+     * @param itemId
+     * @return 
      */
-    private double weightedSum(int userId,int itemId)
+    public double weightedSum(int userId,int itemId)
     {
-        double SumTop=0;
-        double SumBottom=0;
-        //get the similar movies to itemId 
+        double sumTop=0;
+        double sumBottom=0;
         
-        return 0;
-        
-    }
-    
-    
-    
-    /**
-     * Computa la similaridad entre los vectores de ratings de dos elementoss
-     * @param eventos1
-     * @param eventos2 
-     * @return  devuelve la similitud entre dos items
-     */
-    public double itemVectorSimilarity(List<Events> eventos1,List<Events> eventos2)
-    {
-        return determineSimilarity(eventos1, eventos2);
-    }
        
+        //get the similar items to itemId 
+        ArrayList<Pair> similarItem=new ArrayList();
+        similarItem=modelo.getSimilarItems(itemId);
+        if(similarItem==null)
+            System.out.println("es null");
+        // Sorting
+        Collections.sort(similarItem , new Comparator<Pair>() {
+                @Override
+                public int compare(Pair p1, Pair p2)
+                {
+
+                    return p1.getSimilitud().compareTo(p2.getSimilitud());
+                }
+            });
         
-    
-    private double determineSimilarity(final List<Events> ratingsA,final List<Events>ratingsB)
-    {
-      float dotProduct=0;
-      float magnitudeA=0;
-      float magnitudeB=0;
-      //float resultado=0;
-      double ratingA=0;
-      double ratingB=0;
-      
-      if(ratingsA.size()>ratingsB.size()){
-        for(int i=0;i<ratingsB.size();i++)
-        {
-            ratingA=ratingsA.get(i).getRating();
-            ratingB=ratingsB.get(i).getRating();
-
-            dotProduct+=ratingA*ratingB;
-            magnitudeA+=ratingA*ratingA;
-            magnitudeB+=ratingB*ratingB;
-          
+        //get the ratings for all the similar items the user has seen
+        double temp=0;
+        for(int i=0; i<knn.minNeighbor && similarItem.size()>i ;i++){
+            //get rating for userId and similarItem[i]
+            temp=getRating(getEventsDAO(), itemId);
+            sumTop+=temp*similarItem.get(i).getSimilitud();
+            sumBottom+=Math.abs(similarItem.get(i).getSimilitud());
         }
-      }else{
-          for(int i=0;i<ratingsA.size();i++)
-        {
-            ratingA=ratingsA.get(i).getRating();
-            ratingB=ratingsB.get(i).getRating();
-
-            dotProduct+=ratingA*ratingB;
-            magnitudeA+=ratingA*ratingA;
-            magnitudeB+=ratingB*ratingB;
-          
-        }
-      }
-      
-      
-      return (dotProduct/(sqrt(magnitudeA)*sqrt(magnitudeB)));
+        //calculate the weighted sums
+        
+        //System.out.println("tam similar items"+similarItem.size());
+        
+        return sumTop/sumBottom;
+        
     }
     
+    /*find the ratings from a list of events*
+     * 
+     */
+    public double getRating(ArrayList<Events> v,int item)
+    {
+        for(Events e:v)
+        {
+            if(item==e.getMovieID())
+                return e.getRating();
+        }
+        return -1;
+        
+        
+    }
+
 }
