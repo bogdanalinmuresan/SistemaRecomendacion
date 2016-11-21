@@ -5,8 +5,6 @@
  */
 package algoritmosClasicos;
 
-import java.util.Comparator;
-
 /**
  *
  * @author bogdan

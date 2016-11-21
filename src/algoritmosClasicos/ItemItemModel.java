@@ -22,7 +22,7 @@ import sistemarecomendacion.DAO.Events;
 public class ItemItemModel {
             HashMap<Integer, ArrayList<Pair> >similarityMatrixModel;
             //numbers of neighbors to retain in the similarity matrix
-            int modelSize;
+           
 
     /**
      * constructor
@@ -50,7 +50,7 @@ public class ItemItemModel {
         
         similarItem=similarityMatrixModel.get(itemId);
         if(similarityMatrixModel==null)
-            System.out.println("similarityMatrixModels devuelve null ");
+            System.err.println("similarityMatrixModels devuelve null ");
         
         
         // Sorting
@@ -67,7 +67,7 @@ public class ItemItemModel {
                     else return 0;
                 }
         });
-        System.out.println("similarItem.size()= "+similarItem.size());
+        //System.out.println("similarItem.size()= "+similarItem.size());
         
         if(similarItem.size() >= knn.neighborhoodSize_N){
             for(int i=0; i<knn.neighborhoodSize_N;i++){
@@ -75,7 +75,7 @@ public class ItemItemModel {
             }
         }
         
-        System.out.println("similarItemsSorted.size()= "+similarItemsSorted.size());
+        //System.out.println("similarItemsSorted.size()= "+similarItemsSorted.size());
         
         //devolver los k similar items
         
@@ -94,6 +94,7 @@ public class ItemItemModel {
             Integer item1=entry.getKey();
             List<Events> ratingsA=entry.getValue();
             ArrayList itemSimilarity=new ArrayList<Pair>();
+            //select ItemVectorRating greater than threshold 
             if(ratingsA.size() >= knn.minNeighbor_k){
                 //for each item, get ratings 
                 for (Map.Entry<Integer, List<Events>> entryB : getItemEventDAO().entrySet()) {
@@ -112,7 +113,7 @@ public class ItemItemModel {
             }    
             
         }
-        System.out.println("tam  = "+similarityMatrixModel.size());
+        //System.out.println("tam  = "+similarityMatrixModel.size());
         return similarityMatrixModel;
     }
     

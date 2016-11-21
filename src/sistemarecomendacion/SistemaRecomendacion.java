@@ -55,9 +55,9 @@ public class SistemaRecomendacion {
         itemItemModel.buildModel();
         //res=itemItemModel.buildModel();
         itemItemCF itemitem=new itemItemCF(itemItemModel);
-        
-        System.out.println("prediction ="+itemitem.weightedSum(2,110));
-       
+        for(int i=0;i<10;i++){
+            System.out.println("prediction user "+i+" ="+itemitem.weightedSum(i,110));
+        }
       
         //System.out.println("value "+itemItem.itemVectorSimilarity(it.next().getValue(), it.next().getValue()));
         
