@@ -11,12 +11,12 @@ package algoritmosClasicos;
  */
 public interface knn {
     /**
-     * most similar items in similarMatrix model
+     * most similar items in similarMatrix model,this is applied for each item to be scored
      */
-    public final int minNeighbor=30;
+    public final int minNeighbor_k=30;
     
     /**
      * Similar items
      */
-    public final int neighborhoodSize=30;
+    public final int neighborhoodSize_N=30;
 }

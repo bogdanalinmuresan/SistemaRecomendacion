@@ -5,13 +5,10 @@
  */
 package sistemarecomendacion;
 
-import algoritmosClasicos.Pair;
-import java.util.ArrayList;
 import org.json.JSONException;
 import sistemarecomendacion.DAO.AccesoJDBC;
 import sistemarecomendacion.DAO.AccesoNOSQL;
 import algoritmosClasicos.itemItemCF;
-import java.util.HashMap;
 import algoritmosClasicos.ItemItemModel;
 
 /**
@@ -54,18 +51,12 @@ public class SistemaRecomendacion {
         System.out.println("tamanio userEventDao sql  "+nuevoacceso.getUserEventDAO().size());
         // System.out.println("tamanio userEventDao sql  "+nuevoacceso.userEventDAO.keySet().size());
         ItemItemModel itemItemModel=new ItemItemModel();
-        HashMap<Integer, ArrayList<Pair> > res=new HashMap<Integer, ArrayList<Pair> >();
+        //HashMap<Integer, ArrayList<Pair> > res=new HashMap<Integer, ArrayList<Pair> >();
         itemItemModel.buildModel();
         //res=itemItemModel.buildModel();
         itemItemCF itemitem=new itemItemCF(itemItemModel);
         
-            //ArrayList<Pair> ratings= new ArrayList<>();
-           // ratings=(ArrayList<Pair>) entry.getValue();
-            /*for(Pair p:res.entrySet().iterator().next().getValue())
-            {
-                System.out.println(""+p.getSimilitud());
-            }*/
-        System.out.println(""+itemitem.weightedSum(1,2727));
+        System.out.println("prediction ="+itemitem.weightedSum(2,110));
        
       
         //System.out.println("value "+itemItem.itemVectorSimilarity(it.next().getValue(), it.next().getValue()));

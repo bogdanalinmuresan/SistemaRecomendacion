@@ -6,11 +6,9 @@
 package sistemarecomendacion.DAO;
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.sql.SQLException;
 import java.util.Iterator;
-import java.util.Set;
 
 /**
  *Clase que proporciona el acceso a una fuente de datos mysql para cargar en memoria

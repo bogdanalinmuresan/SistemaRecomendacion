@@ -1,2 +1,0 @@
-algoritmosClasicos.Pair
-algoritmosClasicos.MyComparator

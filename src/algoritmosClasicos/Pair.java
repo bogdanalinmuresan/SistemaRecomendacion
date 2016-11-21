@@ -24,16 +24,17 @@ public class Pair   {
     
 }
 
-    class MyComparator implements Comparator<Pair> {
- 
-         @Override
-         public int compare(Pair o1, Pair o2)
-         {
-             if(o1.getSimilitud()>o2.getSimilitud())
-                 return -1;
-             else if(o1.getSimilitud()<o2.getSimilitud())
-                 return 1;
-             else return 0;
-         }
-     }
+/*
+class MyComparator implements Comparator<Pair> {
 
+     @Override
+     public int compare(Pair o1, Pair o2)
+     {
+         if(o1.getSimilitud()>o2.getSimilitud())
+             return -1;
+         else if(o1.getSimilitud()<o2.getSimilitud())
+             return 1;
+         else return 0;
+     }
+}
+*/

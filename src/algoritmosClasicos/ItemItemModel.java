@@ -7,6 +7,8 @@ package algoritmosClasicos;
 
 import static java.lang.Math.sqrt;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,12 +20,16 @@ import sistemarecomendacion.DAO.Events;
  * @author bogdan
  */
 public class ItemItemModel {
-            HashMap<Integer, ArrayList<Pair> >similarityMatrixModel=new HashMap<>();
+            HashMap<Integer, ArrayList<Pair> >similarityMatrixModel;
             //numbers of neighbors to retain in the similarity matrix
-            int modelSize=0;
+            int modelSize;
 
+    /**
+     * constructor
+     */
     public ItemItemModel(){
-        
+        similarityMatrixModel=new HashMap<>();
+         int modelSize=0;
     }
 
     /**
@@ -38,38 +44,75 @@ public class ItemItemModel {
      * @return 
      */
     public ArrayList<Pair> getSimilarItems(Integer itemId){
-        return similarityMatrixModel.get(itemId);
+        ArrayList<Pair> similarItem;
+        ArrayList<Pair>similarItemsSorted =new ArrayList<Pair>();
+        //get items with the similarity 
+        
+        similarItem=similarityMatrixModel.get(itemId);
+        if(similarityMatrixModel==null)
+            System.out.println("similarityMatrixModels devuelve null ");
+        
+        
+        // Sorting
+        Collections.sort(similarItem , new Comparator<Pair>() {
+                @Override
+                public int compare(Pair p1, Pair p2)
+                {
+
+                    //return p1.getSimilitud().compareTo(p2.getSimilitud());
+                    if(p1.getSimilitud()>p2.getSimilitud())
+                        return -1;
+                    else if(p1.getSimilitud()<p2.getSimilitud())
+                        return 1;
+                    else return 0;
+                }
+        });
+        System.out.println("similarItem.size()= "+similarItem.size());
+        
+        if(similarItem.size() >= knn.neighborhoodSize_N){
+            for(int i=0; i<knn.neighborhoodSize_N;i++){
+                similarItemsSorted.add((Pair) similarItem.get(i));
+            }
+        }
+        
+        System.out.println("similarItemsSorted.size()= "+similarItemsSorted.size());
+        
+        //devolver los k similar items
+        
+        
+        return similarItemsSorted;
     }
     
     /**
-     * data model constructor
-     * @return 
+     * data model constructor ,build the SimilarityMatrixModel
+     * @return the similarity matrix
      */
     public  HashMap<Integer, ArrayList<Pair>> buildModel()
     {
-        //HashMap<Integer, ArrayList<Pair> > similarityMatrixModel=new HashMap<>();
-        
         //for each item get ratings 
         for (Map.Entry<Integer, List<Events>> entry : getItemEventDAO().entrySet()) {
-        Integer item1=entry.getKey();
-        List<Events> ratingsA=entry.getValue();
-            
-            //for each item, get ratings 
+            Integer item1=entry.getKey();
+            List<Events> ratingsA=entry.getValue();
             ArrayList itemSimilarity=new ArrayList<Pair>();
-            for (Map.Entry<Integer, List<Events>> entryB : getItemEventDAO().entrySet()) {
-                Integer item2=entryB.getKey();
-                List<Events> ratingsB=entryB.getValue();
+            if(ratingsA.size() >= knn.minNeighbor_k){
+                //for each item, get ratings 
+                for (Map.Entry<Integer, List<Events>> entryB : getItemEventDAO().entrySet()) {
+                    Integer item2=entryB.getKey();
+                    List<Events> ratingsB=entryB.getValue();
+                        //not calculate the similarity for the same item
+                        if(ratingsB.size() >= knn.minNeighbor_k && item1!=item2){
+                            //calculate the similarity between items 
+                            double similitud=determineSimilarity(ratingsA, ratingsB);
+                            //System.out.println("simiitud ="+similitud);
+                            Pair p=new Pair(item2, similitud);
+                            itemSimilarity.add(p);
+                        }
+                    similarityMatrixModel.put(item1, itemSimilarity);
+                }
+            }    
             
-                //calculate the similarity between items 
-                double similitud=determineSimilarity(ratingsA, ratingsB);
-                //System.out.println("simiitud ="+similitud);
-                Pair p=new Pair(item2, similitud);
-                itemSimilarity.add(p);
-            }
-            
-            similarityMatrixModel.put(item1, itemSimilarity);
         }
-        //System.out.println("tam  = "+similarityMatrixModel.size());
+        System.out.println("tam  = "+similarityMatrixModel.size());
         return similarityMatrixModel;
     }
     
