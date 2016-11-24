@@ -26,14 +26,12 @@ public class AccesoNOSQL extends InterfazCliente {
     
     /**
      * Constructor con parametros
-     * @param ho
-     * @param baseded
-     * @param puer
+     * @param cadena
      * @param use
      * @param pass 
      */
-    public AccesoNOSQL(String ho, String baseded, int puer, String use, String pass) {
-        super(ho, baseded, puer, use, pass);
+    public AccesoNOSQL( String use, String pass,String cadena) {
+        super( use, pass,cadena);
     }
     
  
@@ -49,7 +47,7 @@ public class AccesoNOSQL extends InterfazCliente {
      */
     public MongoCollection<Document> consultaBD(String baseDatos ,String coleccion)
     {
-        String direccion="mongodb://"+getUser()+":"+getPassword()+"@"+getHost()+":"+getPuerto()+"/"+getBaseDatos();
+        String direccion="mongodb://"+getUser()+":"+getPassword()+"@"+getCadenaConexion();
         //mongodb://bogdan:ar03pbo@ds033337.mongolab.com:33337/nosql
         MongoClientURI connectionString = new MongoClientURI(direccion);
         MongoClient mongoClient = new MongoClient(connectionString);
@@ -70,6 +68,7 @@ public class AccesoNOSQL extends InterfazCliente {
      * @param newuser
      * @param newpassword 
      */
+    /*
     @Override
     public void configurarConexionBD(String newhost, String newbasededatos, int newpuerto, String newuser, String newpassword) {
         setHost(newhost);
@@ -78,7 +77,7 @@ public class AccesoNOSQL extends InterfazCliente {
         setUser(newuser);
         setPassword(newpassword);
     }
-
+*/
     /**
      * Método para cargar en memoria los datos de la base de datos 
      */
@@ -103,7 +102,6 @@ public class AccesoNOSQL extends InterfazCliente {
         while(cursor.hasNext())
         {
             try {
-                Events evento=new Events();
                 String stringjson=cursor.next().toJson();
                 JSONObject obj1=new JSONObject(stringjson);
                 
@@ -112,11 +110,13 @@ public class AccesoNOSQL extends InterfazCliente {
                 String rating=obj1.getString("rating");
                 String timestamp=obj1.getString("timestamp");
                 
-                evento.setUserID(Integer.parseInt(userId));
-                evento.setMovieID(Integer.parseInt(movieID));
-                evento.setRating(Double.parseDouble(rating));
-                evento.setTimestamp(Integer.parseInt(timestamp));
+                User u=new User(Integer.parseInt(userId));
+                Item i= new Movie(Integer.parseInt(movieID));
                 
+                double rat=Double.parseDouble(rating);
+                int tim=Integer.parseInt(timestamp);
+                
+                Events evento=new Events(u, (Movie) i,rat,tim);
                 getEventsDAO().add(evento);
                 
             } catch (JSONException ex) {
@@ -175,7 +175,10 @@ public class AccesoNOSQL extends InterfazCliente {
                 JSONObject obj1=new JSONObject(stringjson);
                 
                 String userId=obj1.getString("userId");
-                getUserDAO().add(Integer.parseInt(userId));
+                User u=new User();
+                //Integer.parseInt(userId);
+                u.setUserId(Integer.parseInt(userId));
+                getUserDAO().add(u);
                 
             } catch (JSONException ex) {
                 Logger.getLogger(AccesoNOSQL.class.getName()).log(Level.SEVERE, null, ex);
@@ -190,20 +193,23 @@ public class AccesoNOSQL extends InterfazCliente {
     @Override
     public void cargarUserEventDAO() {
         try{
-            Iterator<Integer> itUser = getUserDAO().iterator();
-            while (itUser.hasNext())
-           {
-               Integer elemento=itUser.next();
-               List<Events> resEvent=new ArrayList<>();
-               Iterator<Events> itEvent = getEventsDAO().iterator();
-               while (itEvent.hasNext()) {
-                    if ((itEvent.next().getUserID())==elemento)
+            for(User u:getUserDAO())
+            {
+                //para cada usuario obtener sus eventos
+                
+                List<Events> resEvent=new ArrayList<>();
+               
+                
+		for(Events e:getEventsDAO()) {
+                    if (e.getUser().getUserId()==u.getUserId())
                     {
-                        resEvent.add(itEvent.next());
+                        resEvent.add(new Events(e));
+                    } else {
                     }
-                }
-                getUserEventDAO().put(elemento,resEvent);
-           }
+		} 
+                getUserEventDAO().put(u,resEvent);
+                
+            }
         }catch(Exception e)
         {
            System.out.println("no carga los datos en el metodo ");
@@ -218,19 +224,21 @@ public class AccesoNOSQL extends InterfazCliente {
     public void cargarItemEventDAO() {
         try
         {
-            Iterator<Movie> itItem = getItemsDAO().iterator();
-            while(itItem.hasNext())
+            for(Movie m:getItemsDAO())
             {
-                Integer elemento=itItem.next().getId();
-                Iterator<Events> itEvent = getEventsDAO().iterator();
-                List<Events> resEvent=new ArrayList<>();
-                while (itEvent.hasNext()) {
-                    if ((elemento==itEvent.next().getMovieID()) )
-                    {
-                        resEvent.add(itEvent.next());
+                Movie elemento=new Movie(m);
+                //recorrer los eventos
+                ArrayList<Events> resEvent=new ArrayList<>();
+                
+                for(Events e:getEventsDAO()) {
+                    if(e.getItem().getId()==elemento.getId())
+                    {    
+                        resEvent.add(new Events(e));
                     }
-                }
-                getItemEventDAO().put(elemento,resEvent);
+		}
+                //insertamos
+               // System.out.println("elemento"+elemento.getId());
+                getItemEventDAO().put(elemento, resEvent);   
             }
         }
         catch(Exception e)

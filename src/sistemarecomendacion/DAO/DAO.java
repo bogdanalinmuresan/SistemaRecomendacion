@@ -17,21 +17,21 @@ import java.util.Set;
  */
 public abstract class DAO {
      //users 
-    static Set<Integer> userDAO=new HashSet();
+    static Set userDAO=new HashSet<User>();
     //items
-    static ArrayList<Movie> itemsDAO=new ArrayList<>();
+    static ArrayList itemsDAO=new ArrayList<Movie>();
     //provides access to events by item ID.
-    static HashMap itemEventDAO =new HashMap< >();
+    static HashMap itemEventDAO =new HashMap<Movie,ArrayList<Events>>();
     //provides access to events by user ID.
-    static HashMap userEventDAO =new HashMap< >();
+    static HashMap userEventDAO =new HashMap<User,ArrayList<Events>>();
     //provides access to the database of events.(ratings)
-    static ArrayList eventsDAO=new ArrayList<>();
+    static ArrayList eventsDAO=new ArrayList<Events>();
     
      /**
      * Método selector 
      * @return Devuelve los usuarios 
      */
-    public static Set<Integer> getUserDAO(){return userDAO;}
+    public static Set<User> getUserDAO(){return userDAO;}
     /**
      * Método selector 
      * @return devuelve las peliculas
@@ -41,12 +41,12 @@ public abstract class DAO {
      * Método selector
      * @return los eventos de cada pelicula(ratings)
      */
-    public static HashMap<Integer,List<Events> > getItemEventDAO(){return itemEventDAO;}
+    public static HashMap<Movie,ArrayList<Events> > getItemEventDAO(){return itemEventDAO;}
     /**
      * Método selector
      * @return devuelve los eventos de cada usuario
      */
-    public static HashMap<Integer,List<Events> > getUserEventDAO(){return userEventDAO;}
+    public  static HashMap<User,List<Events> > getUserEventDAO(){return userEventDAO;}
     /**
      * Método selector 
      * @return devuelve los eventos (ratings)

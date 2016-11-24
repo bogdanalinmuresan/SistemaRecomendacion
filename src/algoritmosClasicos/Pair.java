@@ -5,19 +5,26 @@
  */
 package algoritmosClasicos;
 
+import sistemarecomendacion.DAO.Item;
+import sistemarecomendacion.DAO.Movie;
+
 /**
  *
  * @author bogdan
  */
 public class Pair   {
-    int item1=0;
+    Movie item1;
     double similitud=0.0;
+    
+    public Pair(){
+        item1=new Movie();
+    }
 
-    Pair(int i1 ,double similitud){
+    Pair(Movie i1 ,double similitud){
         this.item1=i1;
         this.similitud=similitud;
     }
-    public int getItem1(){return item1;}
+    public Item getItem1(){return item1;}
     public Double getSimilitud(){return similitud;}
     
 }

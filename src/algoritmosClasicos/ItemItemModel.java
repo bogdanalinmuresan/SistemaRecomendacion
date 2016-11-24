@@ -14,13 +14,15 @@ import java.util.List;
 import java.util.Map;
 import static sistemarecomendacion.DAO.DAO.getItemEventDAO;
 import sistemarecomendacion.DAO.Events;
+import sistemarecomendacion.DAO.Item;
+import sistemarecomendacion.DAO.Movie;
 
 /**
  *
  * @author bogdan
  */
 public class ItemItemModel {
-            HashMap<Integer, ArrayList<Pair> >similarityMatrixModel;
+            HashMap<Movie, ArrayList<Pair> >similarityMatrixModel;
             //numbers of neighbors to retain in the similarity matrix
            
 
@@ -28,93 +30,115 @@ public class ItemItemModel {
      * constructor
      */
     public ItemItemModel(){
-        similarityMatrixModel=new HashMap<>();
-         int modelSize=0;
+        similarityMatrixModel=new HashMap<Movie,ArrayList<Pair>> ();
+        
     }
 
     /**
      * get all the items of model
      * @return 
      */
-    public HashMap<Integer, ArrayList<Pair> > getItemsUniverse(){return similarityMatrixModel;}
+    public HashMap<Movie, ArrayList<Pair> > getItemsUniverse(){return similarityMatrixModel;}
     
     /**
-     * get all the items and its similarity with itemId, the similirity aren`t sorted
-     * @param itemId
+     * get all the items and its similarity 
+     * @param ite
      * @return 
      */
-    public ArrayList<Pair> getSimilarItems(Integer itemId){
-        ArrayList<Pair> similarItem;
-        ArrayList<Pair>similarItemsSorted =new ArrayList<Pair>();
-        //get items with the similarity 
+    public ArrayList<Pair> getSimilarItems(Movie ite){
         
-        similarItem=similarityMatrixModel.get(itemId);
-        if(similarityMatrixModel==null)
-            System.err.println("similarityMatrixModels devuelve null ");
+        //System.out.println("boolena getItemUniverse.get(ite) "+getItemsUniverse().containsKey(ite));
         
-        
-        // Sorting
-        Collections.sort(similarItem , new Comparator<Pair>() {
-                @Override
-                public int compare(Pair p1, Pair p2)
-                {
+        ArrayList<Pair> similarItem=getItemsUniverse().get(ite);
+        if(similarItem!=null){
+                //System.out.println("tam similarItem = "+similarItem.size());
+               // for(Pair p:similarItem){
+               //     System.out.println("p.getId = "+p.getItem1().getId());
+               // }
+                ArrayList<Pair> similarItemsSorted=new ArrayList<>();
+                //get items with the similarity 
 
-                    //return p1.getSimilitud().compareTo(p2.getSimilitud());
-                    if(p1.getSimilitud()>p2.getSimilitud())
-                        return -1;
-                    else if(p1.getSimilitud()<p2.getSimilitud())
-                        return 1;
-                    else return 0;
+                // Sorting
+                Collections.sort(similarItem , new Comparator<Pair>() {
+                        @Override
+                        public int compare(Pair p1, Pair p2)
+                        {
+                            //return p1.getSimilitud().compareTo(p2.getSimilitud());
+                            if(p1.getSimilitud()>p2.getSimilitud())
+                                return -1;
+                            else if(p1.getSimilitud()<p2.getSimilitud())
+                                return 1;
+                            else return 0;
+                        }
+                });
+
+                //System.out.println("similarItem.size()= "+similarItem.size());
+
+                if(similarItem.size() >= knn.neighborhoodSize_N){
+                    for(int i=0; i<knn.neighborhoodSize_N;i++){
+                        similarItemsSorted.add((Pair) similarItem.get(i));
+                    }
+
+                    return similarItemsSorted;
+                }else{
+                    return similarItem;
                 }
-        });
-        //System.out.println("similarItem.size()= "+similarItem.size());
-        
-        if(similarItem.size() >= knn.neighborhoodSize_N){
-            for(int i=0; i<knn.neighborhoodSize_N;i++){
-                similarItemsSorted.add((Pair) similarItem.get(i));
-            }
+        }else{
+            return null;
         }
-        
-        //System.out.println("similarItemsSorted.size()= "+similarItemsSorted.size());
-        
-        //devolver los k similar items
-        
-        
-        return similarItemsSorted;
-    }
+}
+      
+    
     
     /**
      * data model constructor ,build the SimilarityMatrixModel
      * @return the similarity matrix
      */
-    public  HashMap<Integer, ArrayList<Pair>> buildModel()
+    public  HashMap<Movie, ArrayList<Pair>> buildModel()
     {
+        ArrayList<Pair> itemSimilarity;
+        //System.out.println("itemSimilarity lo primero en builmodels"+itemSimilarity.size());
+        double similitud=0.0;
+        Pair p;
+        
         //for each item get ratings 
-        for (Map.Entry<Integer, List<Events>> entry : getItemEventDAO().entrySet()) {
-            Integer item1=entry.getKey();
-            List<Events> ratingsA=entry.getValue();
-            ArrayList itemSimilarity=new ArrayList<Pair>();
+        for (Map.Entry<Movie, ArrayList<Events>> entry : getItemEventDAO().entrySet()) {
+            Movie item1=entry.getKey();
+            
+            ArrayList<Events> ratingsA=entry.getValue();
+            
+            itemSimilarity=new ArrayList<Pair>();
             //select ItemVectorRating greater than threshold 
             if(ratingsA.size() >= knn.minNeighbor_k){
+                //System.out.println("itemAId = "+item1.getId());
+                //System.out.println("tam ratingsA = "+ratingsA.size());
                 //for each item, get ratings 
-                for (Map.Entry<Integer, List<Events>> entryB : getItemEventDAO().entrySet()) {
-                    Integer item2=entryB.getKey();
-                    List<Events> ratingsB=entryB.getValue();
+                for (Map.Entry<Movie, ArrayList<Events>> entryB : getItemEventDAO().entrySet()) {
+                    Movie item2=entryB.getKey();
+                    ArrayList<Events> ratingsB=entryB.getValue();
+                    
                         //not calculate the similarity for the same item
-                        if(ratingsB.size() >= knn.minNeighbor_k && item1!=item2){
+                        if(ratingsB.size() >= knn.minNeighbor_k && item1.getId()!=item2.getId()){
                             //calculate the similarity between items 
-                            double similitud=determineSimilarity(ratingsA, ratingsB);
+                            similitud=determineSimilarity(ratingsA, ratingsB);
                             //System.out.println("simiitud ="+similitud);
-                            Pair p=new Pair(item2, similitud);
+                            p=new Pair(item2, similitud);
                             itemSimilarity.add(p);
+                            //System.out.println("item "+item1.getId()+" itemSimilaritySize() "+itemSimilarity.size());
                         }
-                    similarityMatrixModel.put(item1, itemSimilarity);
+                        
                 }
-            }    
-            
+                similarityMatrixModel.put(item1, itemSimilarity);
+                
+            }   
+           
+               
+             
         }
-        //System.out.println("tam  = "+similarityMatrixModel.size());
-        return similarityMatrixModel;
+                // System.out.println("tam similarityMatrix model en builModel  = "+similarityMatrixModel.size());
+                //ArrayList<Pair> get = similarityMatrixModel.get(new Movie(16));
+                //System.out.println("tamaño de similarity matrix"+get.size());
+                return similarityMatrixModel;
     }
     
     /**

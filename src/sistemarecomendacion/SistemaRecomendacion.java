@@ -10,6 +10,9 @@ import sistemarecomendacion.DAO.AccesoJDBC;
 import sistemarecomendacion.DAO.AccesoNOSQL;
 import algoritmosClasicos.itemItemCF;
 import algoritmosClasicos.ItemItemModel;
+import sistemarecomendacion.DAO.Item;
+import sistemarecomendacion.DAO.Movie;
+import sistemarecomendacion.DAO.User;
 
 /**
  *
@@ -28,7 +31,8 @@ public class SistemaRecomendacion {
         
         
         /***********************Acceso  SQL****************************/
-        AccesoJDBC nuevoacceso= new AccesoJDBC("jdbc:mysql://localhost","sistemasderecomendaciontfg",3306,"root","");
+        String cadenaConexion="jdbc:mysql://localhost:3306/sistemasderecomendaciontfg";
+        AccesoJDBC nuevoacceso= new AccesoJDBC("root","",cadenaConexion);
         /*
         System.out.println("host = " +nuevoacceso.getHost());
         System.out.println("base de datos  = " +nuevoacceso.getBaseDatos());
@@ -40,24 +44,40 @@ public class SistemaRecomendacion {
         
         //nuevoacceso.cargarMoviesDao();
         //nuevoacceso.cargarEventosDao();
-       nuevoacceso.cargarDatosDAO();
-        System.out.println("Se han cargado los datos correctamente");
+        nuevoacceso.cargarDatosDAO();
+        //System.out.println("Se han cargado los datos correctamente");
         
-        
+        /*
         System.out.println("tamanio movies sql  "+nuevoacceso.getItemsDAO().size());
         System.out.println("tamanio eventos sql  "+nuevoacceso.getEventsDAO().size());
         System.out.println("tamanio usuarios sql  "+nuevoacceso.getUserDAO().size());
         System.out.println("tamanio itemEventDao sql  "+nuevoacceso.getItemEventDAO().size());
         System.out.println("tamanio userEventDao sql  "+nuevoacceso.getUserEventDAO().size());
+        */
         // System.out.println("tamanio userEventDao sql  "+nuevoacceso.userEventDAO.keySet().size());
         ItemItemModel itemItemModel=new ItemItemModel();
         //HashMap<Integer, ArrayList<Pair> > res=new HashMap<Integer, ArrayList<Pair> >();
         itemItemModel.buildModel();
         //res=itemItemModel.buildModel();
         itemItemCF itemitem=new itemItemCF(itemItemModel);
-        for(int i=0;i<10;i++){
-            System.out.println("prediction user "+i+" ="+itemitem.weightedSum(i,110));
-        }
+        /*for(int i=0;i<10;i++){
+            User user=new User(i);
+            Movie mov=new Movie(i);
+            System.out.println("prediction user "+i+" ="+itemitem.weightedSum(user,mov));
+        }*/
+        
+        
+        User u=new User(3);
+        Movie mov=new Movie(233);
+        double res=+itemitem.weightedSum(u,mov);
+        if(res==-1 || res==0)
+            System.out.println("El usuario ya ha votado esta pelicula");
+        else
+            if(res==-2)
+                System.out.println("No hay suficientes datos para predecir sobre esta pelicula");
+           
+                    
+        System.out.println("prediccion score ="+res);
       
         //System.out.println("value "+itemItem.itemVectorSimilarity(it.next().getValue(), it.next().getValue()));
         
@@ -105,15 +125,33 @@ public class SistemaRecomendacion {
         
         
         //*--------------------------------------------------------------------
-        String host="ds033337.mongolab.com";
-        String bd="nosql";
-        Integer puerto=33337;
+        //  String host="ds033337.mongolab.com";
+        
+        /*
         String user="bogdan";
         String pass="ar03pbo";
-        AccesoNOSQL nosql=new AccesoNOSQL(host, bd, puerto, user, pass);
-       
+        AccesoNOSQL nosql=new AccesoNOSQL( user, pass,"ds033337.mongolab.com:33337/nosql");
+        nosql.cargarDatosDAO();
         
-        //nosql.cargarDatosDAO();
+        ItemItemModel itemItemModel=new ItemItemModel();
+        //HashMap<Integer, ArrayList<Pair> > res=new HashMap<Integer, ArrayList<Pair> >();
+        itemItemModel.buildModel();
+        //res=itemItemModel.buildModel();
+        itemItemCF itemitem=new itemItemCF(itemItemModel);
+       
+        User u=new User(3);
+        Movie mov=new Movie(233);
+        double res=+itemitem.weightedSum(u,mov);
+        if(res==-1 || res==0)
+            System.out.println("El usuario ya ha votado esta pelicula");
+        else
+            if(res==-2)
+                System.out.println("No hay suficientes datos para predecir sobre esta pelicula");
+           
+                    
+        System.out.println("prediccion score nosql ="+res);
+        
+        */
         //--------------------------------------------------------------------*/
         
         

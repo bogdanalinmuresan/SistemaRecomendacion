@@ -5,24 +5,60 @@
  */
 package sistemarecomendacion.DAO;
 
+import java.util.Objects;
+
 /**
  *Clase que representa un pelicula 
  * @author bogdan
  */
-class Movie {
+public class Movie extends Item{
     
-    private int id ;
+    
     private String title;
     private String genre;
     
-    public int getId(){return id;}
+    public Movie(int i){
+        super(i);
+        this.title="";
+        this.genre="";
+    }
+    public Movie(){
+        super();
+        title="";
+        genre="";
+    }
+    
+    public Movie(Movie m){
+        super(m.getId());
+        this.setTitle(m.getTitle());
+        this.setGenre(m.getGenre());
+    }
+    
+    
+    
     public String getTitle(){return title;}
     public String getGenre(){return genre;}
     
-    public void setId(int nuevoID){this.id=nuevoID;}
+   
     public void setTitle(String nuevotitle){this.title=nuevotitle;}
     public void setGenre(String nuevogenre){this.genre=nuevogenre;}
     
-    
-    
+    @Override
+    public int hashCode(){
+        return Objects.hash(itemId);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Movie other = (Movie) obj;
+        
+        return Objects.equals(this.itemId, other.itemId);
+    }
+  
 }

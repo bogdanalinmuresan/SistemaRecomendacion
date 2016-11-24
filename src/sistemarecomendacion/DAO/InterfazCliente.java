@@ -15,45 +15,39 @@ package sistemarecomendacion.DAO;
 public abstract class InterfazCliente extends DAO {
 
     //atributos 
-    private String host;
-    private String basededatos;
-    private int puerto;
+    private String cadena;
     private String user;
     private String password;
     
     /**
      * Constructor con parametros
      * 
-     * @param ho
-     * @param baseded
-     * @param puer
-     * @param use
-     * @param pass 
+     * @param use usuario
+     * @param pass  contrasenia
+     * @param cadenaconexion cadean de conexion
      */
-    public InterfazCliente(String ho,String baseded,int puer,String use,String pass)
+    public InterfazCliente(String use,String pass,String  cadenaconexion)
     {
-        this.host=ho;
-        this.basededatos=baseded;
-        this.puerto=puer;
+        this.cadena=cadenaconexion;
         this.user=use;
         this.password=pass;
     }
     
     /**
-     * Metodo selector que devuelve el nombre del host
-     * @return el host
+     * Medodo modificador 
+     * @param cadena nueva cadena 
      */
-    public String getHost(){return host;}
+    public void setCadenaConexion(String cadena){
+        this.cadena=cadena;
+    }
     /**
-     * Devuelve el nombre de la base de datos a la que se conecta
-     * @return  La base de datos
+     * Método consultos
+     * @return cadena de conexion
      */
-    public String getBaseDatos(){return basededatos;}
-    /**
-     * Devuelve el puerto
-     * @return El puerto 
-     */
-    public int getPuerto(){return puerto;}
+    public String getCadenaConexion(){
+        return cadena;
+    }
+   
     /**
      * Devuelve el usuario
      * @return user
@@ -64,22 +58,7 @@ public abstract class InterfazCliente extends DAO {
      * @return La contraseña
      */
     public String getPassword(){return password;}
-    
-    /**
-     * Método para configurar el host de la conexión
-     * @param nuevoHost 
-     */
-    public void setHost(String nuevoHost){this.host=nuevoHost;}
-    /**
-     * Método que configura una base de datos
-     * @param nuevaBaseDatos 
-     */
-    public void setBaseDatos(String nuevaBaseDatos){this.basededatos=nuevaBaseDatos;}
-    /**
-     * Método para configurar el puerto
-     * @param nuevoPuerto 
-     */
-    public void setPuerto(int nuevoPuerto){this.puerto=nuevoPuerto;}
+
     /**
      * Método para configurar un usuario para la conexión con la base de datos
      * @param nuevoUser 
@@ -90,24 +69,5 @@ public abstract class InterfazCliente extends DAO {
      * @param nuevoPassword 
      */
     public void setPassword(String nuevoPassword){this.password=nuevoPassword;}
-    
-    
-    /**
-     * Método para cargar todos los datos en memoria de la fuente de datos proporcionada
-     */
-    //abstract public void cargarDatos();
-    
-    
-    /**
-     * Método para configurar la conexión a la la fuente de datos proporcionancio los 
-     * parametros necesarios
-     * 
-     * @param newhost
-     * @param newbasededatos
-     * @param newpuerto
-     * @param newuser
-     * @param newpassword 
-     */
-    abstract public void configurarConexionBD(String newhost,String newbasededatos,int newpuerto,String newuser,String newpassword);
  
 }

@@ -8,7 +8,6 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.sql.SQLException;
-import java.util.Iterator;
 
 /**
  *Clase que proporciona el acceso a una fuente de datos mysql para cargar en memoria
@@ -17,41 +16,17 @@ import java.util.Iterator;
  * @author bogdan
  */
 public class AccesoJDBC extends InterfazCliente {
-   
-    
-   //**************** Atributos de la clase **********************************// 
-   /*
-    //users 
-    private ArrayList<Integer> userDAO=new ArrayList<Integer>();
-    //items
-    private ArrayList<Movie> itemsDAO=new ArrayList<Movie>();
-    //provides access to events by item ID.
-    private HashMap itemEventDAO =new HashMap<Integer,List<Events> >();
-    //provides access to events by user ID.
-    private HashMap userEventDAO =new HashMap<Integer,List<Events> >();
-    //provides access to the database of events.(ratings)
-    private ArrayList eventsDAO=new ArrayList<Events>();
-    */
-    /**
-     * Método que devuelve los usuarios 
-     * @return los usuarios del sistema
-     */
-    
-
-    /*-------------------------------------------------------------------------*/
-    
+  
     /**
      * Constructor con párametros
      * 
-     * @param ho
-     * @param baseded
-     * @param puer
+     * @param cadena
      * @param use
      * @param pass 
      */
-    public AccesoJDBC(String ho,String baseded,int puer,String use,String pass)
+    public AccesoJDBC(String use,String pass,String cadena)
     {
-        super(ho,baseded,puer,use,pass);
+        super(use,pass,cadena);
     }
     
     /**
@@ -63,8 +38,9 @@ public class AccesoJDBC extends InterfazCliente {
         ResultSet rset=null;
         try{
              //      "jdbc:mysql://localhost:3306/sistemasderecomendaciontfg", "root", ""); // MySQL
-             String consu=getHost()+":"+getPuerto()+"/"+getBaseDatos();
-             Connection conn=DriverManager.getConnection(consu,getUser(),"");
+             //String consu=getCadenaConexion();
+            
+             Connection conn=DriverManager.getConnection(getCadenaConexion(),getUser(),getPassword());
              Statement stmt = conn.createStatement();
              rset = stmt.executeQuery(consulta);
              
@@ -75,24 +51,6 @@ public class AccesoJDBC extends InterfazCliente {
         
     }
     
- 
-    /**
-     * Método modificador para confgurar la conexión con la base de datos
-     * 
-     * @param newhost
-     * @param newbasededatos
-     * @param newpuerto
-     * @param newuser
-     * @param newpassword 
-     */
-    @Override
-    public void configurarConexionBD(String newhost, String newbasededatos, int newpuerto, String newuser, String newpassword) {
-        setHost(newhost);
-        setBaseDatos(newbasededatos);
-        setPuerto(newpuerto);
-        setUser(newuser);
-        setPassword(newpassword);
-    }
 
     /**
      * Método que carga en memoria todos los datos de la base de datos
@@ -120,13 +78,14 @@ public class AccesoJDBC extends InterfazCliente {
             ResultSet rset=consultaBD("SELECT * FROM `ratings`");
             
             while(rset.next()){
-                Events evento=new Events();
-                
-                evento.setUserID(Integer.parseInt(rset.getString("userId")));
-                evento.setMovieID(Integer.parseInt(rset.getString("movieId")));
-                evento.setRating(Double.parseDouble(rset.getString("rating")));
-                evento.setTimestamp(Integer.parseInt(rset.getString("timestamp")));
-                
+               
+                User u=new User(Integer.parseInt(rset.getString("userId")));
+                Item i=new Movie(Integer.parseInt(rset.getString("movieId")));
+                //evento.setUserID(Integer.parseInt(rset.getString("userId")));
+                //evento.setMovieID(Integer.parseInt(rset.getString("movieId")));
+                double sim=(Double.parseDouble(rset.getString("rating")));
+                int times=(Integer.parseInt(rset.getString("timestamp")));
+                Events evento=new Events(u, (Movie) i,sim,times);
                 getEventsDAO().add(evento);
                 
             }
@@ -170,7 +129,9 @@ public class AccesoJDBC extends InterfazCliente {
              ResultSet rset=consultaBD("SELECT DISTINCT userId FROM `ratings` ORDER BY `userId` ASC");
             
             while(rset.next()) {   // Move the cursor to the next row
-                getUserDAO().add(Integer.parseInt(rset.getString("userId")));
+                User u =new User();
+                u.setUserId(Integer.parseInt(rset.getString("userId")));
+                getUserDAO().add(u);
             }//fin while
              
         }catch(SQLException | NumberFormatException e)
@@ -185,21 +146,20 @@ public class AccesoJDBC extends InterfazCliente {
     @Override
     public void cargarUserEventDAO() {
         try{
-            Iterator<Integer> itUser = getUserDAO().iterator();
-            while (itUser.hasNext())
+            for(User u:getUserDAO())
             {
                 //para cada usuario obtener sus eventos
-                Integer elemento=itUser.next();
-                List<Events> resEvent=new ArrayList<>();
-                Iterator<Events> itEvent = getEventsDAO().iterator();
                 
-		while (itEvent.hasNext()) {
-                    if ((itEvent.next().getUserID())==elemento)
+                List<Events> resEvent=new ArrayList<>();
+                
+		for(Events e:getEventsDAO()) {
+                    if (e.getUser().getUserId()==u.getUserId())
                     {
-                        resEvent.add(itEvent.next());
+                        resEvent.add(e);
+                    } else {
                     }
 		} 
-                getUserEventDAO().put(elemento,resEvent);
+                getUserEventDAO().put(u,resEvent);
                 
             }
         }catch(Exception e ){
@@ -213,21 +173,22 @@ public class AccesoJDBC extends InterfazCliente {
     @Override
     public void cargarItemEventDAO() {
         try{
-             Iterator<Movie> itMovie = getItemsDAO().iterator();
-            while (itMovie.hasNext())
+           // Iterator<Movie> itMovie = getItemsDAO().iterator();
+            for(Movie m:getItemsDAO())
             {
-                Integer elemento=(Integer)itMovie.next().getId();
+                Movie elemento=new Movie(m);
                 //recorrer los eventos
-                List<Events> resEvent=new ArrayList<>();
-                Iterator<Events> itEvent = getEventsDAO().iterator();
-                while (itEvent.hasNext()) {
-                    if((itEvent.next().getMovieID())==elemento)
+                ArrayList<Events> resEvent=new ArrayList<>();
+                
+                for(Events e:getEventsDAO()) {
+                    if(e.getItem().getId()==elemento.getId())
                     {    
-                        resEvent.add(itEvent.next());
+                        resEvent.add(new Events(e));
                     }
 		}
-                //insertamos 
-                getItemEventDAO().put(elemento,resEvent);   
+                //insertamos
+               // System.out.println("elemento"+elemento.getId());
+                getItemEventDAO().put(elemento, resEvent);   
             }
         }catch(Exception e ){
             
