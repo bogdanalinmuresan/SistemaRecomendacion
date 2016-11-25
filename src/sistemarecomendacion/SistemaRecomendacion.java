@@ -10,6 +10,8 @@ import sistemarecomendacion.DAO.AccesoJDBC;
 import sistemarecomendacion.DAO.AccesoNOSQL;
 import algoritmosClasicos.itemItemCF;
 import algoritmosClasicos.ItemItemModel;
+import algoritmosClasicos.Pair;
+import java.util.ArrayList;
 import sistemarecomendacion.DAO.Item;
 import sistemarecomendacion.DAO.Movie;
 import sistemarecomendacion.DAO.User;
@@ -31,93 +33,46 @@ public class SistemaRecomendacion {
         
         
         /***********************Acceso  SQL****************************/
-        String cadenaConexion="jdbc:mysql://localhost:3306/sistemasderecomendaciontfg";
-        AccesoJDBC nuevoacceso= new AccesoJDBC("root","",cadenaConexion);
-        /*
-        System.out.println("host = " +nuevoacceso.getHost());
-        System.out.println("base de datos  = " +nuevoacceso.getBaseDatos());
-        System.out.println("puerto = " +nuevoacceso.getPuerto());
-        System.out.println("usuario = " +nuevoacceso.getUser());
-        System.out.println("pass = " +nuevoacceso.getPassword());
-        */
         
         
-        //nuevoacceso.cargarMoviesDao();
-        //nuevoacceso.cargarEventosDao();
+       
+        
+        String cadenaConexion="jdbc:mysql://localhost:3306/sistemarecomendaciontfg";
+        AccesoJDBC nuevoacceso= new AccesoJDBC("bogdan","123456",cadenaConexion);
+       
         nuevoacceso.cargarDatosDAO();
-        //System.out.println("Se han cargado los datos correctamente");
         
-        /*
-        System.out.println("tamanio movies sql  "+nuevoacceso.getItemsDAO().size());
-        System.out.println("tamanio eventos sql  "+nuevoacceso.getEventsDAO().size());
-        System.out.println("tamanio usuarios sql  "+nuevoacceso.getUserDAO().size());
-        System.out.println("tamanio itemEventDao sql  "+nuevoacceso.getItemEventDAO().size());
-        System.out.println("tamanio userEventDao sql  "+nuevoacceso.getUserEventDAO().size());
-        */
-        // System.out.println("tamanio userEventDao sql  "+nuevoacceso.userEventDAO.keySet().size());
         ItemItemModel itemItemModel=new ItemItemModel();
-        //HashMap<Integer, ArrayList<Pair> > res=new HashMap<Integer, ArrayList<Pair> >();
         itemItemModel.buildModel();
-        //res=itemItemModel.buildModel();
         itemItemCF itemitem=new itemItemCF(itemItemModel);
-        /*for(int i=0;i<10;i++){
-            User user=new User(i);
-            Movie mov=new Movie(i);
-            System.out.println("prediction user "+i+" ="+itemitem.weightedSum(user,mov));
-        }*/
         
+        User u=new User(1);
+        Movie mov=new Movie(15);
         
-        User u=new User(3);
-        Movie mov=new Movie(233);
+        ArrayList<Pair> top=new ArrayList<>();
+        top =itemitem.top10Recomendation(new User(1) );
+        
+        for (Pair top1 : top) {
+            System.out.println("item1 "+top1.getItem1().getId()+ "simility "+top1.getSimilitud() );
+        }
+        
         double res=+itemitem.weightedSum(u,mov);
+         System.out.println("prediccion score ="+res);
+        /*
         if(res==-1 || res==0)
             System.out.println("El usuario ya ha votado esta pelicula");
         else
             if(res==-2)
                 System.out.println("No hay suficientes datos para predecir sobre esta pelicula");
-           
-                    
-        System.out.println("prediccion score ="+res);
+            else{
+                if(res<-3)
+                System.out.println("La prediccion no es valida ");
+            }
+              */      
+       
+       
+       
       
-        //System.out.println("value "+itemItem.itemVectorSimilarity(it.next().getValue(), it.next().getValue()));
-        
-        
-        /*Cuenta el nr de eventos que tiene cada item*/
-        
-        //Integer contador=0;
-        /*
-        Iterator entries = nuevoacceso.getItemEventDAO().entrySet().iterator();
-        while (entries.hasNext()) {
-          Entry thisEntry = (Entry) entries.next();
-          Integer key = (Integer)thisEntry.getKey();
-          ArrayList<Events> value = (ArrayList<Events>) thisEntry.getValue();
-          System.out.println("item id   =" +key);
-          System.out.println("events tamanio =" +value.size());
-          //contador=contador+value.size();
-          
-        }
-        //System.out.println("contador =" +contador);
-       */
-        
-        
-      /*Cuenta el numero de eventos que tiene cada user
-        Iterator entries = nuevoacceso.getUserEventDAO().entrySet().iterator();
-        while (entries.hasNext()) {
-          Entry thisEntry = (Entry) entries.next();
-          Integer key = (Integer)thisEntry.getKey();
-          ArrayList<Events> value = (ArrayList<Events>) thisEntry.getValue();
-          System.out.println("user id   =" +key);
-          System.out.println("events tamanio =" +value.size());
-          
-        }
-          */  
-        /*
-        for(int i=0;i<=nuevoacceso.eventsDAO.size();i++){
-            Events evento=(Events) nuevoacceso.eventsDAO.get(i);
-            System.out.println(evento.getUserID());
-        }
-                */
-        
         
         /***********************Acceso No SQL****************************/
         
@@ -140,7 +95,7 @@ public class SistemaRecomendacion {
         itemItemCF itemitem=new itemItemCF(itemItemModel);
        
         User u=new User(3);
-        Movie mov=new Movie(233);
+        Movie mov=new Movie(2335);
         double res=+itemitem.weightedSum(u,mov);
         if(res==-1 || res==0)
             System.out.println("El usuario ya ha votado esta pelicula");
@@ -150,42 +105,14 @@ public class SistemaRecomendacion {
            
                     
         System.out.println("prediccion score nosql ="+res);
-        
         */
+        
         //--------------------------------------------------------------------*/
         
         
         
         
-        //System.out.println("tamanio peliculas Nosql" +nosql.getItemsDAO().size());
-        //System.out.println("tamanio usuarios Nosqll" +nosql.getUserDAO().size());
-        //System.out.println("tamanio evento Nosql" +nosql.getEventsDAO().size());
-        // System.out.println("tamanio userEventDao Nosql" +nosql.getUserEventDAO().size());
-        //System.out.println("tamanio itemEventDao Nosql" +nosql.getItemEventDAO().size());
-        
-        
-        /*****Muestra los userId y el tamaño de los eventos de cada uno*************/
-        
-        /*--------------------------------------------------------------------
-        Iterator it = nosql.getUserEventDAO().entrySet().iterator();
-        while (it.hasNext()) {
-            Map.Entry pair = (Map.Entry)it.next();
-            System.out.println("userId"+pair.getKey());
-            ArrayList<Events> eventos=new ArrayList<>();
-            eventos=(ArrayList<Events>) pair.getValue();
-            System.out.println("tamanios="+eventos.size());
-        }
-        ----------------------------------------------------------------------*/
-        /*
-        Iterator it = nosql.getItemEventDAO().entrySet().iterator();
-        while (it.hasNext()) {
-            Map.Entry pair = (Map.Entry)it.next();
-            System.out.println("itemId"+pair.getKey());
-            ArrayList<Events> eventos=new ArrayList<>();
-            eventos=(ArrayList<Events>) pair.getValue();
-            System.out.println("tamanios="+eventos.size());
-        }
-                */
+           
     }
  
 }

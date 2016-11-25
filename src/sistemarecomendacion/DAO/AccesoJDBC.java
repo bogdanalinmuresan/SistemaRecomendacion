@@ -37,15 +37,19 @@ public class AccesoJDBC extends InterfazCliente {
     public ResultSet consultaBD(String consulta){
         ResultSet rset=null;
         try{
-             //      "jdbc:mysql://localhost:3306/sistemasderecomendaciontfg", "root", ""); // MySQL
+             //      "jdbc:mysql://localhost:3306/sistemarecomendaciontfg", "root", ""); // MySQL
              //String consu=getCadenaConexion();
+            //System.out.println("cadena de conexion:"+getCadenaConexion());
+            //System.out.println("user:"+getUser());
+            //System.out.println("pass:"+getPassword());
             
-             Connection conn=DriverManager.getConnection(getCadenaConexion(),getUser(),getPassword());
-             Statement stmt = conn.createStatement();
-             rset = stmt.executeQuery(consulta);
+            Connection conn=DriverManager.getConnection(getCadenaConexion(),getUser(),getPassword());
+            Statement stmt = conn.createStatement();
+            rset = stmt.executeQuery(consulta);
              
         }catch(SQLException ex) {
-            System.out.println("error en conectar con la base de datos" );
+            System.out.println("error en conectar con la base de datos,comprueba que el servidor esta activo" );
+            System.out.println("error que coge"+ex);
         }
         return rset;
         
@@ -177,13 +181,14 @@ public class AccesoJDBC extends InterfazCliente {
             for(Movie m:getItemsDAO())
             {
                 Movie elemento=new Movie(m);
-                //recorrer los eventos
                 ArrayList<Events> resEvent=new ArrayList<>();
-                
+                //System.out.println("itemId: "+elemento.getId());
                 for(Events e:getEventsDAO()) {
-                    if(e.getItem().getId()==elemento.getId())
-                    {    
-                        resEvent.add(new Events(e));
+                    if(m.getId()==e.getItem().getId())
+                    {
+                        Events eve=new Events(e);
+                        resEvent.add(eve);
+                        //System.out.println(" itemId "+m.getId()+"event ItemId"+e.getItem().getId());
                     }
 		}
                 //insertamos

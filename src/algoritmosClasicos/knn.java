@@ -13,10 +13,12 @@ public interface knn {
     /**
      * most similar items in similarMatrix model,this is applied for each item to be scored
      */
-    public final int minNeighbor_k=2;
+    public final int minRatings=1;
     
     /**
      * Similar items
      */
-    public final int neighborhoodSize_N=2;
+    public final int neighborhoodSize_N=30;
+    
+    
 }

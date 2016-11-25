@@ -7,8 +7,12 @@ package algoritmosClasicos;
 
 import sistemarecomendacion.DAO.Events;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import static sistemarecomendacion.DAO.DAO.getEventsDAO;
 import static sistemarecomendacion.DAO.DAO.getItemEventDAO;
+import static sistemarecomendacion.DAO.DAO.getItemsDAO;
+import sistemarecomendacion.DAO.Item;
 import sistemarecomendacion.DAO.Movie;
 import sistemarecomendacion.DAO.User;
 /**
@@ -35,41 +39,53 @@ public class itemItemCF implements knn{
      */
     public double weightedSum(User u,Movie ite)
     {
-        double sumTop=0;
-        double sumBottom=1;
+        
         double res;
         
         //Movie m=new Movie(itemId);
         //System.out.println("tamañio geteventitem"+DAO.getItemEventDAO().get(ite).size());
         //int tem=DAO.getItemEventDAO().get(ite).size();
         //System.out.println("tam getItemEventDao() = "+tem);
-        ArrayList<Events>eventos=getItemEventDAO().get(ite);
-        if(eventos==null) System.out.println("es null ");
-        int tem=eventos.size();
+        ArrayList<Events>eventos=getEventsDAO();
+        if(eventos==null) System.out.println("devuelve null weightSum ");
+        int tam=eventos.size();
         boolean esta=false;
+       
         
-        for(int i=0;i<tem && !esta;i++){
-            if(u.getUserId()==eventos.get(i).getUser().getUserId())
-                esta=true;
-        }
-        if(esta){
-            res=-1;
-            //System.out.println("esta peli ya la ha votado el usuario ");
-        }else{
+        
             ArrayList<Pair> similarItem;
             similarItem=modelo.getSimilarItems(ite);
+            System.out.println("tam similar item "+similarItem.size());
+            System.out.println(" item "+ite.getId());
+            //for(Pair p:similarItem){
+                
+            //    System.out.println("similar item"+p.getItem1().getId()+" similitud : "+p.getSimilitud());
+            //}
             if(similarItem!=null){
                 //System.out.println("no hay elemento similares");
             
                    //System.out.println("similarItem.size() en weightSum"+similarItem.size());
                     //get the ratings for all the similar items(similar items.size()< minNeighbor) the user has seen
-                    double temp;
-                    for(int i=0; i< similarItem.size();i++){
-                        //get rating for userId and similarItem[i]
-                        temp=getRatingOfItemUserVoted(getEventsDAO(), u);
+                double sumTop=0;
+                double sumBottom=1;    
+                double temp;
+                //k most similar items that user u has also rated for some neightborhood
+                
+                for(int i=0; i< similarItem.size() ;i++){
+                    //get rating for userId and similarItem[i]
+                    temp=getRatingOfSimilarItemUserVoted(similarItem.get(i).getItem1(), u );
+                    if(temp!=-99){
+                        //System.out.println("el rating es "+temp);
                         sumTop+=temp*similarItem.get(i).getSimilitud();
                         sumBottom+=Math.abs(similarItem.get(i).getSimilitud());
+                    }else{
+                        
                     }
+                }
+                System.out.println("sum top "+sumTop);
+                System.out.println("sum bottonm "+sumBottom);
+                res=sumTop/sumBottom;
+                
             }else{
                 //no esta la pelicla en la similarityMatrixModel
                 return res=-2;
@@ -77,23 +93,50 @@ public class itemItemCF implements knn{
         //calculate the weighted sums
         
         //System.out.println("tam similar items"+similarItem.size());
-        } 
+         
         //System.out.println("res weightSum"+sumTop/sumBottom);
-        return res= sumTop/sumBottom;
+        return res;
         
     }
     
     /*find the ratings of a item that user has rate previously
      * 
      */
-    public double getRatingOfItemUserVoted(ArrayList<Events> v,User user)
+    public double getRatingOfSimilarItemUserVoted(Item  i,User u)
     {
-        for(Events e:v)
+        double rating=-99;
+        for(Events e:getEventsDAO())
         {
-            if(user.getUserId()==e.getItem().getId())
-                return e.getRating();
+           if(i.getId()==e.getItem().getId() && u.getUserId()==e.getUser().getUserId())
+                rating=e.getRating();
         }
-        return -1; 
+        return rating;
     }
-
+    
+          
+    public ArrayList<Pair> top10Recomendation(User u){
+        ArrayList<Item> res=new ArrayList<>();
+        ArrayList<Pair> resultado=new ArrayList<>();
+        double score;
+        for(int i =0;i<10;i++)
+        {
+            score=weightedSum(u, (Movie) getItemsDAO().get(i));
+            resultado.add(new Pair((Movie) getItemsDAO().get(i) ,score));
+        }
+        
+        Collections.sort(resultado , new Comparator<Pair>() {
+                @Override
+                public int compare(Pair p1, Pair p2)
+                {
+                    //return p1.getSimilitud().compareTo(p2.getSimilitud());
+                    if(p1.getSimilitud()>p2.getSimilitud())
+                        return -1;
+                    else if(p1.getSimilitud()<p2.getSimilitud())
+                        return 1;
+                    else return 0;
+                }
+        });
+        
+        return resultado;
+    }
 }

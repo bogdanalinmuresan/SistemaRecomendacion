@@ -16,6 +16,7 @@ import static sistemarecomendacion.DAO.DAO.getItemEventDAO;
 import sistemarecomendacion.DAO.Events;
 import sistemarecomendacion.DAO.Item;
 import sistemarecomendacion.DAO.Movie;
+import sistemarecomendacion.DAO.User;
 
 /**
  *
@@ -43,13 +44,19 @@ public class ItemItemModel {
     /**
      * get all the items and its similarity 
      * @param ite
-     * @return 
+     * @return null if item not found  in the Similarity Matrix Model
      */
     public ArrayList<Pair> getSimilarItems(Movie ite){
         
         //System.out.println("boolena getItemUniverse.get(ite) "+getItemsUniverse().containsKey(ite));
         
         ArrayList<Pair> similarItem=getItemsUniverse().get(ite);
+        /*
+        for(Pair p: similarItem)
+        {
+            //System.out.println("similar items  "+p.getItem1().getId()+": "+p.getSimilitud());
+        }
+        */
         if(similarItem!=null){
                 //System.out.println("tam similarItem = "+similarItem.size());
                // for(Pair p:similarItem){
@@ -57,7 +64,10 @@ public class ItemItemModel {
                // }
                 ArrayList<Pair> similarItemsSorted=new ArrayList<>();
                 //get items with the similarity 
-
+                //for(Pair p:similarItem){
+                //        System.out.println(" Similarity Items before sorted  , itemId  : "+p.getItem1().getId()+" similitud"+p.getSimilitud());
+                        
+                //    }
                 // Sorting
                 Collections.sort(similarItem , new Comparator<Pair>() {
                         @Override
@@ -71,23 +81,11 @@ public class ItemItemModel {
                             else return 0;
                         }
                 });
-
-                //System.out.println("similarItem.size()= "+similarItem.size());
-
-                if(similarItem.size() >= knn.neighborhoodSize_N){
-                    for(int i=0; i<knn.neighborhoodSize_N;i++){
-                        similarItemsSorted.add((Pair) similarItem.get(i));
-                    }
-
-                    return similarItemsSorted;
-                }else{
-                    return similarItem;
-                }
-        }else{
-            return null;
+          return similarItem;
         }
+        return null;
 }
-      
+
     
     
     /**
@@ -102,31 +100,33 @@ public class ItemItemModel {
         Pair p;
         
         //for each item get ratings 
-        for (Map.Entry<Movie, ArrayList<Events>> entry : getItemEventDAO().entrySet()) {
-            Movie item1=entry.getKey();
-            
-            ArrayList<Events> ratingsA=entry.getValue();
+        for (Map.Entry<Movie, ArrayList<Events>> entryA : getItemEventDAO().entrySet()) {
+            Movie item1=entryA.getKey();
+            ArrayList<Events> ratingsA=entryA.getValue();
+           //System.out.println("itemId "+item1.getId());
+            //System.out.println("tam rating "+ratingsA.size());
             
             itemSimilarity=new ArrayList<Pair>();
             //select ItemVectorRating greater than threshold 
-            if(ratingsA.size() >= knn.minNeighbor_k){
+            if(ratingsA.size() >= knn.minRatings){
                 //System.out.println("itemAId = "+item1.getId());
                 //System.out.println("tam ratingsA = "+ratingsA.size());
                 //for each item, get ratings 
                 for (Map.Entry<Movie, ArrayList<Events>> entryB : getItemEventDAO().entrySet()) {
+                    
                     Movie item2=entryB.getKey();
                     ArrayList<Events> ratingsB=entryB.getValue();
-                    
-                        //not calculate the similarity for the same item
-                        if(ratingsB.size() >= knn.minNeighbor_k && item1.getId()!=item2.getId()){
-                            //calculate the similarity between items 
-                            similitud=determineSimilarity(ratingsA, ratingsB);
-                            //System.out.println("simiitud ="+similitud);
-                            p=new Pair(item2, similitud);
-                            itemSimilarity.add(p);
-                            //System.out.println("item "+item1.getId()+" itemSimilaritySize() "+itemSimilarity.size());
-                        }
-                        
+                    if(item1.getId()!=item2.getId()){
+                            //not calculate the similarity for the same item
+                            if(ratingsB.size() >= knn.minRatings && item1.getId()!=item2.getId()){
+                                //calculate the similarity between items 
+                                similitud=determineSimilarity(ratingsA, ratingsB);
+                                //System.out.println("simiitud ="+similitud);
+                                p=new Pair(item2, similitud);
+                                itemSimilarity.add(p);
+                                //System.out.println("item "+item1.getId()+" itemSimilaritySize() "+itemSimilarity.size());
+                            }
+                    }
                 }
                 similarityMatrixModel.put(item1, itemSimilarity);
                 
@@ -138,6 +138,16 @@ public class ItemItemModel {
                 // System.out.println("tam similarityMatrix model en builModel  = "+similarityMatrixModel.size());
                 //ArrayList<Pair> get = similarityMatrixModel.get(new Movie(16));
                 //System.out.println("tamaño de similarity matrix"+get.size());
+        /*        
+        for(Map.Entry<Movie, ArrayList<Pair>> entryA : similarityMatrixModel.entrySet()){
+                     Movie item2=entryA.getKey();
+                    ArrayList<Pair> ratingsB=entryA.getValue();
+                    System.out.println("itemId = "+item2.getId());
+                    for(Pair par:ratingsB){
+                       System.out.println(" ItemId par :"+par.getItem1().getId()+"similitud"+par.getSimilitud());
+                    }
+                }
+                 */
                 return similarityMatrixModel;
     }
     
@@ -149,6 +159,7 @@ public class ItemItemModel {
      */
     public double itemVectorSimilarity(List<Events> eventos1,List<Events> eventos2)
     {
+        
         return determineSimilarity(eventos1, eventos2);
     }
     
@@ -185,8 +196,9 @@ public class ItemItemModel {
         }
       }
       
-      
-      return (dotProduct/(sqrt(magnitudeA)*sqrt(magnitudeB)));
+      double res=(dotProduct/(sqrt(magnitudeA)*sqrt(magnitudeB)));
+      //System.out.println("similitud entre ratings"+res);
+      return res;
     }
     
 }
