@@ -16,12 +16,19 @@ import sistemarecomendacion.DAO.User;
  */
 public class RecommenderApi {
     private RecommenderContext rc;
+    private ModelDataSet mds;
     
     public RecommenderApi(){
         rc=new RecommenderContext();
+        this.mds=new ModelDataSet();
     }
     
-    public void itemBased(ModelDataSet mds){
+    public RecommenderApi(ModelDataSet mds){
+        rc=new RecommenderContext();
+        this.mds=mds;
+    }
+    
+    public void itemBased(){
         ItemBased itB=new ItemBased(mds);
         rc.setAlgorithmType(itB);
         

@@ -11,7 +11,6 @@ import sistemarecomendacion.DAO.Events;
 import sistemarecomendacion.DAO.Item;
 import sistemarecomendacion.DAO.User;
 import Ratings.*;
-import sistemarecomendacion.DAO.Movie;
 
 /**
  *

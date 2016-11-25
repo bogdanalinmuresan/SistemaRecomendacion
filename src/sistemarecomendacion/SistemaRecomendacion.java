@@ -9,12 +9,6 @@ import Api.RecommenderApi;
 import Ratings.ModelDataSet;
 import org.json.JSONException;
 import sistemarecomendacion.DAO.AccesoJDBC;
-import sistemarecomendacion.DAO.AccesoNOSQL;
-import algoritmosClasicos.itemItemCF;
-import algoritmosClasicos.ItemItemModel;
-import algoritmosClasicos.Pair;
-import java.util.ArrayList;
-import sistemarecomendacion.DAO.Item;
 import sistemarecomendacion.DAO.Movie;
 import sistemarecomendacion.DAO.User;
 
@@ -44,8 +38,8 @@ public class SistemaRecomendacion {
        
         nuevoacceso.cargarDatosDAO();
         ModelDataSet mds=new ModelDataSet();
-        RecommenderApi rec=new RecommenderApi();
-        rec.itemBased(mds);
+        RecommenderApi rec=new RecommenderApi(mds);
+        rec.itemBased();
         double res;
         res=rec.prediction(new User(1), new Movie(15));
         System.out.println("prediccion = "+res);

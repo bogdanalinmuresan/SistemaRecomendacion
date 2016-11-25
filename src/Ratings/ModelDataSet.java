@@ -16,7 +16,6 @@ import static sistemarecomendacion.DAO.DAO.getItemEventDAO;
 import sistemarecomendacion.DAO.Events;
 import sistemarecomendacion.DAO.Movie;
 import Algorithms.CosineSimilarity;
-import java.util.List;
 import sistemarecomendacion.DAO.Item;
 
 /**
