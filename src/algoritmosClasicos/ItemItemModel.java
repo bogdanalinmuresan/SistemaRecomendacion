@@ -191,8 +191,7 @@ public class ItemItemModel {
 
             dotProduct+=ratingA*ratingB;
             magnitudeA+=ratingA*ratingA;
-            magnitudeB+=ratingB*ratingB;
-          
+            magnitudeB+=ratingB*ratingB;  
         }
       }
       

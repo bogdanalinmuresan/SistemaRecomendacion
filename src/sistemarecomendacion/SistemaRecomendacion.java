@@ -5,6 +5,8 @@
  */
 package sistemarecomendacion;
 
+import Api.RecommenderApi;
+import Ratings.ModelDataSet;
 import org.json.JSONException;
 import sistemarecomendacion.DAO.AccesoJDBC;
 import sistemarecomendacion.DAO.AccesoNOSQL;
@@ -41,6 +43,13 @@ public class SistemaRecomendacion {
         AccesoJDBC nuevoacceso= new AccesoJDBC("bogdan","123456",cadenaConexion);
        
         nuevoacceso.cargarDatosDAO();
+        ModelDataSet mds=new ModelDataSet();
+        RecommenderApi rec=new RecommenderApi();
+        rec.itemBased(mds);
+        double res;
+        res=rec.prediction(new User(1), new Movie(15));
+        System.out.println("prediccion = "+res);
+        /*
         
         ItemItemModel itemItemModel=new ItemItemModel();
         itemItemModel.buildModel();
@@ -58,7 +67,7 @@ public class SistemaRecomendacion {
         
         double res=+itemitem.weightedSum(u,mov);
          System.out.println("prediccion score ="+res);
-        /*
+       
         if(res==-1 || res==0)
             System.out.println("El usuario ya ha votado esta pelicula");
         else
@@ -68,9 +77,9 @@ public class SistemaRecomendacion {
                 if(res<-3)
                 System.out.println("La prediccion no es valida ");
             }
-              */      
+                   
        
-       
+       */
        
       
         
