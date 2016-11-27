@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package sistemarecomendacion.DAO;
+package Dao;
 
 /**
  *Clase abstracta que heredan las clases inferiores para acceder a la fuente de 

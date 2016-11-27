@@ -6,7 +6,7 @@
 package Algorithms;
 
 import java.util.ArrayList;
-import sistemarecomendacion.DAO.Events;
+import Dao.Events;
 
 /**
  *

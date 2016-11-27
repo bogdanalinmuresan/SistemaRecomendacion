@@ -7,7 +7,7 @@ package Algorithms;
 
 import static java.lang.Math.sqrt;
 import java.util.ArrayList;
-import sistemarecomendacion.DAO.Events;
+import Dao.Events;
 
 /**
  *

@@ -4,12 +4,13 @@
  * and open the template in the editor.
  */
 package Api;
+import Algorithms.BaseLinePredictor;
 import Algorithms.ItemBased;
 import Algorithms.RecommenderContext;
 import Ratings.ModelDataSet;
 import java.util.ArrayList;
-import sistemarecomendacion.DAO.Item;
-import sistemarecomendacion.DAO.User;
+import Dao.Item;
+import Dao.User;
 /**
  *
  * @author bogdan
@@ -34,11 +35,12 @@ public class RecommenderApi {
         
     }
     
-    public void baselinePrediction(ModelDataSet mds){
-        
+    public void baselinePrediction(){
+        BaseLinePredictor bsp=new BaseLinePredictor(mds);
+        rc.setAlgorithmType(bsp);
     }
     
-    public void contentBased(ModelDataSet mds){
+    public void contentBased(){
         
     }
     

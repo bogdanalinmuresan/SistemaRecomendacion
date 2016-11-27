@@ -5,8 +5,8 @@
  */
 package Algorithms;
 
-import sistemarecomendacion.DAO.Item;
-import sistemarecomendacion.DAO.Movie;
+import Dao.Item;
+import Dao.Movie;
 
 /**
  *

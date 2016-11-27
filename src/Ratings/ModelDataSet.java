@@ -12,11 +12,13 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
-import static sistemarecomendacion.DAO.DAO.getItemEventDAO;
-import sistemarecomendacion.DAO.Events;
-import sistemarecomendacion.DAO.Movie;
+import static Dao.DAO.getItemEventDAO;
+import Dao.Events;
+import Dao.Movie;
 import Algorithms.CosineSimilarity;
-import sistemarecomendacion.DAO.Item;
+import static Dao.DAO.getEventsDAO;
+import Dao.Item;
+import Dao.User;
 
 /**
  *
@@ -112,4 +114,22 @@ public class ModelDataSet implements Model{
         }
                 return similarityMatrixModel;
     }
+    
+    /**
+     * find the ratings of a item that user has rate previously
+     * @param i item 
+     * @param u user
+     * @return  rating, -99 if don vote the item
+     */
+    public double getRatingOfSimilarItemUserVoted(Item  i,User u)
+    {
+        double rating=-99;
+        for(Events e:getEventsDAO())
+        {
+           if(i.getId()==e.getItem().getId() && u.getUserId()==e.getUser().getUserId())
+                rating=e.getRating();
+        }
+        return rating;
+    }
 }
+

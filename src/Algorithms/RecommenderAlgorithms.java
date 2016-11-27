@@ -6,8 +6,8 @@
 package Algorithms;
 
 import java.util.ArrayList;
-import sistemarecomendacion.DAO.Item;
-import sistemarecomendacion.DAO.User;
+import Dao.Item;
+import Dao.User;
 
 /**
  *

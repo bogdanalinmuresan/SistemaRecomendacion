@@ -3,36 +3,34 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package sistemarecomendacion.DAO;
+package Dao;
 
 import java.util.Objects;
 
 /**
- *
+ *clase generica que representa un item en nuestro sistema
  * @author bogdan
  */
-public class User {
-    private int userId;
+public  class Item {
+    int itemId;
     
-    public User(){
+    public int getId() { return itemId; }
+    public void setId(int i) {this.itemId = i;}
     
+    public Item(int Id){
+        this.itemId=Id;
+    }
+    public Item(){
+        itemId=0;
     }
     
-    public User(int i){
-        this.userId=i;
+    public Item(Item i){
+        this.itemId=i.getId();
     }
-    
-    public User(User u){
-        this.userId=u.getUserId();
-    }
-  
-    public int getUserId() { return userId; }
-    public void setUserId(int i) {this.userId = i;}
     
     @Override
     public int hashCode(){
-        return Objects.hash(userId);
-        
+         return Objects.hash(itemId);
     }
 
     @Override
@@ -43,10 +41,11 @@ public class User {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final User other = (User) obj;
-        if (this.userId != other.userId) {
+        final Item other = (Item) obj;
+         if (this.itemId != other.itemId) {
             return false;
         }
         return true;
     }
+    
 }
