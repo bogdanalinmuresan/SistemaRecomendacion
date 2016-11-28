@@ -5,6 +5,7 @@
  */
 package Algorithms;
 
+import Dao.Pair;
 import Dao.Item;
 import Dao.User;
 import Ratings.ModelDataSet;
@@ -31,7 +32,7 @@ public class WeightSum extends ItemScorer implements ScoreMeasure{
 
     @Override
     public double score(User u, Item ite) {
-        double res=-99;
+        double res=0;
         //res ==-99 if user dont voted item i
         res=mds.getRatingOfSimilarItemUserVoted(ite, u );
         if(res==-99){
@@ -53,11 +54,12 @@ public class WeightSum extends ItemScorer implements ScoreMeasure{
                 }
                 res=sumTop/sumBottom;
             }else{
-                //no esta la pelicla en la similarityMatrixModel
+                //doesnt exit item i in the model mds
                 return res=-2;
             }
         }else{
-            return res;
+            //user has rated this item
+            return -1;
         } 
         
         return res;

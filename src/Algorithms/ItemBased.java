@@ -33,6 +33,12 @@ public class ItemBased extends ColaborativeFiltering{
         return res;
     }
 
+    /**
+     * 
+     * @param u user 
+     * @param ite item
+     * @return -1 if user has rated item ite  ,-2 if item isnt store in model ,must change knn interface variable    
+     */
     @Override
     public double predict(User u, Item ite) {
         double res=0;

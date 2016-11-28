@@ -32,13 +32,15 @@ public class BaseLinePredictor implements RecommenderAlgorithms{
 
     @Override
     public double predict(User u, Item i) {
-        double res=-99; 
+        double res=0; 
         res=mds.getRatingOfSimilarItemUserVoted(i, u);
+        //user hasnt voted item i 
         if(res==-99)
             res=globalMeanRating()+getStandardDeviationForUser(u)+getStandardDeviationForItem(i);
-        
-        return res;
-        
+        else{
+           return -1; 
+        }
+        return res; 
     }
     
     

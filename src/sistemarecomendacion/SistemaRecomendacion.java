@@ -27,6 +27,7 @@ public class SistemaRecomendacion {
         new User(352), new Movie(1229)
         new User(1), new Movie(967)
         new User(1), new Movie(15)
+        new User(1), new Movie(16) user has rated that item
         */
  
         String cadenaConexion="jdbc:mysql://localhost:3306/sistemarecomendaciontfg";
@@ -35,7 +36,7 @@ public class SistemaRecomendacion {
         nuevoacceso.cargarDatosDAO();
         ModelDataSet mds=new ModelDataSet();
         RecommenderApi rec=new RecommenderApi(mds);
-        //rec.itemBased();
+        
         rec.baselinePrediction();
         double res;
         res=rec.prediction(new User(1), new Movie(16));
