@@ -38,9 +38,11 @@ public  class Item {
         if (obj == null) {
             return false;
         }
+        /*
         if (getClass() != obj.getClass()) {
             return false;
         }
+                */
         final Item other = (Item) obj;
         return this.itemId == other.itemId;
     }

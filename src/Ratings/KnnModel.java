@@ -53,8 +53,8 @@ public class KnnModel implements InterfaceModel{
     public ArrayList<Pair> getSimilarItems(Item ite)
     { 
         ArrayList<Pair> similarItem=getItemsUniverse().get(ite);
-       System.out.println("tam similarItem en getSimilarItem()"+similarItem.size());
-       System.out.println("el elemento es"+ite.getId());
+        //System.out.println("tam similarItem en getSimilarItem()"+similarItem.size());
+        //System.out.println("el elemento es"+ite.getId());
         if(similarItem!=null){
             Collections.sort(similarItem , new Comparator<Pair>() {
                     @Override

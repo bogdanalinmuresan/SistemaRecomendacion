@@ -5,8 +5,6 @@
  */
 package Dao;
 
-import java.util.Objects;
-
 /**
  *Clase que representa un pelicula 
  * @author bogdan
@@ -42,7 +40,7 @@ public class Movie extends Item{
    
     public void setTitle(String nuevotitle){this.title=nuevotitle;}
     public void setGenre(String nuevogenre){this.genre=nuevogenre;}
-    
+    /*
     @Override
     public int hashCode(){
         return Objects.hash(getId());
@@ -60,5 +58,6 @@ public class Movie extends Item{
         
         return Objects.equals(this.getId(), other.getId());
     }
+    */
   
 }

@@ -7,10 +7,7 @@ package sistemarecomendacion;
 
 import Api.RecommenderApi;
 import Dao.AccessDataAPI;
-import Ratings.KnnModel;
 import org.json.JSONException;
-import Dao.AccessDataJDBC;
-import Dao.Item;
 import Dao.Movie;
 import Dao.User;
 import Ratings.ModelAPI;
@@ -53,7 +50,7 @@ public class SistemaRecomendacion {
         
         rec.itemBased();
         double resI;
-        resI=rec.prediction(new User(1), new Item(15));
+        resI=rec.prediction(new User(1), new Movie(15));
         System.out.println("prediccion ItemBased = "+resI);
              
         /***********************Acceso No SQL****************************/

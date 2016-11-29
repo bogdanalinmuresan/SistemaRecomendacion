@@ -1,2 +1,5 @@
 language: java
-install: ant deps
+ant: test
+os:
+  - linux
+  - osx

@@ -5,9 +5,6 @@
  */
 package Dao;
 
-import Dao.Item;
-import Dao.Movie;
-
 /**
  *
  * @author bogdan
