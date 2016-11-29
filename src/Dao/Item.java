@@ -42,10 +42,7 @@ public  class Item {
             return false;
         }
         final Item other = (Item) obj;
-         if (this.itemId != other.itemId) {
-            return false;
-        }
-        return true;
+        return Objects.equals(this.itemId, other.itemId);
     }
     
 }

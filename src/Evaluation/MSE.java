@@ -6,7 +6,7 @@
 package Evaluation;
 
 import Dao.Pair;
-import Ratings.ModelDataSet;
+import Ratings.KnnModel;
 import java.util.ArrayList;
 
 /**
@@ -15,7 +15,7 @@ import java.util.ArrayList;
  */
 public class MSE extends BasicAcurrancyErrorMetric implements EvaluationType {
 
-    public MSE(ModelDataSet mds) {
+    public MSE(KnnModel mds) {
         super(mds);
     }
 

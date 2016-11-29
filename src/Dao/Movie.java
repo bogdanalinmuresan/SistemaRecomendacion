@@ -45,7 +45,7 @@ public class Movie extends Item{
     
     @Override
     public int hashCode(){
-        return Objects.hash(itemId);
+        return Objects.hash(getId());
     }
 
     @Override
@@ -58,7 +58,7 @@ public class Movie extends Item{
         }
         final Movie other = (Movie) obj;
         
-        return Objects.equals(this.itemId, other.itemId);
+        return Objects.equals(this.getId(), other.getId());
     }
   
 }

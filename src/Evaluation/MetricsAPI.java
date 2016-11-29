@@ -6,7 +6,7 @@
 package Evaluation;
 
 import Dao.Pair;
-import Ratings.ModelDataSet;
+import Ratings.KnnModel;
 import java.util.ArrayList;
 
 /**
@@ -15,7 +15,7 @@ import java.util.ArrayList;
  */
 public class MetricsAPI {
     private MetricsContext mt;
-    private ModelDataSet mds;
+    private KnnModel mds;
     
     public void mae(){
         MAE mae=new MAE(mds);

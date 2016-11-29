@@ -12,26 +12,25 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
-import static Dao.DAO.getItemEventDAO;
 import Dao.Events;
-import Dao.Movie;
 import Algorithms.CosineSimilarity;
-import static Dao.DAO.getEventsDAO;
+import Dao.AccessDataAPI;
 import Dao.Item;
+import Dao.Movie;
 import Dao.User;
 
 /**
  *
  * @author bogdan
  */
-public class ModelDataSet implements Model{
+public class KnnModel implements InterfaceModel{
+    AccessDataAPI adapi;
     HashMap<Item, ArrayList<Pair> >similarityMatrixModel;
     
-     /**
-     * constructor
-     */
-    public ModelDataSet(){
+    
+    public KnnModel(AccessDataAPI ad){
         similarityMatrixModel=new HashMap<> ();
+        this.adapi=ad; 
         buildModel();
     }
     
@@ -39,18 +38,23 @@ public class ModelDataSet implements Model{
      * get all the items of model
      * @return 
      */
-    public HashMap<Item, ArrayList<Pair> > getItemsUniverse(){return similarityMatrixModel;}
+    @Override
+    public HashMap<Item, ArrayList<Pair> > getItemsUniverse(){
+        return similarityMatrixModel;
+    }
     
     
     /**
      * get all the items and its similarity 
      * @param ite
-     * @return null if item not found  in the Similarity Matrix Model
+     * @return null if item not found  in the Similarity Matrix InterfaceModel
      */
+    @Override
     public ArrayList<Pair> getSimilarItems(Item ite)
     { 
         ArrayList<Pair> similarItem=getItemsUniverse().get(ite);
-       
+       System.out.println("tam similarItem en getSimilarItem()"+similarItem.size());
+       System.out.println("el elemento es"+ite.getId());
         if(similarItem!=null){
             Collections.sort(similarItem , new Comparator<Pair>() {
                     @Override
@@ -70,9 +74,9 @@ public class ModelDataSet implements Model{
 }
      /**
      * data model constructor ,build the SimilarityMatrixModel
-     * @return the similarity matrix
      */
-    public  HashMap<Item, ArrayList<Pair>> buildModel()
+    @Override
+    public  void buildModel()
     {
         CosineSimilarity c=new CosineSimilarity();
         ArrayList<Pair> itemSimilarity;
@@ -81,25 +85,25 @@ public class ModelDataSet implements Model{
         Pair p;
         
         //for each item get ratings 
-        for (Map.Entry<Movie, ArrayList<Events>> entryA : getItemEventDAO().entrySet()) {
-            Movie item1=entryA.getKey();
+        for (Map.Entry<Item, ArrayList<Events>> entryA : adapi.getItemEvent().entrySet()) {
+            Item item1=entryA.getKey();
             ArrayList<Events> ratingsA=entryA.getValue();
            //System.out.println("itemId "+item1.getId());
             //System.out.println("tam rating "+ratingsA.size());
             
-            itemSimilarity=new ArrayList<Pair>();
+            itemSimilarity=new ArrayList<>();
             //select ItemVectorRating greater than threshold 
-            if(ratingsA.size() >= Model.minRatings){
+            if(ratingsA.size() >= InterfaceModel.minRatings){
                 //System.out.println("itemAId = "+item1.getId());
                 //System.out.println("tam ratingsA = "+ratingsA.size());
                 //for each item, get ratings 
-                for (Map.Entry<Movie, ArrayList<Events>> entryB : getItemEventDAO().entrySet()) {
+                for (Map.Entry<Item, ArrayList<Events>> entryB : adapi.getItemEvent().entrySet()) {
                     
-                    Movie item2=entryB.getKey();
+                    Item item2=entryB.getKey();
                     ArrayList<Events> ratingsB=entryB.getValue();
                     if(item1.getId()!=item2.getId()){
                         //not calculate the similarity for the same item
-                        if(ratingsB.size() >= Model.minRatings && item1.getId()!=item2.getId()){
+                        if(ratingsB.size() >= InterfaceModel.minRatings && item1.getId()!=item2.getId()){
                             //calculate the similarity between items 
                             similitud=c.determineSimilarity(ratingsA,ratingsB);
                             //System.out.println("simiitud ="+similitud);
@@ -109,27 +113,38 @@ public class ModelDataSet implements Model{
                         }
                     }
                 }
-            similarityMatrixModel.put(item1, itemSimilarity);
+                
+                getItemsUniverse().put(item1, itemSimilarity);
             }   
         }
-                return similarityMatrixModel;
+        System.out.println("tam getItemUniverse().size()"+getItemsUniverse().get(new Item(2)).size());        
     }
-    
+
     /**
      * find the ratings of a item that user has rate previously
      * @param i item 
      * @param u user
      * @return  rating, -99 if don vote the item
      */
-    public double getRatingOfSimilarItemUserVoted(Item  i,User u)
-    {
+    @Override
+    public double getRatingOfSimilarItemUserVoted(Item  i,User u){
         double rating=-99;
-        for(Events e:getEventsDAO())
+        boolean esta =false;
+        for(Events e:adapi.getEvents())
         {
-           if(i.getId()==e.getItem().getId() && u.getUserId()==e.getUser().getUserId())
+           if(i.getId()==e.getItem().getId() && u.getUserId()==e.getUser().getUserId()){
                 rating=e.getRating();
+                esta=true;
+                //System.out.println("entra en getRatingOfSimilarItemUserVoted(Item  i,User u) ");
+           }
         }
-        return rating;
+        if(esta)
+            return rating;
+        else
+            return -99;
     }
+
+    
+  
 }
 

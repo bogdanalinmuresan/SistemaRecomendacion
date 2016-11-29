@@ -6,16 +6,14 @@
 package Dao;
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.List;
 import java.sql.SQLException;
-
 /**
  *Clase que proporciona el acceso a una fuente de datos mysql para cargar en memoria
  *los datos
  * 
  * @author bogdan
  */
-public class AccesoJDBC extends InterfazCliente {
+public class AccessDataJDBC extends InterfazCliente {
   
     /**
      * Constructor con párametros
@@ -24,9 +22,10 @@ public class AccesoJDBC extends InterfazCliente {
      * @param use
      * @param pass 
      */
-    public AccesoJDBC(String use,String pass,String cadena)
+    public AccessDataJDBC(String use,String pass,String cadena)
     {
         super(use,pass,cadena);
+        cargarDatosDAO();
     }
     
     /**
@@ -154,7 +153,7 @@ public class AccesoJDBC extends InterfazCliente {
             {
                 //para cada usuario obtener sus eventos
                 
-                List<Events> resEvent=new ArrayList<>();
+                ArrayList<Events> resEvent=new ArrayList<>();
                 
 		for(Events e:getEventsDAO()) {
                     if (e.getUser().getUserId()==u.getUserId())
@@ -178,9 +177,9 @@ public class AccesoJDBC extends InterfazCliente {
     public void cargarItemEventDAO() {
         try{
            // Iterator<Movie> itMovie = getItemsDAO().iterator();
-            for(Movie m:getItemsDAO())
+            for(Item m:getItemsDAO())
             {
-                Movie elemento=new Movie(m);
+                Item elemento=new Item(m);
                 ArrayList<Events> resEvent=new ArrayList<>();
                 //System.out.println("itemId: "+elemento.getId());
                 for(Events e:getEventsDAO()) {
@@ -199,5 +198,8 @@ public class AccesoJDBC extends InterfazCliente {
             
         }
     }
+
+ 
+
 
 }

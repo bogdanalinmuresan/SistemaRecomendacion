@@ -19,7 +19,6 @@ public class RecommenderContext {
     
     
     public RecommenderContext(){
-        
     }
 
     public RecommenderAlgorithms getAlgorithType(){

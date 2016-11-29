@@ -7,36 +7,32 @@ package Api;
 import Algorithms.BaseLinePredictor;
 import Algorithms.ItemBased;
 import Algorithms.RecommenderContext;
-import Ratings.ModelDataSet;
 import java.util.ArrayList;
 import Dao.Item;
 import Dao.User;
+import Ratings.ModelAPI;
 /**
  *
  * @author bogdan
  */
 public class RecommenderApi {
     private RecommenderContext rc;
-    private ModelDataSet mds;
+    private ModelAPI modelapi;
     
-    public RecommenderApi(){
-        rc=new RecommenderContext();
-        this.mds=new ModelDataSet();
-    }
     
-    public RecommenderApi(ModelDataSet mds){
+    public RecommenderApi(ModelAPI mds){
         rc=new RecommenderContext();
-        this.mds=mds;
+        this.modelapi=mds;
     }
     
     public void itemBased(){
-        ItemBased itB=new ItemBased(mds);
+        ItemBased itB=new ItemBased(modelapi);
         rc.setAlgorithmType(itB);
         
     }
     
     public void baselinePrediction(){
-        BaseLinePredictor bsp=new BaseLinePredictor(mds);
+        BaseLinePredictor bsp=new BaseLinePredictor(modelapi);
         rc.setAlgorithmType(bsp);
     }
     

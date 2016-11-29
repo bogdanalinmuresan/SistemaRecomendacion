@@ -17,41 +17,41 @@ import java.util.Set;
  */
 public abstract class DAO {
      //users 
-    static Set userDAO=new HashSet<User>();
+    private  Set userDAO=new HashSet<User>();
     //items
-    static ArrayList itemsDAO=new ArrayList<Movie>();
+    private ArrayList itemsDAO=new ArrayList<Item>();
     //provides access to events by item ID.
-    static HashMap itemEventDAO =new HashMap<Movie,ArrayList<Events>>();
+    private HashMap itemEventDAO =new HashMap<Item,ArrayList<Events>>();
     //provides access to events by user ID.
-    static HashMap userEventDAO =new HashMap<User,ArrayList<Events>>();
+    private HashMap userEventDAO =new HashMap<User,ArrayList<Events>>();
     //provides access to the database of events.(ratings)
-    static ArrayList eventsDAO=new ArrayList<Events>();
+    private ArrayList eventsDAO=new ArrayList<Events>();
     
      /**
      * Método selector 
      * @return Devuelve los usuarios 
      */
-    public static Set<User> getUserDAO(){return userDAO;}
+    public   Set<User> getUserDAO(){return userDAO;}
     /**
      * Método selector 
      * @return devuelve las peliculas
      */
-    public static ArrayList<Movie> getItemsDAO(){return itemsDAO;}
+    public  ArrayList<Item> getItemsDAO(){return itemsDAO;}
     /**
      * Método selector
      * @return los eventos de cada pelicula(ratings)
      */
-    public static HashMap<Movie,ArrayList<Events> > getItemEventDAO(){return itemEventDAO;}
+    public HashMap<Item,ArrayList<Events> > getItemEventDAO(){return itemEventDAO;}
     /**
      * Método selector
      * @return devuelve los eventos de cada usuario
      */
-    public  static HashMap<User,List<Events> > getUserEventDAO(){return userEventDAO;}
+    public HashMap<User,ArrayList<Events> > getUserEventDAO(){return userEventDAO;}
     /**
      * Método selector 
      * @return devuelve los eventos (ratings)
      */
-    public static ArrayList<Events> getEventsDAO(){return eventsDAO;}
+    public  ArrayList<Events> getEventsDAO(){return eventsDAO;}
     
     public abstract void cargarDatosDAO();
     public abstract void cargarEventosDAO();

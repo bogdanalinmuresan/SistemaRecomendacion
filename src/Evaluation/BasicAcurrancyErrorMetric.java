@@ -5,24 +5,24 @@
  */
 package Evaluation;
 
-import Ratings.ModelDataSet;
+import Ratings.KnnModel;
 
 /**
  *
  * @author bogdan
  */
 public abstract class BasicAcurrancyErrorMetric {
-     ModelDataSet mds;
+     KnnModel mds;
      
-     public BasicAcurrancyErrorMetric(ModelDataSet mds){
+     public BasicAcurrancyErrorMetric(KnnModel mds){
          this.mds=mds;
      }
      
-    public ModelDataSet getModel(){
+    public KnnModel getModel(){
        return mds;
     }
     
-    public void setModel(ModelDataSet mds){
+    public void setModel(KnnModel mds){
         this.mds=mds;
     }
      

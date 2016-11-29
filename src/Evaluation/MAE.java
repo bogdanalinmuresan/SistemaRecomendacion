@@ -5,7 +5,7 @@
  */
 package Evaluation;
 
-import Ratings.ModelDataSet;
+import Ratings.KnnModel;
 import java.util.ArrayList;
 
 /**
@@ -15,7 +15,7 @@ import java.util.ArrayList;
 public class MAE extends BasicAcurrancyErrorMetric implements EvaluationType{
 
     
-    public MAE(ModelDataSet mds){
+    public MAE(KnnModel mds){
         super(mds);
     }
     

@@ -5,12 +5,10 @@
  */
 package Algorithms;
 
-import Dao.DAO.*;
-import static Dao.DAO.*;
 import Dao.Events;
 import Dao.Item;
 import Dao.User;
-import Ratings.ModelDataSet;
+import Ratings.ModelAPI;
 import java.util.ArrayList;
 
 /**
@@ -18,12 +16,14 @@ import java.util.ArrayList;
  * @author bogdan
  */
 public class BaseLinePredictor implements RecommenderAlgorithms{
+    ModelAPI accessModelApi;
     
     
-    ModelDataSet mds;
-    public BaseLinePredictor(ModelDataSet mds){
-        this.mds=mds;
+    public BaseLinePredictor(ModelAPI mapi){
+        this.accessModelApi=mapi;
     }
+    
+    
     
     @Override
     public ArrayList<Item> top10Recomendation(User u) {
@@ -32,26 +32,28 @@ public class BaseLinePredictor implements RecommenderAlgorithms{
 
     @Override
     public double predict(User u, Item i) {
-        double res=0; 
-        res=mds.getRatingOfSimilarItemUserVoted(i, u);
-        //user hasnt voted item i 
-        if(res==-99)
+        double res=-1; 
+        res=accessModelApi.getRatingOfSimilarItemUserVoted(i, u);
+        //System.out.println("res ="+res);
+        //user has not voted item i 
+        if(res==-99){
             res=globalMeanRating()+getStandardDeviationForUser(u)+getStandardDeviationForItem(i);
-        else{
-           return -1; 
-        }
-        return res; 
+            return res;
+        }else{
+            //item voted
+           return -2; 
+        } 
     }
     
     
     public double globalMeanRating(){
         double res=0;
-        
-        for(Events e:getEventsDAO()){
+        double tam=accessModelApi.getAccessDataApi().getEvents().size();
+        for(Events e:accessModelApi.getAccessDataApi().getEvents()){
             res+=e.getRating();
         }
         //System.out.println("global mean rating= "+res/getEventsDAO().size());
-        return res/getEventsDAO().size();
+        return res/tam;
     }
     
 
@@ -60,7 +62,7 @@ public class BaseLinePredictor implements RecommenderAlgorithms{
         double res=0;
         double itemUserVoted=0;
         //items user rated
-        for(Events e:getEventsDAO()){
+        for(Events e:accessModelApi.getAccessDataApi().getEvents()){
             if(u.getUserId()==e.getUser().getUserId()){
                 res+=e.getRating();
                 itemUserVoted++;
@@ -77,7 +79,7 @@ public class BaseLinePredictor implements RecommenderAlgorithms{
         double avg=0.0;
         double res=0.0;
         int userVotedItem = 0;
-        for(Events e:getEventsDAO()){
+        for(Events e:accessModelApi.getAccessDataApi().getEvents()){
             if((i.getId()==e.getItem().getId()) ){
                 res=res+e.getRating();
                 userVotedItem++;
@@ -95,7 +97,7 @@ public class BaseLinePredictor implements RecommenderAlgorithms{
         double sd=0;
         int tam=0;
         //movies seen by user 
-        for(Events e:getEventsDAO()){
+        for(Events e:accessModelApi.getAccessDataApi().getEvents()){
             if(u.getUserId()==e.getUser().getUserId()){
                sd+=Math.pow((e.getRating()-avg), 2);
                 tam++;
@@ -112,7 +114,7 @@ public class BaseLinePredictor implements RecommenderAlgorithms{
         double tam=0;
         double sd=0;
         
-        for(Events e:getEventsDAO()){
+        for(Events e:accessModelApi.getAccessDataApi().getEvents()){
             if(i.getId()==e.getItem().getId()){
                 sd+=Math.pow((e.getRating()-avg), 2);
                 tam++;

@@ -6,11 +6,14 @@
 package sistemarecomendacion;
 
 import Api.RecommenderApi;
-import Ratings.ModelDataSet;
+import Dao.AccessDataAPI;
+import Ratings.KnnModel;
 import org.json.JSONException;
-import Dao.AccesoJDBC;
+import Dao.AccessDataJDBC;
+import Dao.Item;
 import Dao.Movie;
 import Dao.User;
+import Ratings.ModelAPI;
 
 /**
  *
@@ -31,20 +34,26 @@ public class SistemaRecomendacion {
         */
  
         String cadenaConexion="jdbc:mysql://localhost:3306/sistemarecomendaciontfg";
-        AccesoJDBC nuevoacceso= new AccesoJDBC("bogdan","123456",cadenaConexion);
-       
-        nuevoacceso.cargarDatosDAO();
-        ModelDataSet mds=new ModelDataSet();
-        RecommenderApi rec=new RecommenderApi(mds);
+        //AccessDataJDBC nuevoacceso= new AccessDataJDBC("bogdan","123456",cadenaConexion);
+        //nuevoacceso.cargarDatosDAO();
+        
+        AccessDataAPI accesoDataApi=new AccessDataAPI();
+        accesoDataApi.accessSQL("bogdan","123456",cadenaConexion);
+        
+        
+        ModelAPI accesoModelo=new ModelAPI(accesoDataApi);
+        accesoModelo.knnModel();
+        
+        RecommenderApi rec=new RecommenderApi(accesoModelo);
         
         rec.baselinePrediction();
         double res;
-        res=rec.prediction(new User(1), new Movie(16));
+        res=rec.prediction(new User(1), new Movie(15));
         System.out.println("prediccion Baseline = "+res);
         
         rec.itemBased();
         double resI;
-        resI=rec.prediction(new User(1), new Movie(16));
+        resI=rec.prediction(new User(1), new Item(15));
         System.out.println("prediccion ItemBased = "+resI);
              
         /***********************Acceso No SQL****************************/

@@ -12,8 +12,6 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.bson.Document;
@@ -22,7 +20,7 @@ import org.json.*;
  *Clase para acceder a una base de datos no SQL en concreto MongoDb
  * @author bogdan
  */
-public class AccesoNOSQL extends InterfazCliente {
+public class AccessDataNOSQL extends InterfazCliente {
     
     /**
      * Constructor con parametros
@@ -30,8 +28,9 @@ public class AccesoNOSQL extends InterfazCliente {
      * @param use
      * @param pass 
      */
-    public AccesoNOSQL( String use, String pass,String cadena) {
+    public AccessDataNOSQL( String use, String pass,String cadena) {
         super( use, pass,cadena);
+        cargarDatosDAO();
     }
     
  
@@ -120,7 +119,7 @@ public class AccesoNOSQL extends InterfazCliente {
                 getEventsDAO().add(evento);
                 
             } catch (JSONException ex) {
-                Logger.getLogger(AccesoNOSQL.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(AccessDataNOSQL.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
         cursor.close();    
@@ -153,7 +152,7 @@ public class AccesoNOSQL extends InterfazCliente {
                 
                 getItemsDAO().add(peli);
             } catch (JSONException ex) {
-                Logger.getLogger(AccesoNOSQL.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(AccessDataNOSQL.class.getName()).log(Level.SEVERE, null, ex);
                 System.err.print("error en cargarItemsDAO en AccesoNoSQL");
             }
         }
@@ -181,7 +180,7 @@ public class AccesoNOSQL extends InterfazCliente {
                 getUserDAO().add(u);
                 
             } catch (JSONException ex) {
-                Logger.getLogger(AccesoNOSQL.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(AccessDataNOSQL.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
         cursor.close();
@@ -197,7 +196,7 @@ public class AccesoNOSQL extends InterfazCliente {
             {
                 //para cada usuario obtener sus eventos
                 
-                List<Events> resEvent=new ArrayList<>();
+                ArrayList<Events> resEvent=new ArrayList<>();
                
                 
 		for(Events e:getEventsDAO()) {
@@ -224,9 +223,9 @@ public class AccesoNOSQL extends InterfazCliente {
     public void cargarItemEventDAO() {
         try
         {
-            for(Movie m:getItemsDAO())
+            for(Item m:getItemsDAO())
             {
-                Movie elemento=new Movie(m);
+                Item elemento=new Item(m);
                 //recorrer los eventos
                 ArrayList<Events> resEvent=new ArrayList<>();
                 
@@ -246,5 +245,4 @@ public class AccesoNOSQL extends InterfazCliente {
             
         }
     }
-
 }

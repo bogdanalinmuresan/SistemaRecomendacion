@@ -17,13 +17,13 @@ import Ratings.*;
 public class ItemBased extends ColaborativeFiltering{
     private WeightSum ws;
     private CosineSimilarity c;
-    ModelDataSet mds;
+    ModelAPI mapi;
 
     public ItemBased() {
     }
     
-    public ItemBased(ModelDataSet mds){
-        this.mds=mds;
+    public ItemBased(ModelAPI mdapi){
+        this.mapi=mdapi;
     }
 
     @Override
@@ -37,13 +37,14 @@ public class ItemBased extends ColaborativeFiltering{
      * 
      * @param u user 
      * @param ite item
-     * @return -1 if user has rated item ite  ,-2 if item isnt store in model ,must change knn interface variable    
+     * @return -1 if user has rated item ite  ,-2 if item isnt store in model then it must change knn interface variable    
      */
     @Override
     public double predict(User u, Item ite) {
         double res=0;
-        ws=new WeightSum(u, ite, mds);
+        ws=new WeightSum(u, ite, mapi);
         res=ws.itemscore(u, ite);
+        
     return res;
     }
 

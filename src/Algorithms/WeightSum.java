@@ -8,7 +8,7 @@ package Algorithms;
 import Dao.Pair;
 import Dao.Item;
 import Dao.User;
-import Ratings.ModelDataSet;
+import Ratings.ModelAPI;
 import java.util.ArrayList;
 
 /**
@@ -16,13 +16,13 @@ import java.util.ArrayList;
  * @author bogdan
  */
 public class WeightSum extends ItemScorer implements ScoreMeasure{
-    ModelDataSet mds;
+    private ModelAPI modelapi;    
     
     public WeightSum(){ 
     }
     
-    public WeightSum(User u,Item i,ModelDataSet mds){
-        this.mds=mds;
+    public WeightSum(User u,Item i,ModelAPI modelapi){
+        this.modelapi=modelapi;
     }
 
     @Override
@@ -32,12 +32,13 @@ public class WeightSum extends ItemScorer implements ScoreMeasure{
 
     @Override
     public double score(User u, Item ite) {
-        double res=0;
+        
+        double res=-2;
         //res ==-99 if user dont voted item i
-        res=mds.getRatingOfSimilarItemUserVoted(ite, u );
+        res=modelapi.getRatingOfSimilarItemUserVoted(ite, u );
         if(res==-99){
             ArrayList<Pair> similarItem;
-            similarItem=mds.getSimilarItems(ite);
+            similarItem=modelapi.getSimilarItems(ite);
 
             if(similarItem!=null){
                 double sumTop=0;
@@ -45,7 +46,7 @@ public class WeightSum extends ItemScorer implements ScoreMeasure{
                 double temp;
                 for(int i=0; i< similarItem.size() ;i++){
                     //get rating for userId and similarItem[i]
-                    temp=mds.getRatingOfSimilarItemUserVoted(similarItem.get(i).getItem1(), u );
+                    temp=modelapi.getRatingOfSimilarItemUserVoted(similarItem.get(i).getItem1(), u );
                     //items that user voted ,dont mind
                     if(temp!=-99){
                         sumTop+=temp*similarItem.get(i).getSimilitud();
@@ -53,17 +54,13 @@ public class WeightSum extends ItemScorer implements ScoreMeasure{
                     }
                 }
                 res=sumTop/sumBottom;
+                return res;
             }else{
-                //doesnt exit item i in the model mds
+                //no esta la pelicla en la similarityMatrixModel
                 return res=-2;
             }
-        }else{
-            //user has rated this item
-            return -1;
-        } 
-        
-        return res;
-    
+        }
+        return -2;
     }
     
 }

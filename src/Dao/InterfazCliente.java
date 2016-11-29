@@ -69,5 +69,6 @@ public abstract class InterfazCliente extends DAO {
      * @param nuevoPassword 
      */
     public void setPassword(String nuevoPassword){this.password=nuevoPassword;}
- 
+    
+   
 }
