@@ -1,5 +1,4 @@
 language: java
 ant: test
 os:
-  - linux
   - osx
