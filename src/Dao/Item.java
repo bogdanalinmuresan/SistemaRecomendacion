@@ -42,7 +42,7 @@ public  class Item {
             return false;
         }
         final Item other = (Item) obj;
-        return Objects.equals(this.itemId, other.itemId);
+        return this.itemId == other.itemId;
     }
     
 }
