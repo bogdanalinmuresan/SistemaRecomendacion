@@ -19,6 +19,11 @@ public class MSE extends BasicAcurrancyErrorMetric implements EvaluationType {
     public MSE(EvaluationModel mds) {
         super(mds);
     }
+    
+    public MSE()
+    {
+        super();
+    }
 
     @Override
     public double calculate(ArrayList<PairEvaluation> predictionRating) {

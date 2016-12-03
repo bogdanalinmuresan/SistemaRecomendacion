@@ -52,11 +52,11 @@ public class EvaluationModel implements InterfaceModel {
     }
     public EvaluationModel(AccessDataAPI accessData,int k){
         this.adapi=accessData; 
-        divideBlocks();
         this.k=k;
-        buildModel();
-        loadItemsTrainBlock();
-        loadItemsEventsTrainBlock();
+        divideBlocks();
+        loadItemsTrainForTestBlock();
+        loadItemsEventsForTrainBlock();
+        buildModel(); 
     }
     
     public void divideBlocks(){
@@ -185,21 +185,32 @@ public class EvaluationModel implements InterfaceModel {
                             return getRatingsItemUserVotedTrainBlock4( i, u);
                     
         }
-        return getRatingsItemUserVotedTrainBlock0( i, u); 
+        return 0;
+         
     }
 
     @Override
     public void buildModel() {
-        buildModel0();
-        buildModel1();
-        buildModel2();
-        buildModel3();
-        buildModel4();
+        if (k==0){
+            buildModel0();
+        }else{
+            if(k==1)
+                buildModel1();
+            else
+                if(k==2)
+                    buildModel2();
+                else
+                    if(k==3)
+                        buildModel3();
+                    else
+                        if(k==4)
+                            buildModel4();
+                    
+        }
+        
     }
     
-    
-    
-    public void loadItemsTrainBlock0(){
+    public void loadIEventsTrainForTestBlock0(){
         //block 1 
         for(int i=0;i<getTestBlock1().size();i++){
             Events evento=new Events(getTestBlock1().get(i));
@@ -220,10 +231,11 @@ public class EvaluationModel implements InterfaceModel {
            Events evento=new Events(getTestBlock4().get(i));
            trainBlock0.add(evento);
         }
+        System.out.println("train Block tam"+trainBlock0.size());
         
         
     } 
-    public void loadItemsTrainBlock1(){
+    public void loadIEventsTrainForTestBlock1(){
         
         //block 0 
         for(int i=0;i<getTestBlock0().size();i++){
@@ -248,7 +260,7 @@ public class EvaluationModel implements InterfaceModel {
         
      
     }
-    public void loadItemsTrainBlock2(){
+    public void loadIEventsTrainForTestBlock2(){
          
         //block 0 
         for(int i=0;i<getTestBlock0().size();i++){
@@ -272,7 +284,7 @@ public class EvaluationModel implements InterfaceModel {
         }
         
     }
-    public void loadItemsTrainBlock3(){
+    public void loadIEventsTrainForTestBlock3(){
         
         //block 0 
         for(int i=0;i<getTestBlock0().size();i++){
@@ -296,7 +308,7 @@ public class EvaluationModel implements InterfaceModel {
         }
        
     }
-    public void loadItemsTrainBlock4(){
+    public void loadIEventsTrainForTestBlock4(){
          
         //block 0
         for(int i=0;i<getTestBlock0().size();i++){
@@ -321,27 +333,48 @@ public class EvaluationModel implements InterfaceModel {
        
     }
    
-    public void loadItemsTrainBlock(){
-        loadItemsTrainBlock0();
-        loadItemsTrainBlock1();
-        loadItemsTrainBlock2();
-        loadItemsTrainBlock3();
-        loadItemsTrainBlock4();
+    public void loadItemsTrainForTestBlock(){
+        if (k==0){
+            loadIEventsTrainForTestBlock0();
+        }else{
+            if(k==1)
+                loadIEventsTrainForTestBlock1();
+            else
+                if(k==2)
+                    loadIEventsTrainForTestBlock2();
+                else
+                    if(k==3)
+                        loadIEventsTrainForTestBlock3();
+                    else
+                        if(k==4)
+                            loadIEventsTrainForTestBlock4();
+                    
+        }
+      
     }
     
-    public void loadItemsEventsTrainBlock(){
-        loadItemEventsTrainBlock0();
-        loadItemEventsTrainBlock1();
-        loadItemEventsTrainBlock2();
-        loadItemEventsTrainBlock3();
-        loadItemEventsTrainBlock4();
+    public void loadItemsEventsForTrainBlock(){
+        if (k==0){
+            loadItemEventsForTrainBlock0();
+        }else{
+            if(k==1)
+                loadItemEventsForTrainBlock1();
+            else
+                if(k==2)
+                    loadItemEventsForTrainBlock2();
+                else
+                    if(k==3)
+                        loadItemEventsForTrainBlock3();
+                    else
+                        if(k==4)
+                            loadItemEventsForTrainBlock4();
+        }
     }
     
-    public void loadItemEventsTrainBlock0(){
+    public void loadItemEventsForTrainBlock0(){
         try{
            // Iterator<Movie> itMovie = getItemsDAO().iterator();
-            for(Item m:adapi.getItems())
-            {
+            for(Item m:getItems()){
                 Item elemento=new Item(m);
                 ArrayList<Events> resEvent=new ArrayList<>();
                 //System.out.println("itemId: "+elemento.getId());
@@ -355,13 +388,15 @@ public class EvaluationModel implements InterfaceModel {
 		}
                 //insertamos
                // System.out.println("elemento"+elemento.getId());
-                itemsEventsTrainBlock0.put(elemento, resEvent);   
+                itemsEventsTrainBlock0.put(elemento, resEvent); 
+                
             }
-        }catch(Exception e ){
             
+        }catch(Exception e ){
+            System.err.println("e = "+e);
         }
     }
-    public void loadItemEventsTrainBlock1(){
+    public void loadItemEventsForTrainBlock1(){
         try{
            // Iterator<Movie> itMovie = getItemsDAO().iterator();
             for(Item m:adapi.getItems())
@@ -385,7 +420,7 @@ public class EvaluationModel implements InterfaceModel {
             
         }
     }
-    public void loadItemEventsTrainBlock2(){
+    public void loadItemEventsForTrainBlock2(){
         try{
            // Iterator<Movie> itMovie = getItemsDAO().iterator();
             for(Item m:adapi.getItems())
@@ -409,7 +444,7 @@ public class EvaluationModel implements InterfaceModel {
             
         }
     }
-    public void loadItemEventsTrainBlock3(){
+    public void loadItemEventsForTrainBlock3(){
         try{
            // Iterator<Movie> itMovie = getItemsDAO().iterator();
             for(Item m:adapi.getItems())
@@ -433,7 +468,7 @@ public class EvaluationModel implements InterfaceModel {
             
         }
     }
-    public void loadItemEventsTrainBlock4(){
+    public void loadItemEventsForTrainBlock4(){
         try{
            // Iterator<Movie> itMovie = getItemsDAO().iterator();
             for(Item m:adapi.getItems())
@@ -484,7 +519,7 @@ public class EvaluationModel implements InterfaceModel {
                     ArrayList<Events> ratingsB=entryB.getValue();
                     if(item1.getId()!=item2.getId()){
                         //not calculate the similarity for the same item
-                        if(ratingsB.size() >= InterfaceModel.minRatings && item1.getId()!=item2.getId()){
+                        if(ratingsB.size() >= InterfaceModel.minRatings){
                             //calculate the similarity between items 
                             similitud=c.determineSimilarity(ratingsA,ratingsB);
                             //System.out.println("simiitud ="+similitud);
@@ -494,10 +529,23 @@ public class EvaluationModel implements InterfaceModel {
                         }
                     }
                 }
-                
                 similarityMatrixModel0.put(item1, itemSimilarity);
+                //System.out.println("elemento  "+item1.getId());
             }   
         }
+        /*
+        for (Map.Entry<Item,ArrayList<Pair> > entry : similarityMatrixModel0.entrySet()) {
+            Item key = entry.getKey();
+            ArrayList<Pair> value = entry.getValue();
+            System.out.println("-------------------------------------------------------------------------------------------- ");
+            System.out.println("elem = "+key.getId());
+            // ...
+            for(Pair s:value){
+                System.out.println("similar elem = "+s.getItem1().getId());
+                System.out.println("similitud = "+s.getSimilitud());
+            }
+        }
+                */
     }
     public void buildModel1(){
         CosineSimilarity c=new CosineSimilarity();
@@ -525,7 +573,7 @@ public class EvaluationModel implements InterfaceModel {
                     ArrayList<Events> ratingsB=entryB.getValue();
                     if(item1.getId()!=item2.getId()){
                         //not calculate the similarity for the same item
-                        if(ratingsB.size() >= InterfaceModel.minRatings && item1.getId()!=item2.getId()){
+                        if(ratingsB.size() >= InterfaceModel.minRatings){
                             //calculate the similarity between items 
                             similitud=c.determineSimilarity(ratingsA,ratingsB);
                             //System.out.println("simiitud ="+similitud);
@@ -566,7 +614,7 @@ public class EvaluationModel implements InterfaceModel {
                     ArrayList<Events> ratingsB=entryB.getValue();
                     if(item1.getId()!=item2.getId()){
                         //not calculate the similarity for the same item
-                        if(ratingsB.size() >= InterfaceModel.minRatings && item1.getId()!=item2.getId()){
+                        if(ratingsB.size() >= InterfaceModel.minRatings){
                             //calculate the similarity between items 
                             similitud=c.determineSimilarity(ratingsA,ratingsB);
                             //System.out.println("simiitud ="+similitud);
@@ -607,7 +655,7 @@ public class EvaluationModel implements InterfaceModel {
                     ArrayList<Events> ratingsB=entryB.getValue();
                     if(item1.getId()!=item2.getId()){
                         //not calculate the similarity for the same item
-                        if(ratingsB.size() >= InterfaceModel.minRatings && item1.getId()!=item2.getId()){
+                        if(ratingsB.size() >= InterfaceModel.minRatings ){
                             //calculate the similarity between items 
                             similitud=c.determineSimilarity(ratingsA,ratingsB);
                             //System.out.println("simiitud ="+similitud);

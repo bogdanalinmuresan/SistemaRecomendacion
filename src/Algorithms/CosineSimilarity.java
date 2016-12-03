@@ -22,38 +22,41 @@ public class CosineSimilarity extends ItemSimilarity implements SimilarityCalcul
     @Override
     public double determineSimilarity(ArrayList<Events> ratingsA, ArrayList<Events> ratingsB) 
     {
-      float dotProduct=0;
-      float magnitudeA=0;
-      float magnitudeB=0;
-      //float resultado=0;
-      double ratingA=0;
-      double ratingB=0;
-      
-      if(ratingsA.size()>ratingsB.size()){
-        for(int i=0;i<ratingsB.size();i++)
-        {
-            ratingA=ratingsA.get(i).getRating();
-            ratingB=ratingsB.get(i).getRating();
-
-            dotProduct+=ratingA*ratingB;
-            magnitudeA+=ratingA*ratingA;
-            magnitudeB+=ratingB*ratingB;
-          
+        double res=0;
+        float dotProduct=0;
+        float magnitudeA=0;
+        float magnitudeB=0;
+        //float resultado=0;
+        double ratingA;
+        double ratingB;
+        if(!ratingsB.isEmpty() && !ratingsA.isEmpty()){
+            if(ratingsA.size()>ratingsB.size()){
+                for(int i=0;i<ratingsB.size();i++)
+                {
+                    ratingA=ratingsA.get(i).getRating();
+                    ratingB=ratingsB.get(i).getRating();
+                    
+                    dotProduct+=ratingA*ratingB;
+                    magnitudeA+=ratingA*ratingA;
+                    magnitudeB+=ratingB*ratingB;
+                    
+                }
+            }else{
+                for(int i=0;i<ratingsA.size();i++)
+                {
+                    ratingA=ratingsA.get(i).getRating();
+                    ratingB=ratingsB.get(i).getRating();
+                    
+                    dotProduct+=ratingA*ratingB;
+                    magnitudeA+=ratingA*ratingA;
+                    magnitudeB+=ratingB*ratingB;
+                    
+                }
+            }
+            res=(dotProduct/(sqrt(magnitudeA)*sqrt(magnitudeB)));
+        } else {
         }
-      }else{
-          for(int i=0;i<ratingsA.size();i++)
-        {
-            ratingA=ratingsA.get(i).getRating();
-            ratingB=ratingsB.get(i).getRating();
-
-            dotProduct+=ratingA*ratingB;
-            magnitudeA+=ratingA*ratingA;
-            magnitudeB+=ratingB*ratingB;
-          
-        }
-      }
       
-      double res=(dotProduct/(sqrt(magnitudeA)*sqrt(magnitudeB)));
       //System.out.println("similitud entre ratings"+res);
       return res;
     }

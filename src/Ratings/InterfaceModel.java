@@ -21,7 +21,7 @@ public interface InterfaceModel {
     /**
      * most similar items in similarMatrix model,this is applied for each item to be scored
      */
-    public final int minRatings=1;
+    public final int minRatings=0;
     
     /**
      * Similar items

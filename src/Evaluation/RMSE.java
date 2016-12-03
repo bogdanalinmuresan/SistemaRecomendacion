@@ -19,6 +19,10 @@ public class RMSE extends BasicAcurrancyErrorMetric implements EvaluationType {
     public RMSE(EvaluationModel mds) {
         super(mds);
     }
+    
+    public RMSE(){
+        super();
+    }
 
     @Override
     public double calculate(ArrayList<PairEvaluation> predictionRating) {

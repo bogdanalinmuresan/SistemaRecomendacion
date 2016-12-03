@@ -18,8 +18,10 @@ import Dao.Movie;
 import Dao.User;
 import Evaluation.EvaluationType;
 import Evaluation.MAE;
+import Evaluation.MSE;
 import Evaluation.MetricsAPI;
 import Evaluation.PairEvaluation;
+import Evaluation.RMSE;
 import Ratings.EvaluationModel;
 import Ratings.ModelAPI;
 import java.util.ArrayList;
@@ -99,7 +101,7 @@ public class SistemaRecomendacion {
         
         ArrayList<Events> bloque0=evalModel.getTestBlock0();
         
-        for(int i=0; i<bloque0.size();i++){
+        for(int i=0; i<20;i++){
             PairEvaluation entradaBaseline=new PairEvaluation();
             PairEvaluation entradaItem=new PairEvaluation();
             Events evento=new Events(bloque0.get(i));
@@ -107,34 +109,54 @@ public class SistemaRecomendacion {
             predictionBaseline=recbaseline.prediction(evento.getUser() ,evento.getItem());
             predictionItem=recItem.prediction(evento.getUser() ,evento.getItem());
             
-            //System.out.println("prediccion Baseline = "+predictionBaseline);
-            if(predictionItem!=-2)
+            System.out.println("prediccion Baseline = "+predictionBaseline);
+            //if(predictionItem!=-2)
                 System.out.println("prediccion Item = "+predictionItem);
             //---
             entradaBaseline.setFirst(predictionBaseline);
             entradaBaseline.setSecond(evento.getRating());
             
             entradaItem.setFirst(predictionItem);
-            entradaItem.setFirst(evento.getRating());
+            entradaItem.setSecond(evento.getRating());
             
             resPredictionBaseline.add(entradaBaseline);
             resPredictionItem.add(entradaItem);
         }
-        
+        for(PairEvaluation p:resPredictionItem){
+            System.out.println("1 = "+p.getFirst()+"2 ="+p.getSecond());
+        }
         
         MetricsAPI accessMetrics=new MetricsAPI();
         EvaluationType mae=new MAE();
         accessMetrics.setMetric(mae);
         
         
+        
         double resultadoMae=0;
+         double resultadoItem=0;
+         
         resultadoMae=mae.calculate(resPredictionBaseline);
         System.out.println("mae baseline "+resultadoMae);
         
-        double resultadoItem=0;
         resultadoItem=mae.calculate(resPredictionItem);
         System.out.println("mae item "+resultadoItem);
+        
+        
+        EvaluationType mse=new MSE();
+        accessMetrics.setMetric(mse);
+        resultadoMae=mse.calculate(resPredictionBaseline);
+        System.out.println("mse baseline "+resultadoMae);
+        
+        resultadoItem=mse.calculate(resPredictionItem);
+        System.out.println("mse item "+resultadoItem);
   
+        EvaluationType rmse=new RMSE();
+        accessMetrics.setMetric(rmse);
+        resultadoMae=rmse.calculate(resPredictionBaseline);
+        System.out.println("rmse baseline "+resultadoMae);
+        
+        resultadoItem=rmse.calculate(resPredictionItem);
+        System.out.println("rmse item "+resultadoItem);
         /**********************************************************************/
         
         /***********************************************************************/

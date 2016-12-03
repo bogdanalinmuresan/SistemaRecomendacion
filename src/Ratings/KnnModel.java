@@ -107,7 +107,7 @@ public class KnnModel implements InterfaceModel{
                     ArrayList<Events> ratingsB=entryB.getValue();
                     if(item1.getId()!=item2.getId()){
                         //not calculate the similarity for the same item
-                        if(ratingsB.size() >= InterfaceModel.minRatings && item1.getId()!=item2.getId()){
+                        if(ratingsB.size() >= InterfaceModel.minRatings){
                             //calculate the similarity between items 
                             similitud=c.determineSimilarity(ratingsA,ratingsB);
                             //System.out.println("simiitud ="+similitud);

@@ -34,6 +34,8 @@ public class ItemBased extends ColaborativeFiltering{
     @Override
     public ArrayList<Item> top10Recomendation(User u) {
         ArrayList<Item> res=new ArrayList<>();
+        //10 items ,user rate ,and the the 10 most similar items 
+        
         
         return res;
     }

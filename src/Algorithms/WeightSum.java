@@ -37,19 +37,20 @@ public class WeightSum extends ItemScorer implements ScoreMeasure{
     @Override
     public double score(User u, Item ite) {
         
-        double res=-2;
+        double res=0;
         //res ==-99 if user dont voted item i
         res=modelapi.getRatingOfSimilarItemUserVoted(ite, u );
-        //System.out.print("res en weight sum="+res);
-        if(res==-99){
+        //System.out.print("res en weight sum= "+res);
+        if(res==-99.0){
             ArrayList<Pair> similarItem;
             similarItem=modelapi.getSimilarItems(ite);
-
+            //System.out.println("similarItem.size()"+similarItem.size());
             if(similarItem!=null){
                 double sumTop=0;
                 double sumBottom=1;    
                 double temp;
                 for(int i=0; i< similarItem.size() ;i++){
+                    //System.out.println("similarItem.get("+i+") "+similarItem.get(i).getSimilitud());
                     //get rating for userId and similarItem[i]
                     temp=modelapi.getRatingOfSimilarItemUserVoted(similarItem.get(i).getItem1(), u );
                     //items that user voted ,dont mind
@@ -59,13 +60,15 @@ public class WeightSum extends ItemScorer implements ScoreMeasure{
                     }
                 }
                 res=sumTop/sumBottom;
+               // System.out.println("res dentro ="+res);
                 return res;
             }else{
                 //no esta la pelicla en la similarityMatrixModel
+                //System.out.println("devuelve -2 porque no esta en la matrix\n");
                 return res=-2;
             }
         }
-        return -2;
+        return res;
     }
     
 }
