@@ -21,7 +21,11 @@ public class WeightSum extends ItemScorer implements ScoreMeasure{
     public WeightSum(){ 
     }
     
-    public WeightSum(User u,Item i,ModelAPI modelapi){
+    public WeightSum(ModelAPI modelapi){
+        this.modelapi=modelapi;
+    }
+    
+    public void setModelApi(ModelAPI modelapi){
         this.modelapi=modelapi;
     }
 
@@ -36,6 +40,7 @@ public class WeightSum extends ItemScorer implements ScoreMeasure{
         double res=-2;
         //res ==-99 if user dont voted item i
         res=modelapi.getRatingOfSimilarItemUserVoted(ite, u );
+        //System.out.print("res en weight sum="+res);
         if(res==-99){
             ArrayList<Pair> similarItem;
             similarItem=modelapi.getSimilarItems(ite);

@@ -16,8 +16,8 @@ import Dao.Events;
 import Algorithms.CosineSimilarity;
 import Dao.AccessDataAPI;
 import Dao.Item;
-import Dao.Movie;
 import Dao.User;
+import java.util.Set;
 
 /**
  *
@@ -32,6 +32,10 @@ public class KnnModel implements InterfaceModel{
         similarityMatrixModel=new HashMap<> ();
         this.adapi=ad; 
         buildModel();
+    }
+    
+    public AccessDataAPI getAccessDataApi(){
+        return adapi;
     }
     
      /**
@@ -71,7 +75,7 @@ public class KnnModel implements InterfaceModel{
           return similarItem;
         }
         return null;
-}
+    }
      /**
      * data model constructor ,build the SimilarityMatrixModel
      */
@@ -117,7 +121,7 @@ public class KnnModel implements InterfaceModel{
                 getItemsUniverse().put(item1, itemSimilarity);
             }   
         }
-        System.out.println("tam getItemUniverse().size()"+getItemsUniverse().get(new Item(2)).size());        
+        //System.out.println("tam getItemUniverse().size()"+getItemsUniverse().get(new Item(2)).size());        
     }
 
     /**
@@ -144,7 +148,21 @@ public class KnnModel implements InterfaceModel{
             return -99;
     }
 
-    
+    @Override
+    public ArrayList<Events> getEvents() {
+        return adapi.getEvents();
+    }
+
+    @Override
+    public Set<User> getUser() {
+        return adapi.getUser();
+    }
+
+    @Override
+    public ArrayList<Item> getItems() {
+        return adapi.getItems();
+    }
+
   
 }
 

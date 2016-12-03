@@ -6,6 +6,7 @@
 package Evaluation;
 
 import Dao.Pair;
+import Ratings.EvaluationModel;
 import Ratings.KnnModel;
 import java.util.ArrayList;
 
@@ -15,13 +16,19 @@ import java.util.ArrayList;
  */
 public class RMSE extends BasicAcurrancyErrorMetric implements EvaluationType {
 
-    public RMSE(KnnModel mds) {
+    public RMSE(EvaluationModel mds) {
         super(mds);
     }
 
     @Override
     public double calculate(ArrayList<PairEvaluation> predictionRating) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    double tam=predictionRating.size();
+    double num=0;
+        for(PairEvaluation p: predictionRating){
+            num+=Math.pow(p.getFirst()-p.getSecond(), 2);
+        }
+        
+    return Math.sqrt(num/tam);
     }
     
 }

@@ -8,6 +8,7 @@ package Algorithms;
 import java.util.ArrayList;
 import Dao.Item;
 import Dao.User;
+import Ratings.ModelAPI;
 
 /**
  *
@@ -19,5 +20,5 @@ public interface  RecommenderAlgorithms {
 
     public  abstract ArrayList<Item> top10Recomendation(User u);
     
-    public abstract double predict(User u,Item i);
+    public abstract double predict(User u,Item i,ModelAPI modelapi);
 }

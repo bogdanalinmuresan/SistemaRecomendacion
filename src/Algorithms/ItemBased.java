@@ -15,16 +15,21 @@ import Ratings.*;
  * @author bogdan
  */
 public class ItemBased extends ColaborativeFiltering{
-    private WeightSum ws;
-    private CosineSimilarity c;
+    
+    
     ModelAPI mapi;
+    ScoreAPI measureapi;
 
     public ItemBased() {
+        //this.mapi=mdapi;
     }
     
-    public ItemBased(ModelAPI mdapi){
-        this.mapi=mdapi;
+    public ItemBased(ScoreAPI measureapi){
+        this.measureapi=measureapi;
+        //this.mapi=mdapi;
     }
+    
+  
 
     @Override
     public ArrayList<Item> top10Recomendation(User u) {
@@ -37,13 +42,15 @@ public class ItemBased extends ColaborativeFiltering{
      * 
      * @param u user 
      * @param ite item
+     * @param modelapi
      * @return -1 if user has rated item ite  ,-2 if item isnt store in model then it must change knn interface variable    
      */
     @Override
-    public double predict(User u, Item ite) {
+    public double predict(User u, Item ite,ModelAPI modelapi) {
         double res=0;
-        ws=new WeightSum(u, ite, mapi);
-        res=ws.itemscore(u, ite);
+        //scoremeasure=new WeightSum(u, ite, mapi);
+        res=measureapi.score(u, ite);
+        //scoremeasure.score(u, ite);
         
     return res;
     }

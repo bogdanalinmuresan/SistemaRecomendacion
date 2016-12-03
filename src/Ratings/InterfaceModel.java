@@ -5,11 +5,13 @@
  */
 package Ratings;
 
+import Dao.Events;
 import Dao.Item;
 import Dao.Pair;
 import Dao.User;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Set;
 
 /**
  *
@@ -33,5 +35,12 @@ public interface InterfaceModel {
     public ArrayList<Pair> getSimilarItems(Item ite);
     
     public double getRatingOfSimilarItemUserVoted(Item  i,User u);
+    
+    public ArrayList<Events> getEvents();
+    
+    public Set<User> getUser();
+    
+    public ArrayList<Item> getItems();
+    
     
 }

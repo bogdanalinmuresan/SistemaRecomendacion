@@ -17,6 +17,11 @@ public class PairEvaluation {
         first=i;
         second=j;
     }
+    public PairEvaluation(){
+        
+    }
+    
+    
     
     public double getFirst(){
         return first;

@@ -14,41 +14,45 @@ import java.util.Set;
  * @author bogdan
  */
 public class AccessDataAPI {
-    DataContext dc;
+    DataContext datacontext;
     
     public AccessDataAPI(){
-        this.dc=new DataContext();
+        this.datacontext=new DataContext();
         
+    }
+    
+    public void addNewConnection(InterfazCliente ic){
+        datacontext.setAccessType(ic);
     }
     
     public void accessSQL(String user ,String pass,String cadena){
         AccessDataJDBC ajdbc=new AccessDataJDBC(user, pass, cadena);
-        dc.setAccessType(ajdbc);
+        datacontext.setAccessType(ajdbc);
     }
     
     public void accessNOSQL(String use, String pass,String cadena){
         AccessDataNOSQL nosql=new AccessDataNOSQL(use,pass,cadena);
-        dc.setAccessType(nosql);
+        datacontext.setAccessType(nosql);
     }
     
     public ArrayList<Events> getEvents(){
-        return dc.getEvents();
+        return datacontext.getEvents();
     }
     
     public HashMap<Item,ArrayList<Events>> getItemEvent(){
-        return dc.getItemEvent();
+        return datacontext.getItemEvent();
     }
     
      public Set<User> getUser(){
-         return dc.getUser();
+         return datacontext.getUser();
      }
      
     public ArrayList<Item> getItems(){
-        return dc.getItems();
+        return datacontext.getItems();
     }
     
     public HashMap<User,ArrayList<Events>> getUserEvent(){
-        return dc.getUserEvent();
+        return datacontext.getUserEvent();
     }
     
     

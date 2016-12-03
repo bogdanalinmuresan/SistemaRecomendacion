@@ -8,6 +8,7 @@ package Algorithms;
 import java.util.ArrayList;
 import Dao.Item;
 import Dao.User;
+import Ratings.ModelAPI;
 
 /**
  *
@@ -16,6 +17,7 @@ import Dao.User;
 public class RecommenderContext {
     //Interface reference
     private RecommenderAlgorithms algorithmType;
+    ModelAPI modelapi;
     
     
     public RecommenderContext(){
@@ -29,13 +31,18 @@ public class RecommenderContext {
         this.algorithmType=rc;
     }
     
+    
+    public void setModel(ModelAPI modelapi){
+        this.modelapi=modelapi;
+    }
+    
     // Métodos de servicio (invocan los métodos implementados por las estrategias)
     public ArrayList<Item> top10Recommendation(User u){
        return algorithmType.top10Recomendation(u);
    }
    
-   public double prediction(User u,Item i){
-       return algorithmType.predict(u, i);
+   public double prediction(User u,Item i,ModelAPI modelapi){
+       return algorithmType.predict(u, i,modelapi);
    }
     
 }

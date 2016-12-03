@@ -5,8 +5,7 @@
  */
 package Evaluation;
 
-import Dao.Pair;
-import Ratings.KnnModel;
+import Ratings.EvaluationModel;
 import java.util.ArrayList;
 
 /**
@@ -15,12 +14,20 @@ import java.util.ArrayList;
  */
 public class MetricsAPI {
     private MetricsContext mt;
-    private KnnModel mds;
+    
+    
+    public MetricsAPI(){
+        
+        mt=new MetricsContext();
+    }
     
     public void mae(){
-        MAE mae=new MAE(mds);
-         mt.setEvaluationType(mae);
+        MAE mae=new MAE();
+        mt.setEvaluationType(mae);
         //return mt.calculate( predRat);
+    }
+    public void setMetric(EvaluationType evaltype){
+        mt.setEvaluationType(evaltype);
     }
     
     public double calculate(ArrayList<PairEvaluation> predRat){

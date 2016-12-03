@@ -5,7 +5,8 @@
  */
 package Evaluation;
 
-import Ratings.KnnModel;
+import Ratings.EvaluationModel;
+import static java.lang.Math.abs;
 import java.util.ArrayList;
 
 /**
@@ -15,8 +16,12 @@ import java.util.ArrayList;
 public class MAE extends BasicAcurrancyErrorMetric implements EvaluationType{
 
     
-    public MAE(KnnModel mds){
+    public MAE(EvaluationModel mds){
         super(mds);
+    }
+    
+    public MAE(){
+        super();
     }
     
     
@@ -26,10 +31,10 @@ public class MAE extends BasicAcurrancyErrorMetric implements EvaluationType{
     double num=0;
     
         for(PairEvaluation p: predictionRating){
-            num+=Math.pow(p.getFirst()-p.getSecond(), 2);
+            num+=abs((p.getFirst()-p.getSecond()));
         }
         
-    return (Math.sqrt(num))/tam;
+    return num/tam;
     }
     
 }
