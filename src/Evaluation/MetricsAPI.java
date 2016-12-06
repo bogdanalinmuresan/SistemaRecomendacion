@@ -5,7 +5,6 @@
  */
 package Evaluation;
 
-import Ratings.EvaluationModel;
 import java.util.ArrayList;
 
 /**

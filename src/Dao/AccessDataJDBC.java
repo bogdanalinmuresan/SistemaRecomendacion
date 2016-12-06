@@ -162,9 +162,16 @@ public class AccessDataJDBC extends InterfazCliente {
                     } else {
                     }
 		} 
+                //System.out.println("user   "+u.getUserId()+"tam events "+resEvent.size());
                 getUserEventDAO().put(u,resEvent);
+                /*
+                ArrayList<Events> res;
+                res=getUserEventDAO().get(u);
                 
+                System.out.println(" "+res.get(0).getUser().getUserId());
+                */
             }
+            System.out.println("getUserEventDAO().size()  "+getUserEventDAO().size());
         }catch(Exception e ){
             
         }

@@ -16,8 +16,7 @@ import Ratings.ModelAPI;
 public class ScoreAPI {
     ScoreContext measurecontext;
     private final ModelAPI modelapi;
-   
-    ScoreMeasure sc;
+   ScoreMeasure sc;
     
     public ScoreAPI(ModelAPI mapi){
         this.measurecontext=new ScoreContext();
@@ -28,17 +27,16 @@ public class ScoreAPI {
         return measurecontext.score(u, i);
     }
     
-    
     public ScoreAPI(ModelAPI mapi,ScoreMeasure sc){
         
         this.modelapi=mapi;
         this.measurecontext=new ScoreContext();
-        measurecontext.setScore(sc);
+        measurecontext.setScoreMeasure(sc);
     }
     
-    public void addScore(ScoreMeasure sc){
+    public void setScoreMeasure(ScoreMeasure sc){
         this.sc=sc;
-        measurecontext.setScore(sc);
+        measurecontext.setScoreMeasure(sc);
     }
     
     

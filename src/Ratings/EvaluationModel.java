@@ -6,11 +6,14 @@
 package Ratings;
 
 import Algorithms.CosineSimilarity;
+import Algorithms.RecommenderApi;
 import Dao.AccessDataAPI;
 import Dao.Events;
 import Dao.Item;
 import Dao.Pair;
 import Dao.User;
+import Evaluation.MetricsAPI;
+import Evaluation.PairEvaluation;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -30,11 +33,11 @@ public class EvaluationModel implements InterfaceModel {
     private ArrayList<Events> testBlock2=new ArrayList<>();
     private ArrayList<Events> testBlock3=new ArrayList<>();
     private ArrayList<Events> testBlock4=new ArrayList<>();
-    ArrayList<Events> trainBlock0=new ArrayList<Events>();
-    ArrayList<Events> trainBlock1=new ArrayList<Events>();
-    ArrayList<Events> trainBlock2=new ArrayList<Events>();
-    ArrayList<Events> trainBlock3=new ArrayList<Events>();
-    ArrayList<Events> trainBlock4=new ArrayList<Events>();
+    ArrayList<Events> trainBlock0=new ArrayList<>();
+    ArrayList<Events> trainBlock1=new ArrayList<>();
+    ArrayList<Events> trainBlock2=new ArrayList<>();
+    ArrayList<Events> trainBlock3=new ArrayList<>();
+    ArrayList<Events> trainBlock4=new ArrayList<>();
     HashMap<Item, ArrayList<Pair> >similarityMatrixModel0=new HashMap<> ();
     HashMap<Item, ArrayList<Pair> >similarityMatrixModel1=new HashMap<> ();
     HashMap<Item, ArrayList<Pair> >similarityMatrixModel2=new HashMap<> ();
@@ -50,6 +53,16 @@ public class EvaluationModel implements InterfaceModel {
     public EvaluationModel(){
         
     }
+    
+    public EvaluationModel(AccessDataAPI accessData){
+        this.adapi=accessData; 
+        this.k=0;
+        divideBlocks();
+        loadItemsTrainForTestBlock();
+        loadItemsEventsForTrainBlock();
+        buildModel(); 
+    }
+    
     public EvaluationModel(AccessDataAPI accessData,int k){
         this.adapi=accessData; 
         this.k=k;
@@ -57,6 +70,56 @@ public class EvaluationModel implements InterfaceModel {
         loadItemsTrainForTestBlock();
         loadItemsEventsForTrainBlock();
         buildModel(); 
+    }
+    
+    /**
+     * 
+     * @param recapi acceso a los algoritmos de recomendacion
+     * @param metricsapi  acceso a las metricas 
+     * @return  
+     */
+    public double evaluationK(RecommenderApi recapi,MetricsAPI metricsapi){
+        //variables
+        double prediction=0;
+        ArrayList<PairEvaluation> vectorPredictionRatings=new ArrayList<>();
+        ArrayList<Events> testBlock=null;
+        //cargar test bloque segun parámetro
+        if (k==0){
+            testBlock=getTestBlock0();
+        }else{
+            if(k==1)
+                testBlock=getTestBlock1();
+            else
+                if(k==2)
+                    testBlock=getTestBlock2();
+                else
+                    if(k==3)
+                        testBlock=getTestBlock3();
+                    else
+                        if(k==4)
+                            testBlock=getTestBlock4();
+                    
+        }
+        PairEvaluation entrada=new PairEvaluation();
+        //para cade rating del testBlock realizamos una prediccion
+        
+         for(int i=0; i<testBlock.size();i++){
+             System.out.println("recorrer test block"+i+"tam test block "+testBlock.size());
+          
+            Events evento=new Events(testBlock.get(i));
+            prediction=recapi.prediction(evento.getUser(), evento.getItem());
+            System.out.println("prediction es "+prediction);
+            if(prediction!=0){
+                entrada.setFirst(prediction);
+                entrada.setSecond(evento.getRating());
+                vectorPredictionRatings.add(entrada);
+            }
+         }
+         // la metrica
+         double resultadoMetrica=metricsapi.calculate(vectorPredictionRatings);
+         System.out.println("resultadoMetrica "+resultadoMetrica);
+         return resultadoMetrica;
+        
     }
     
     public void divideBlocks(){
@@ -164,7 +227,7 @@ public class EvaluationModel implements InterfaceModel {
                             return getSimilarItemsTrainBlock4(ite);
                     
         }
-        return getSimilarItemsTrainBlock0(ite); 
+        return null; 
     }
 
     @Override
@@ -729,7 +792,11 @@ public class EvaluationModel implements InterfaceModel {
                         else return 0;
                     }
             });
-          return similarItem;
+            ArrayList<Pair> resultado=new ArrayList<>();
+            for(int i=0; i<similarItem.size() && i<neighborhoodSize_N; i++){
+                resultado.add(similarItem.get(i));
+            }
+          return  resultado;
         }
         return null;
     }
@@ -901,6 +968,10 @@ public class EvaluationModel implements InterfaceModel {
     
     public void setK(int i){
         this.k=i;
+        divideBlocks();
+        loadItemsTrainForTestBlock();
+        loadItemsEventsForTrainBlock();
+        buildModel(); 
     }
 
     @Override
@@ -921,7 +992,7 @@ public class EvaluationModel implements InterfaceModel {
                             return getTrainBlock4();
                     
         }
-        return getTrainBlock0();
+        return null;
     }
 
     @Override
@@ -932,5 +1003,17 @@ public class EvaluationModel implements InterfaceModel {
     @Override
     public ArrayList<Item> getItems() {
         return adapi.getItems();
+    }
+
+  
+
+    @Override
+    public HashMap<User, ArrayList<Events>> getUserEventDAO() {
+        return adapi.getUserEvent();
+    }
+
+    @Override
+    public HashMap<Item, ArrayList<Events>> getItemEventDAO() {
+        return adapi.getItemEvent();
     }
 }

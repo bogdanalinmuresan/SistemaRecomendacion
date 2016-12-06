@@ -21,8 +21,7 @@ public interface InterfaceModel {
     /**
      * most similar items in similarMatrix model,this is applied for each item to be scored
      */
-    public final int minRatings=0;
-    
+    public final int minRatings=30;
     /**
      * Similar items
      */
@@ -42,5 +41,8 @@ public interface InterfaceModel {
     
     public ArrayList<Item> getItems();
     
+    public HashMap<User,ArrayList<Events> > getUserEventDAO();
+    
+    public HashMap<Item,ArrayList<Events> > getItemEventDAO();
     
 }

@@ -163,6 +163,32 @@ public class KnnModel implements InterfaceModel{
         return adapi.getItems();
     }
 
+    @Override
+    public HashMap<User, ArrayList<Events>> getUserEventDAO() {
+        return adapi.getUserEvent();
+    }
+
+    @Override
+    public HashMap<Item, ArrayList<Events>> getItemEventDAO() {
+        return adapi.getItemEvent();
+    }
+    
+    public ArrayList<Item> getItemsUserRated(User u){
+        ArrayList<Item> itemsUserRated=new ArrayList<>();
+        ArrayList<Events> userEvents;
+        userEvents=adapi.getUserEvent().get(u);
+        if(userEvents==null)
+            System.out.println("es null user events");
+        
+        for(int i=0;i<userEvents.size();i++){
+            //get elements user has rated
+            Item item=new Item(userEvents.get(i).getItem());
+            itemsUserRated.add(item);
+        }
+        return itemsUserRated;
+    }
+    
+
   
 }
 

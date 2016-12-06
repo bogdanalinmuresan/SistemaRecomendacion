@@ -25,7 +25,7 @@ public class ScoreContext {
         return scoremeasure;
     }
     
-    public void setScore(ScoreMeasure score){
+    public void setScoreMeasure(ScoreMeasure score){
         this.scoremeasure=score;
        
     }

@@ -37,12 +37,12 @@ public class RecommenderContext {
     }
     
     // Métodos de servicio (invocan los métodos implementados por las estrategias)
-    public ArrayList<Item> top10Recommendation(User u){
-       return algorithmType.top10Recomendation(u);
+    public ArrayList<Item> top10Recommendation(User u,int N){
+       return algorithmType.topNRecomendation(u,N);
    }
    
-   public double prediction(User u,Item i,ModelAPI modelapi){
-       return algorithmType.predict(u, i,modelapi);
+   public double prediction(User u,Item i){
+       return algorithmType.predict(u, i);
    }
     
 }

@@ -17,9 +17,9 @@ public class RecommenderApi {
     private  ModelAPI modelapi;
     
     
-    public RecommenderApi(ModelAPI mds,RecommenderAlgorithms ra){
-        rc=new RecommenderContext();
-        this.modelapi=mds;
+    public RecommenderApi(){
+        this.rc=new RecommenderContext();
+        this.modelapi=new ModelAPI();
     }
     
     public RecommenderApi(ModelAPI mds){
@@ -30,20 +30,18 @@ public class RecommenderApi {
     
    
     
-    public void configureAlgorithm(RecommenderAlgorithms ra,ModelAPI modelapi){
+    public void configureAlgorithm(RecommenderAlgorithms ra){
         rc.setAlgorithmType(ra);
-        this.modelapi=modelapi;
-        rc.setModel(modelapi);
     }
     
    
     
     public double prediction(User u, Item i){
-        return rc.prediction(u, i,modelapi);
+        return rc.prediction(u, i);
     }
     
-    public ArrayList<Item> top10Recomendation(User i){
-        return rc.top10Recommendation(i);
+    public ArrayList<Item> topNRecomendation(User i,int N){
+        return rc.top10Recommendation(i,N);
     }
     
     

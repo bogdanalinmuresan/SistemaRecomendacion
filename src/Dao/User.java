@@ -40,9 +40,7 @@ public class User {
         if (obj == null) {
             return false;
         }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
+        
         final User other = (User) obj;
         if (this.userId != other.userId) {
             return false;

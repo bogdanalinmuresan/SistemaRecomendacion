@@ -21,36 +21,44 @@ import java.util.Set;
 public class ModelAPI {
     
     ModelContext mc;
-    AccessDataAPI accessDataApi;
+    //AccessDataAPI accessDataApi;
     
     public ModelAPI(){
         mc=new ModelContext();
-        accessDataApi=new AccessDataAPI();
+       // accessDataApi=new AccessDataAPI();
     }
-    
+    /*
     public ModelAPI(AccessDataAPI accessDataApi){
         mc=new ModelContext();
-        this.accessDataApi=accessDataApi;
+        //this.accessDataApi=accessDataApi;
     }
-    
+    */
+    public ModelAPI(InterfaceModel interfaceModel){
+        mc=new ModelContext();
+        //this.accessDataApi=accessDataApi;
+    }
+    /*
     public AccessDataAPI getAccessDataApi(){
         return accessDataApi;
     }
-    
+    */
     
     public void setModel(InterfaceModel newModel){
         mc.setModel(newModel);
     }
-    
+    /*
     public void knnModel(){
         KnnModel knnM=new KnnModel(accessDataApi);
         mc.setModel(knnM);
     }
+    */
+    
+    /*
     public void EvaluationModel(int k){
         EvaluationModel evalModel=new EvaluationModel(accessDataApi, k);
         mc.setModel(evalModel);
     }
-    
+    */
     public HashMap<Item, ArrayList<Pair> > getItemsUniverse(){
         return mc.getItemsUniverse();
     }
@@ -74,5 +82,11 @@ public class ModelAPI {
     public ArrayList<Item> getItems(){
         return mc.getItems();
     }
-     
+    public HashMap<User,ArrayList<Events> > getUserEventDAO(){
+        return mc.getUserEventDAO();
+    }
+    
+    public HashMap<Item,ArrayList<Events> > getItemEventDAO(){
+        return mc.getItemEventDAO();
+    } 
 }

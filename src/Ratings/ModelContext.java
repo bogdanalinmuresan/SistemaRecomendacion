@@ -19,9 +19,7 @@ import java.util.Set;
  */
 public class ModelContext {
     InterfaceModel im;
-    
-    
-    
+
     public void setModel(InterfaceModel im){
         this.im=im;
     }
@@ -53,5 +51,13 @@ public class ModelContext {
     
     public ArrayList<Item> getItems(){
         return im.getItems();
+    }
+    
+    public HashMap<User,ArrayList<Events> > getUserEventDAO(){
+        return im.getUserEventDAO();
+    }
+    
+    public HashMap<Item,ArrayList<Events> > getItemEventDAO(){
+        return im.getItemEventDAO();
     }
 }

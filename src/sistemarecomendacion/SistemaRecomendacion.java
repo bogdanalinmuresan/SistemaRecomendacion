@@ -7,24 +7,18 @@ package sistemarecomendacion;
 
 import Algorithms.BaseLinePredictor;
 import Algorithms.ItemBased;
+import Algorithms.RecommenderApi;
 import Algorithms.ScoreAPI;
 import Algorithms.WeightSum;
-import Algorithms.RecommenderApi;
 import Dao.AccessDataAPI;
-import Dao.Events;
-import Dao.Item;
+import Dao.AccessDataJDBC;
 import org.json.JSONException;
-import Dao.Movie;
-import Dao.User;
 import Evaluation.EvaluationType;
 import Evaluation.MAE;
 import Evaluation.MSE;
 import Evaluation.MetricsAPI;
-import Evaluation.PairEvaluation;
-import Evaluation.RMSE;
 import Ratings.EvaluationModel;
 import Ratings.ModelAPI;
-import java.util.ArrayList;
 
 /**
  *
@@ -43,56 +37,147 @@ public class SistemaRecomendacion {
         new User(1), new Movie(15)
         new User(1), new Movie(16) user has rated that item
         */
- 
+        
+        //acceso conexion base de datos
         String cadenaConexion="jdbc:mysql://localhost:3306/sistemarecomendaciontfg";
-        //AccessDataJDBC nuevoacceso= new AccessDataJDBC("bogdan","123456",cadenaConexion);
-        //nuevoacceso.cargarDatosDAO();
-        
         AccessDataAPI accesoDataApi=new AccessDataAPI();
-        accesoDataApi.accessSQL("bogdan","123456",cadenaConexion);
+        AccessDataJDBC accesoJDBC=new AccessDataJDBC("bogdan","123456",cadenaConexion);
+        accesoDataApi.addNewConnection(accesoJDBC);
         
-        User usuario =new User (1);
-        Item item=new Movie(15);
+        //User usuario =new User (1);
+        //Item item=new Movie(15);
         //ModelAPI accesoModelo=new ModelAPI(accesoDataApi);
         //accesoModelo.knnModel();
         /***********************************************************************/
         //carga el primer bloque 
-        EvaluationModel evalModel=new EvaluationModel(accesoDataApi,0);
+        EvaluationModel evalModel=new EvaluationModel(accesoDataApi,-1);
         //evalModel.buildModel();
-        ModelAPI accesoModelo=new ModelAPI(accesoDataApi);
+        ModelAPI accesoModelo=new ModelAPI(evalModel);
         accesoModelo.setModel(evalModel);
+        
+        
+        
+        
         
         //EvaluationModel evalModelItem=new EvaluationModel(accesoDataApi,0);
         //evalModel.buildModel();
         //ModelAPI accesoModeloItem=new ModelAPI(accesoDataApi);
         //accesoModelo.setModel(evalModelItem);
-        
-        /*
-        //carga el segundo 
-        evalModel.setK(1);
-        //carga el segundo
-        evalModel.setK(2);
-        //carga el terecero
-        evalModel.setK(3);
-        //carga el tercero
-        evalModel.setK(4);
-        
-        */
-        
+    
         /***********************************************************************/
+        
         RecommenderApi recbaseline=new RecommenderApi(accesoModelo);
         RecommenderApi recItem=new RecommenderApi(accesoModelo);
         
         //configure baseline predictor
         BaseLinePredictor baseprediction=new BaseLinePredictor(accesoModelo);
-        recbaseline.configureAlgorithm(baseprediction, accesoModelo);
+        recbaseline.configureAlgorithm(baseprediction);
         
-        //configure item-based
+        //configure item-based algorithm
         WeightSum weightSum=new WeightSum(accesoModelo);
         ScoreAPI measapi=new ScoreAPI(accesoModelo, weightSum);
-        ItemBased itemBased=new ItemBased(measapi);
-        recItem.configureAlgorithm(itemBased,accesoModelo);
+        ItemBased itemBased=new ItemBased(measapi,accesoModelo);
+        recItem.configureAlgorithm(itemBased);
         
+        //configure metrics
+        MetricsAPI accessMetrics=new MetricsAPI();
+        EvaluationType mae=new MAE();
+        accessMetrics.setMetric(mae);
+        
+        long startTime = System.nanoTime();
+        
+        double resultadoMetricas=0;
+       /*
+        resultadoMetricas=evalModel.evaluationK(recItem,accessMetrics);
+        System.out.println("resultado metricas mae block 0  "+resultadoMetricas);
+        
+        */
+        evalModel.setK(1);
+        resultadoMetricas=evalModel.evaluationK(recItem,accessMetrics);
+        System.out.println("resultado metricas mae block 1  "+resultadoMetricas);
+        /*
+        evalModel.setK(2);
+        resultadoMetricas=evalModel.evaluationK(recItem,accessMetrics);
+        System.out.println("resultado metricas mae block 2  "+resultadoMetricas);
+        evalModel.setK(3);
+        resultadoMetricas=evalModel.evaluationK(recItem,accessMetrics);
+        System.out.println("resultado metricas mae block 3  "+resultadoMetricas);
+        
+        evalModel.setK(4);
+        resultadoMetricas= evalModel.evaluationK(recItem,accessMetrics);
+        System.out.println("resultado metricas mae block 4  "+resultadoMetricas);
+        */
+        /*
+        //carga el primer bloque 
+        ModelAPI modelapi=new ModelAPI(accesoDataApi);
+        KnnModel knn=new KnnModel(accesoDataApi);
+       
+        modelapi.knnModel();
+        RecommenderApi recapi=new RecommenderApi(modelapi);
+        
+         //configure item-based algorithm
+        WeightSum wSum=new WeightSum(modelapi);
+        ScoreAPI meapi=new ScoreAPI(modelapi, wSum);
+        ItemBased iBased=new ItemBased(meapi,modelapi);
+        */
+        /*
+        recapi.configureAlgorithm(iBased);
+        User u=new User(1);
+        ArrayList<Item> top10=recapi.topNRecomendation(u, 10);
+        for(Item item:top10){
+            System.out.println(item.getId());
+        }
+        */
+        
+        /*
+        EvaluationType mse=new MSE();
+        accessMetrics.setMetric(mse);
+       
+        resultadoMetricas=evalModel.evaluationK(recbaseline,accessMetrics);
+        System.out.println("resultado metricas mse block 0  "+resultadoMetricas);
+        evalModel.setK(1);
+        resultadoMetricas=evalModel.evaluationK(recbaseline,accessMetrics);
+        
+        System.out.println("resultado metricas mse block 1  "+resultadoMetricas);
+        */
+        /*
+        evalModel.setK(2);
+        resultadoMetricas=evalModel.evaluationK(recbaseline,accessMetrics);
+        System.out.println("resultado metricas mse block 2  "+resultadoMetricas);
+        evalModel.setK(3);
+        resultadoMetricas=evalModel.evaluationK(recbaseline,accessMetrics);
+        System.out.println("resultado metricas mse block 3  "+resultadoMetricas);
+        
+        evalModel.setK(4);
+        resultadoMetricas=evalModel.evaluationK(recbaseline,accessMetrics);
+        System.out.println("resultado metricas mse block 4  "+resultadoMetricas);
+        */
+        /*
+        EvaluationType rmse=new MSE();
+        accessMetrics.setMetric(rmse);
+        
+        resultadoMetricas=evalModel.evaluationK(recbaseline,accessMetrics);
+        System.out.println("resultado metricas rmse block 0  "+resultadoMetricas);
+        evalModel.setK(1);
+        
+        resultadoMetricas=evalModel.evaluationK(recbaseline,accessMetrics);
+        System.out.println("resultado metricas rmse block 1  "+resultadoMetricas);
+        */
+        /*
+        evalModel.setK(2);
+        resultadoMetricas=evalModel.evaluationK(recbaseline,accessMetrics);
+        System.out.println("resultado metricas rmse block 2  "+resultadoMetricas);
+        evalModel.setK(3);
+        resultadoMetricas=evalModel.evaluationK(recbaseline,accessMetrics);
+        System.out.println("resultado metricas rmse block 3  "+resultadoMetricas);
+        evalModel.setK(4);
+        resultadoMetricas=evalModel.evaluationK(recbaseline,accessMetrics);
+        System.out.println("resultado metricas rmse block 4  "+resultadoMetricas);
+        */
+        long endTime = System.nanoTime();
+        long duration = (endTime - startTime);
+        System.out.println("duration exacution "+duration/1000000);
+        /**********************************************************************
         //----
         double predictionBaseline=0;
         double predictionItem=0;
@@ -101,34 +186,35 @@ public class SistemaRecomendacion {
         
         ArrayList<Events> bloque0=evalModel.getTestBlock0();
         
-        for(int i=0; i<20;i++){
+        for(int i=0; i<bloque0.size();i++){
             PairEvaluation entradaBaseline=new PairEvaluation();
             PairEvaluation entradaItem=new PairEvaluation();
             Events evento=new Events(bloque0.get(i));
             //---
             predictionBaseline=recbaseline.prediction(evento.getUser() ,evento.getItem());
             predictionItem=recItem.prediction(evento.getUser() ,evento.getItem());
-            
-            System.out.println("prediccion Baseline = "+predictionBaseline);
-            //if(predictionItem!=-2)
-                System.out.println("prediccion Item = "+predictionItem);
+            if(predictionBaseline!=0){
+                //System.out.println("prediccion Baseline = "+predictionBaseline);
+                entradaBaseline.setFirst(predictionBaseline);
+                entradaBaseline.setSecond(evento.getRating());
+                resPredictionBaseline.add(entradaBaseline);
+            }
+            if(predictionItem!=0){
+                //System.out.println("prediccion Item = "+predictionItem);
+                entradaItem.setFirst(predictionItem);
+                entradaItem.setSecond(evento.getRating());
+                resPredictionItem.add(entradaItem);
+            }
             //---
-            entradaBaseline.setFirst(predictionBaseline);
-            entradaBaseline.setSecond(evento.getRating());
             
-            entradaItem.setFirst(predictionItem);
-            entradaItem.setSecond(evento.getRating());
-            
-            resPredictionBaseline.add(entradaBaseline);
-            resPredictionItem.add(entradaItem);
+           
         }
-        for(PairEvaluation p:resPredictionItem){
-            System.out.println("1 = "+p.getFirst()+"2 ="+p.getSecond());
-        }
+       
         
-        MetricsAPI accessMetrics=new MetricsAPI();
-        EvaluationType mae=new MAE();
-        accessMetrics.setMetric(mae);
+        
+        //MetricsAPI accessMetrics=new MetricsAPI();
+        //EvaluationType mae=new MAE();
+        //accessMetrics.setMetric(mae);
         
         
         
@@ -157,6 +243,8 @@ public class SistemaRecomendacion {
         
         resultadoItem=rmse.calculate(resPredictionItem);
         System.out.println("rmse item "+resultadoItem);
+        
+        ***********************************************************************/
         /**********************************************************************/
         
         /***********************************************************************/

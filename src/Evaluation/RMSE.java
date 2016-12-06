@@ -5,9 +5,7 @@
  */
 package Evaluation;
 
-import Dao.Pair;
 import Ratings.EvaluationModel;
-import Ratings.KnnModel;
 import java.util.ArrayList;
 
 /**

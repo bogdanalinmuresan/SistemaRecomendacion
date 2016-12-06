@@ -14,7 +14,12 @@ public class Pair {
     double similitud=0.0;
     
     public Pair(){
-        item1=new Movie();
+        item1=new Item();
+    }
+    
+    public Pair(Pair p){
+        this.item1=p.item1;
+        this.similitud=p.similitud;
     }
 
     public Pair(Item i1 ,double similitud){

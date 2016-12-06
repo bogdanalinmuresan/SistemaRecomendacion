@@ -23,23 +23,25 @@ public class BaseLinePredictor implements RecommenderAlgorithms{
         this.accessModelApi=mapi;
     }
     
-    public void setModelApi(ModelAPI modelapi){
+    public void setAccessModelApi(ModelAPI modelapi){
         this.accessModelApi=modelapi;
+    }
+    
+    public ModelAPI getAccessModelApi(){
+        return accessModelApi;
     }
     
     
     
     @Override
-    public ArrayList<Item> top10Recomendation(User u) {
+    public ArrayList<Item> topNRecomendation(User u,int n) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public double predict(User u, Item i,ModelAPI modelapi) {
-        double res=-1; 
+    public double predict(User u, Item i) {
+        double res=0; 
         res=accessModelApi.getRatingOfSimilarItemUserVoted(i, u);
-        
-        //System.out.println("res ="+res);
         //user has not voted item i 
         if(res==-99){
             res=globalMeanRating()+getStandardDeviationForUser(u)+getStandardDeviationForItem(i);
@@ -47,7 +49,7 @@ public class BaseLinePredictor implements RecommenderAlgorithms{
             return res;
         }else{
             //item voted
-           return -2; 
+           return res; 
         } 
     }
     
