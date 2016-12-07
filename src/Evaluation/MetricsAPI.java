@@ -20,11 +20,7 @@ public class MetricsAPI {
         mt=new MetricsContext();
     }
     
-    public void mae(){
-        MAE mae=new MAE();
-        mt.setEvaluationType(mae);
-        //return mt.calculate( predRat);
-    }
+   
     public void setMetric(EvaluationType evaltype){
         mt.setEvaluationType(evaltype);
     }

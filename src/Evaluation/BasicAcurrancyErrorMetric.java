@@ -19,7 +19,7 @@ public abstract class BasicAcurrancyErrorMetric {
      }
      
      public BasicAcurrancyErrorMetric(){
-         
+         mds=new EvaluationModel();
      }
      
     public EvaluationModel getModel(){

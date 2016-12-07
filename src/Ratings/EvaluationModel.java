@@ -12,8 +12,12 @@ import Dao.Events;
 import Dao.Item;
 import Dao.Pair;
 import Dao.User;
+import Evaluation.EvaluationType;
+import Evaluation.MAE;
+import Evaluation.MSE;
 import Evaluation.MetricsAPI;
 import Evaluation.PairEvaluation;
+import Evaluation.RMSE;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -74,11 +78,10 @@ public class EvaluationModel implements InterfaceModel {
     
     /**
      * 
-     * @param recapi acceso a los algoritmos de recomendacion
-     * @param metricsapi  acceso a las metricas 
+     * @param recapi acceso a los algoritmos de recomendacion 
      * @return  
      */
-    public double evaluationK(RecommenderApi recapi,MetricsAPI metricsapi){
+    public ArrayList<PairEvaluation> evaluationK(RecommenderApi recapi){
         //variables
         double prediction=0;
         ArrayList<PairEvaluation> vectorPredictionRatings=new ArrayList<>();
@@ -95,6 +98,8 @@ public class EvaluationModel implements InterfaceModel {
                 else
                     if(k==3)
                         testBlock=getTestBlock3();
+                        //System.out.println("entra en k ==3");
+                    
                     else
                         if(k==4)
                             testBlock=getTestBlock4();
@@ -102,23 +107,22 @@ public class EvaluationModel implements InterfaceModel {
         }
         PairEvaluation entrada=new PairEvaluation();
         //para cade rating del testBlock realizamos una prediccion
-        
+        //System.out.println("testBlock.size()= "+testBlock.size());
          for(int i=0; i<testBlock.size();i++){
-             System.out.println("recorrer test block"+i+"tam test block "+testBlock.size());
-          
+             //System.out.println("recorrer test block"+i+"tam test block "+testBlock.size());
+          //System.out.println("item "+testBlock.get(i).getItem().getId()+" user  "+testBlock.get(i).getUser().getUserId()+" rating "+testBlock.get(i).getRating());
             Events evento=new Events(testBlock.get(i));
             prediction=recapi.prediction(evento.getUser(), evento.getItem());
-            System.out.println("prediction es "+prediction);
+           
             if(prediction!=0){
+                //System.out.println("prediction !=0 "+prediction);
                 entrada.setFirst(prediction);
                 entrada.setSecond(evento.getRating());
                 vectorPredictionRatings.add(entrada);
             }
          }
-         // la metrica
-         double resultadoMetrica=metricsapi.calculate(vectorPredictionRatings);
-         System.out.println("resultadoMetrica "+resultadoMetrica);
-         return resultadoMetrica;
+        
+        return vectorPredictionRatings;
         
     }
     
@@ -206,8 +210,10 @@ public class EvaluationModel implements InterfaceModel {
                             return similarityMatrixModel4;
                     
         }
-        return similarityMatrixModel0;
+        return null;
     }
+       
+
 
     @Override
     public ArrayList<Pair> getSimilarItems(Item ite) {
@@ -462,7 +468,7 @@ public class EvaluationModel implements InterfaceModel {
     public void loadItemEventsForTrainBlock1(){
         try{
            // Iterator<Movie> itMovie = getItemsDAO().iterator();
-            for(Item m:adapi.getItems())
+            for(Item m:getItems())
             {
                 Item elemento=new Item(m);
                 ArrayList<Events> resEvent=new ArrayList<>();
@@ -486,7 +492,7 @@ public class EvaluationModel implements InterfaceModel {
     public void loadItemEventsForTrainBlock2(){
         try{
            // Iterator<Movie> itMovie = getItemsDAO().iterator();
-            for(Item m:adapi.getItems())
+            for(Item m:getItems())
             {
                 Item elemento=new Item(m);
                 ArrayList<Events> resEvent=new ArrayList<>();
@@ -510,7 +516,7 @@ public class EvaluationModel implements InterfaceModel {
     public void loadItemEventsForTrainBlock3(){
         try{
            // Iterator<Movie> itMovie = getItemsDAO().iterator();
-            for(Item m:adapi.getItems())
+            for(Item m:getItems())
             {
                 Item elemento=new Item(m);
                 ArrayList<Events> resEvent=new ArrayList<>();
@@ -525,7 +531,7 @@ public class EvaluationModel implements InterfaceModel {
 		}
                 //insertamos
                // System.out.println("elemento"+elemento.getId());
-                itemsEventsTrainBlock1.put(elemento, resEvent);   
+                itemsEventsTrainBlock3.put(elemento, resEvent);   
             }
         }catch(Exception e ){
             
@@ -534,7 +540,7 @@ public class EvaluationModel implements InterfaceModel {
     public void loadItemEventsForTrainBlock4(){
         try{
            // Iterator<Movie> itMovie = getItemsDAO().iterator();
-            for(Item m:adapi.getItems())
+            for(Item m:getItems())
             {
                 Item elemento=new Item(m);
                 ArrayList<Events> resEvent=new ArrayList<>();
@@ -864,7 +870,7 @@ public class EvaluationModel implements InterfaceModel {
         return null;
     }
     public ArrayList<Pair> getSimilarItemsTrainBlock4(Item ite){
-        ArrayList<Pair> similarItem=similarityMatrixModel0.get(ite);
+        ArrayList<Pair> similarItem=similarityMatrixModel4.get(ite);
         //System.out.println("tam similarItem en getSimilarItem()"+similarItem.size());
         //System.out.println("el elemento es"+ite.getId());
         if(similarItem!=null){

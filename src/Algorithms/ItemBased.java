@@ -11,8 +11,6 @@ import Dao.Item;
 import Dao.Pair;
 import Dao.User;
 import Ratings.*;
-import java.util.Collections;
-import java.util.Comparator;
 
 /**
  *
@@ -42,7 +40,7 @@ public class ItemBased extends ColaborativeFiltering{
         //10 items ,user rate ,and the the 10 most similar items 
         //first get the items user rate
         ArrayList<Events> userEvents;
-        userEvents=mapi.getUserEventDAO().get(u);
+        userEvents=mapi.getUserEvent().get(u);
         if(userEvents==null)
             System.out.println("es null user events");
             

@@ -82,11 +82,11 @@ public class ModelAPI {
     public ArrayList<Item> getItems(){
         return mc.getItems();
     }
-    public HashMap<User,ArrayList<Events> > getUserEventDAO(){
+    public HashMap<User,ArrayList<Events> > getUserEvent(){
         return mc.getUserEventDAO();
     }
     
-    public HashMap<Item,ArrayList<Events> > getItemEventDAO(){
+    public HashMap<Item,ArrayList<Events> > getItemEvent(){
         return mc.getItemEventDAO();
     } 
 }

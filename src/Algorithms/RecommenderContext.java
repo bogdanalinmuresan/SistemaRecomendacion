@@ -23,7 +23,7 @@ public class RecommenderContext {
     public RecommenderContext(){
     }
 
-    public RecommenderAlgorithms getAlgorithType(){
+    public RecommenderAlgorithms getAlgorithmType(){
         return algorithmType;
     }
     

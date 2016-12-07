@@ -64,5 +64,11 @@ public class CosineSimilarity extends ItemSimilarity implements SimilarityCalcul
     @Override
     public double compare(ArrayList<Events> ratingsA, ArrayList<Events> ratingsB) {
         return determineSimilarity(ratingsA, ratingsB);
-    }   
+    } 
+    
+    public double cosine(ArrayList<Events> ratingsA, ArrayList<Events> ratingsB){
+        return determineSimilarity(ratingsA, ratingsB);
+    }
 }
+
+

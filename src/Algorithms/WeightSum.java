@@ -8,6 +8,7 @@ package Algorithms;
 import Dao.Pair;
 import Dao.Item;
 import Dao.User;
+import static Ratings.InterfaceModel.neighborhoodSize_N;
 import Ratings.ModelAPI;
 import java.util.ArrayList;
 
@@ -49,7 +50,7 @@ public class WeightSum extends ItemScorer implements ScoreMeasure{
                 double sumTop=0;
                 double sumBottom=1;    
                 double temp;
-                for(int i=0; i< similarItem.size(); i++){
+                for(int i=0; i< similarItem.size()&& i<neighborhoodSize_N; i++){
                     temp=modelapi.getRatingOfSimilarItemUserVoted(similarItem.get(i).getItem1(), u );
                     //items that user voted ,dont mind
                     if(temp!=-99){

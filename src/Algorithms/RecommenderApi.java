@@ -30,7 +30,7 @@ public class RecommenderApi {
     
    
     
-    public void configureAlgorithm(RecommenderAlgorithms ra){
+    public void addAlgorithm(RecommenderAlgorithms ra){
         rc.setAlgorithmType(ra);
     }
     

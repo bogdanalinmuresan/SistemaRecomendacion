@@ -21,7 +21,7 @@ public class ScoreContext {
         
     }
     
-    public ScoreMeasure getScore(){
+    public ScoreMeasure getScoreMeasure(){
         return scoremeasure;
     }
     
