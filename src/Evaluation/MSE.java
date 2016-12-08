@@ -9,20 +9,33 @@ import Ratings.EvaluationModel;
 import java.util.ArrayList;
 
 /**
- *
+ *Clase que calcula la media del error al cuadrado
  * @author bogdan
  */
 public class MSE extends BasicAcurrancyErrorMetric implements EvaluationType {
 
+    /**
+     * Constructor con parámetros
+     * @param mds acceso al modelo de evaluación
+     */
     public MSE(EvaluationModel mds) {
         super(mds);
     }
     
+    /**
+     * Constructor por defecto
+     */
     public MSE()
     {
         super();
     }
 
+    /**
+     * 
+     * @param predictionRating
+     * @return 
+     * @see EvaluationType#calculate(java.util.ArrayList) 
+     */
     @Override
     public double calculate(ArrayList<PairEvaluation> predictionRating) {
     double tam=predictionRating.size();

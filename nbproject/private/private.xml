@@ -3,6 +3,7 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+            <file>file:/Users/bogdan/NetBeansProjects/SistemaRecomendacion/src/Algorithms/SimilarityApi.java</file>
             <file>file:/Users/bogdan/NetBeansProjects/SistemaRecomendacion/src/Algorithms/ItemBased.java</file>
             <file>file:/Users/bogdan/NetBeansProjects/SistemaRecomendacion/src/Ratings/EvaluationModel.java</file>
             <file>file:/Users/bogdan/NetBeansProjects/SistemaRecomendacion/src/Algorithms/BaseLinePredictor.java</file>
@@ -39,6 +40,7 @@
             <file>file:/Users/bogdan/NetBeansProjects/SistemaRecomendacion/src/Dao/AccessDataAPI.java</file>
             <file>file:/Users/bogdan/NetBeansProjects/SistemaRecomendacion/src/Ratings/InterfaceModel.java</file>
             <file>file:/Users/bogdan/NetBeansProjects/SistemaRecomendacion/src/Evaluation/MAE.java</file>
+            <file>file:/Users/bogdan/NetBeansProjects/SistemaRecomendacion/src/Algorithms/SimilarityContext.java</file>
             <file>file:/Users/bogdan/NetBeansProjects/SistemaRecomendacion/src/Algorithms/ScoreMeasure.java</file>
             <file>file:/Users/bogdan/NetBeansProjects/SistemaRecomendacion/src/Algorithms/ItemSimilarity.java</file>
             <file>file:/Users/bogdan/NetBeansProjects/SistemaRecomendacion/src/Ratings/ModelAPI.java</file>

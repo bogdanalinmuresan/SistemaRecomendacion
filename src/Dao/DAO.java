@@ -11,8 +11,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- *
+ *Clase abstracta que representa el acceso a una fuente de datos 
  * @author bogdan
+ * @version 1.0
  */
 public abstract class DAO {
      //users 
@@ -52,11 +53,34 @@ public abstract class DAO {
      */
     public  ArrayList<Events> getEventsDAO(){return eventsDAO;}
     
+    /**
+     *Método que carga los datos en memoria 
+     */
     public abstract void cargarDatosDAO();
+
+    /**
+     *Método que carga las calificaciones
+     */
     public abstract void cargarEventosDAO();
+
+    /**
+     *Método que carga los elementos
+     */
     public abstract void cargarItemsDAO();
+
+    /**
+     *Método que carga los usuarios 
+     */
     public abstract void cargarUserDAO();
+
+    /**
+     *Método que cara las calificaciones de los usuarios
+     */
     public abstract void cargarUserEventDAO();
+
+    /**
+     *Método que carga las calificaciones de los elementos
+     */
     public abstract void cargarItemEventDAO();
     
 }

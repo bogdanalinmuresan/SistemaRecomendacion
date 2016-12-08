@@ -6,17 +6,18 @@
 package Algorithms;
 
 /**
- *
+ *Clase absracta que tiene que heredar los algoritmos de la familia de algoritmos colaborativo
  * @author bogdan
+ * @version 1.0
  */
 public abstract class ColaborativeFiltering implements RecommenderAlgorithms{
     /**
-     * most similar items in similarMatrix model,this is applied for each item to be scored
+     *número de calificaciones que debe tener un elemento
      */
-    public final int minRatings=1;
+    public final int minRatings=30;
     
     /**
-     * Similar items
+     * numero de vecinos similares a un elemento
      */
     public final int neighborhoodSize_N=30;
 }

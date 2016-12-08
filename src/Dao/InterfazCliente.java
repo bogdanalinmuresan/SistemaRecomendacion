@@ -10,7 +10,7 @@ package Dao;
  * datos.
  * 
  * @author bogdan
- * 
+ * @version 1.0
  */
 public abstract class InterfazCliente extends DAO {
 
@@ -40,19 +40,20 @@ public abstract class InterfazCliente extends DAO {
     public void setCadenaConexion(String cadena){
         this.cadena=cadena;
     }
-    /**
-     * Método consultos
-     * @return cadena de conexion
-     */
+   /**
+    * Devuelve la cadena de conexión
+    * @return cadena de conexion
+    */
     public String getCadenaConexion(){
         return cadena;
     }
    
     /**
      * Devuelve el usuario
-     * @return user
+     * @return usuario
      */
     public String getUser(){return user;}
+    
     /**
      * Devuelve la contraseña 
      * @return La contraseña
@@ -61,12 +62,12 @@ public abstract class InterfazCliente extends DAO {
 
     /**
      * Método para configurar un usuario para la conexión con la base de datos
-     * @param nuevoUser 
+     * @param nuevoUser  en nuevo usuario
      */
     public void setUser(String nuevoUser){this.user=nuevoUser;}
     /**
      * Método para configurar la contraseña para la conexión con la base de datos
-     * @param nuevoPassword 
+     * @param nuevoPassword  la nueva contraseña
      */
     public void setPassword(String nuevoPassword){this.password=nuevoPassword;}
     

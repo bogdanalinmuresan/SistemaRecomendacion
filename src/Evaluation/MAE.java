@@ -10,21 +10,33 @@ import static java.lang.Math.abs;
 import java.util.ArrayList;
 
 /**
- *
+ *Clase que calcula la media del error absoluto
  * @author bogdan
+ * @version 1.0
  */
 public class MAE extends BasicAcurrancyErrorMetric implements EvaluationType{
 
-    
+    /**
+     * Constructor con parámetros
+     * @param mds acceso al modelo de evaluacion
+     */
     public MAE(EvaluationModel mds){
         super(mds);
     }
     
+    /**
+     * Constructor por defecto
+     */
     public MAE(){
         super();
     }
     
-    
+    /**
+     * 
+     * @param predictionRating
+     * @return 
+     * @see EvaluationType#calculate(java.util.ArrayList) 
+     */
     @Override
     public double calculate(ArrayList<PairEvaluation> predictionRating) {
     double tam=predictionRating.size();

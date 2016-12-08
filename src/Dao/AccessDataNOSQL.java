@@ -58,25 +58,6 @@ public class AccessDataNOSQL extends InterfazCliente {
         return collec;
     }
    
-    
-    /**
-     * Método para configurar la conexión con la base de datos
-     * @param newhost
-     * @param newbasededatos
-     * @param newpuerto
-     * @param newuser
-     * @param newpassword 
-     */
-    /*
-    @Override
-    public void configurarConexionBD(String newhost, String newbasededatos, int newpuerto, String newuser, String newpassword) {
-        setHost(newhost);
-        setBaseDatos(newbasededatos);
-        setPuerto(newpuerto);
-        setUser(newuser);
-        setPassword(newpassword);
-    }
-*/
     /**
      * Método para cargar en memoria los datos de la base de datos 
      */
@@ -91,7 +72,7 @@ public class AccessDataNOSQL extends InterfazCliente {
     }
 
     /**
-     * Método para cargar en memoria los eventos 
+     * Método para cargar en memoria las calificaciones
      */
     @Override
     public void cargarEventosDAO() {
@@ -126,7 +107,7 @@ public class AccessDataNOSQL extends InterfazCliente {
     }
 
     /**
-     * Metodo para cargar en memoria las peliculas
+     * Metodo para cargar en memoria los elementos
      *
      */
     @Override
@@ -187,7 +168,7 @@ public class AccessDataNOSQL extends InterfazCliente {
     }
 
     /**
-     * Carga en memoria los eventos generados por cada usuario
+     * Carga en memoria los calificacioens generadas por cada usuario
      */
     @Override
     public void cargarUserEventDAO() {
@@ -217,7 +198,7 @@ public class AccessDataNOSQL extends InterfazCliente {
 
     
     /**
-     * Método para cargar en memoria los eventos de cada pelicula
+     * Método para cargar en memoria las calificaciones de cada pelicula
      */
     @Override
     public void cargarItemEventDAO() {

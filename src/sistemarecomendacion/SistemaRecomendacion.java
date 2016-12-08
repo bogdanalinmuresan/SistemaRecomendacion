@@ -6,9 +6,11 @@
 package sistemarecomendacion;
 
 import Algorithms.BaseLinePredictor;
+import Algorithms.CosineSimilarity;
 import Algorithms.ItemBased;
 import Algorithms.RecommenderApi;
 import Algorithms.ScoreAPI;
+import Algorithms.SimilarityApi;
 import Algorithms.WeightSum;
 import Dao.AccessDataAPI;
 import Dao.AccessDataJDBC;
@@ -29,7 +31,11 @@ import java.util.ArrayList;
  */
 public class SistemaRecomendacion {
 
-   
+    /**
+     *
+     * @param args
+     * @throws JSONException
+     */
     public static void main(String[] args) throws JSONException {
 
    
@@ -46,15 +52,15 @@ public class SistemaRecomendacion {
         AccessDataAPI accesoDataApi=new AccessDataAPI();
         AccessDataJDBC accesoJDBC=new AccessDataJDBC("bogdan","123456",cadenaConexion);
         accesoDataApi.addNewConnection(accesoJDBC);
+       
         
-        //User usuario =new User (1);
-        //Item item=new Movie(15);
-        //ModelAPI accesoModelo=new ModelAPI(accesoDataApi);
-        //accesoModelo.knnModel();
-        /***********************************************************************/
-        //carga el primer bloque 
-        EvaluationModel evalModel=new EvaluationModel(accesoDataApi,-1);
-        //evalModel.buildModel();
+        //configuramos la medida de similitud
+        CosineSimilarity cosine=new CosineSimilarity();
+        SimilarityApi similarityApi=new SimilarityApi();
+        similarityApi.addSimilarity(cosine);
+        
+        //configuramos el modelo
+        EvaluationModel evalModel=new EvaluationModel(accesoDataApi,-1,similarityApi);
         ModelAPI accesoModelo=new ModelAPI(evalModel);
         accesoModelo.setModel(evalModel);
         
@@ -62,13 +68,10 @@ public class SistemaRecomendacion {
         
         
         
-        //EvaluationModel evalModelItem=new EvaluationModel(accesoDataApi,0);
-        //evalModel.buildModel();
-        //ModelAPI accesoModeloItem=new ModelAPI(accesoDataApi);
-        //accesoModelo.setModel(evalModelItem);
-    
+     
         /***********************************************************************/
         
+        //cpnfiguramos los algoritmos de recoemndacion
         RecommenderApi recbaseline=new RecommenderApi(accesoModelo);
         RecommenderApi recItem=new RecommenderApi(accesoModelo);
         
@@ -78,7 +81,8 @@ public class SistemaRecomendacion {
         
         //configure item-based algorithm
         WeightSum weightSum=new WeightSum(accesoModelo);
-        ScoreAPI measapi=new ScoreAPI(accesoModelo, weightSum);
+        ScoreAPI measapi=new ScoreAPI(accesoModelo);
+        measapi.setScoreMeasure(weightSum);
         ItemBased itemBased=new ItemBased(measapi,accesoModelo);
         recItem.addAlgorithm(itemBased);
         
@@ -118,13 +122,16 @@ public class SistemaRecomendacion {
         accessMetrics.setMetric(rmse);
         resultadoMetricasRmse=accessMetrics.calculate(vectorPredictionRatings);
         System.out.println("resultado metricas rmae block 1  "+resultadoMetricasRmse);
-      /*
+      
+        
+      
+      
         
         //configure metrics
         
        
         
-        
+        /*
         evalModel.setK(2);
         resultadoMetricas=evalModel.evaluationK(recItem,accessMetrics);
         //System.out.println("resultado metricas mae block 2  "+resultadoMetricas);
@@ -136,11 +143,11 @@ public class SistemaRecomendacion {
         resultadoMetricas= evalModel.evaluationK(recItem,accessMetrics);
         //System.out.println("resultado metricas mae block 4  "+resultadoMetricas);
         
-        /*
+        
         //carga el primer bloque 
         ModelAPI modelapi=new ModelAPI(accesoDataApi);
         KnnModel knn=new KnnModel(accesoDataApi);
-       
+       modelapi.setModel(knn);
         modelapi.knnModel();
         RecommenderApi recapi=new RecommenderApi(modelapi);
         
@@ -148,7 +155,7 @@ public class SistemaRecomendacion {
         WeightSum wSum=new WeightSum(modelapi);
         ScoreAPI meapi=new ScoreAPI(modelapi, wSum);
         ItemBased iBased=new ItemBased(meapi,modelapi);
-        */
+        
         /*
         recapi.configureAlgorithm(iBased);
         User u=new User(1);

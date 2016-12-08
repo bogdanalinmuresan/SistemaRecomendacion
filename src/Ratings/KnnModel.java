@@ -13,9 +13,9 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 import Dao.Events;
-import Algorithms.CosineSimilarity;
+import Algorithms.SimilarityApi;
 import Dao.AccessDataAPI;
-import Dao.Item;
+import Dao.Item;   
 import Dao.User;
 import java.util.Set;
 
@@ -26,14 +26,24 @@ import java.util.Set;
 public class KnnModel implements InterfaceModel{
     AccessDataAPI adapi;
     HashMap<Item, ArrayList<Pair> >similarityMatrixModel;
+    SimilarityApi similarityapi;
     
-    
-    public KnnModel(AccessDataAPI ad){
+    /**
+     *
+     * @param ad
+     * @param simapi
+     */
+    public KnnModel(AccessDataAPI ad,SimilarityApi simapi){
         similarityMatrixModel=new HashMap<> ();
         this.adapi=ad; 
+        this.similarityapi=simapi;
         buildModel();
     }
     
+    /**
+     *
+     * @return
+     */
     public AccessDataAPI getAccessDataApi(){
         return adapi;
     }
@@ -82,7 +92,7 @@ public class KnnModel implements InterfaceModel{
     @Override
     public  void buildModel()
     {
-        CosineSimilarity c=new CosineSimilarity();
+        //CosineSimilarity c=new CosineSimilarity();
         ArrayList<Pair> itemSimilarity;
         //System.out.println("itemSimilarity lo primero en builmodels"+itemSimilarity.size());
         double similitud=0.0;
@@ -109,7 +119,7 @@ public class KnnModel implements InterfaceModel{
                         //not calculate the similarity for the same item
                         if(ratingsB.size() >= InterfaceModel.minRatings){
                             //calculate the similarity between items 
-                            similitud=c.determineSimilarity(ratingsA,ratingsB);
+                            similitud=similarityapi.compare(ratingsA,ratingsB);
                             //System.out.println("simiitud ="+similitud);
                             p=new Pair(item2, similitud);
                             itemSimilarity.add(p);
@@ -148,31 +158,56 @@ public class KnnModel implements InterfaceModel{
             return -99;
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public ArrayList<Events> getEvents() {
         return adapi.getEvents();
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public Set<User> getUser() {
         return adapi.getUser();
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public ArrayList<Item> getItems() {
         return adapi.getItems();
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public HashMap<User, ArrayList<Events>> getUserEventDAO() {
         return adapi.getUserEvent();
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public HashMap<Item, ArrayList<Events>> getItemEventDAO() {
         return adapi.getItemEvent();
     }
     
+    /**
+     *
+     * @param u
+     * @return
+     */
     public ArrayList<Item> getItemsUserRated(User u){
         ArrayList<Item> itemsUserRated=new ArrayList<>();
         ArrayList<Events> userEvents;

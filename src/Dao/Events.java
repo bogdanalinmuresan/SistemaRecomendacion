@@ -6,7 +6,7 @@
 package Dao;
 
 /**
- *Clase que representa un rating de la base de datos 
+ *Clase que representa un calificación entre un usuario y un elemento
  * @author bogdan
  * 
  */
@@ -17,20 +17,32 @@ public class Events {
     private double rating;
     private int timestamp;
 
+    /**
+     * Constructor por defecto
+     */
     public Events() {
         this.movie = new Movie();
         this.user=new User();
         this.rating=0.0;
         this.timestamp=0;
     }
-    
+    /**
+     * Constructor con parámetros
+     * @param u
+     * @param i
+     * @param r
+     * @param time 
+     */
     public Events(User u,Movie i,Double r,int time){
         this.movie=new Movie(i);
         this.user=new User(u);
         this.rating=r;
         this.timestamp=time;
     }
-    
+    /**
+     * Constructor de copia
+     * @param e 
+     */
     public Events(Events e ){
         setItem(e.getItem());
         setUser(e.getUser());
@@ -41,20 +53,48 @@ public class Events {
     
     
     //metodos modificadores
-    //public void setUserID(int newuserID){this.userID.setUserId(newuserID);}
-    //public void setMovieID(int newmovieID){this.movieID.setId(newmovieID);}
+    /**
+     * Método modificador
+     * @param newrating nueva valoración
+     */
     public  void setRating(Double newrating){this.rating=newrating;}
+    /**
+     * Método modificador
+     * @param newtimestamp nuevo timestamp 
+     */
     public  void setTimestamp(int newtimestamp){this.timestamp=newtimestamp;}
+    /**
+     * Método modificador
+     * @param u nuevo usuario
+     */
     public  void setUser(User u){this.user=u;}
+    /**
+     * Metodo modificador
+     * @param i nuevo elemento
+     */
     public  void setItem(Item i){this.movie=(Movie) i;}
     
     
     //metodos selectores
-    //public int getUserID(){return (int) userID.getUserId();}
-    //public int getMovieID(){return (int) movieID.getId();}
+    /**
+     * Método selector
+     * @return la valoracion 
+     */
     public double getRating(){return rating;}
+    /**
+     * Método selector
+     * @return devuelve el timestamp
+     */
     public int getTimestamp(){return timestamp;}
+    /**
+     * Método selector
+     * @return devueve el usuario
+     */
     public User getUser(){return user;}
+    /**
+     * Método selector
+     * @return devuelve la pelicula
+     */
     public Item getItem(){return movie;}
     
     

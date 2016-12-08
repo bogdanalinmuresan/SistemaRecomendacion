@@ -13,27 +13,41 @@ import Dao.User;
 import Ratings.*;
 
 /**
- *
+ *Clase que implementa el algoritmo item-based
  * @author bogdan
+ * @version 1.0
  */
 public class ItemBased extends ColaborativeFiltering{
-    
-    
     ModelAPI mapi;
     ScoreAPI measureapi;
 
+    /**
+     * Constructor por defecto
+     */
     public ItemBased() {
         mapi=new ModelAPI();
         measureapi=new ScoreAPI(mapi);
     }
     
+    /**
+     * Constructor con parámetros
+     * @param measureapi medida de calificación
+     * @see ScoreAPI
+     * @param modelapi acceso a los datos del modelo
+     * @see ModelAPI
+     */
     public ItemBased(ScoreAPI measureapi,ModelAPI modelapi){
         this.measureapi=measureapi;
         this.mapi=modelapi;
     }
     
   
-
+    /**
+     * Método que devuelve las n recoemndaciones de un usuario
+     * @param u usuario
+     * @param n número de recomendaciones
+     * @return  lista de las recomendaciones
+     */
     @Override
     public ArrayList<Item> topNRecomendation(User u,int n) {
         ArrayList<Item> res=new ArrayList<>();
@@ -79,10 +93,10 @@ public class ItemBased extends ColaborativeFiltering{
     }
 
     /**
-     * 
+     * Método que devuelve la predicción entre un usuario y un elemento
      * @param u user 
      * @param ite item
-     * @return -1 if user has rated item ite  ,-2 if item isnt store in model then it must change knn interface variable    
+     * @return la predicción ,0 si el usuario ha votado el elemento ite
      */
     @Override
     public double predict(User u, Item ite) {

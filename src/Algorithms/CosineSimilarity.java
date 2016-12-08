@@ -10,15 +10,24 @@ import java.util.ArrayList;
 import Dao.Events;
 
 /**
- *
+ *Clase que calcula la similitud basada en coseno.
  * @author bogdan
  */
-public class CosineSimilarity extends ItemSimilarity implements SimilarityCalculate{
+public class CosineSimilarity extends ItemSimilarity {
     
+    /**
+     * Constructor por defecto
+     */
     public CosineSimilarity(){
         
     }
 
+    /**
+     * Método que calcula la similitud entre dos listas de calificaciones
+     * @param ratingsA lista de calificaciones A
+     * @param ratingsB lista de calificaciones B
+     * @return la similitud,0 si alguna lista esta vacía
+     */
     @Override
     public double determineSimilarity(ArrayList<Events> ratingsA, ArrayList<Events> ratingsB) 
     {
@@ -60,12 +69,25 @@ public class CosineSimilarity extends ItemSimilarity implements SimilarityCalcul
       //System.out.println("similitud entre ratings"+res);
       return res;
     }
-
+    /**
+     * Método que calcula la similitud
+     * @param ratingsA lista de calificaciones A
+     * @param ratingsB lista de calificaciones B
+     * @return la similitud 
+     * @see CosineSimilarity#determineSimilarity(java.util.ArrayList, java.util.ArrayList) 
+     */
     @Override
     public double compare(ArrayList<Events> ratingsA, ArrayList<Events> ratingsB) {
         return determineSimilarity(ratingsA, ratingsB);
     } 
     
+   /**
+    * 
+    * @param ratingsA
+    * @param ratingsB
+    * @return 
+    * @see CosineSimilarity#compare(java.util.ArrayList, java.util.ArrayList) 
+    */
     public double cosine(ArrayList<Events> ratingsA, ArrayList<Events> ratingsB){
         return determineSimilarity(ratingsA, ratingsB);
     }

@@ -7,6 +7,7 @@ package Ratings;
 
 import Algorithms.CosineSimilarity;
 import Algorithms.RecommenderApi;
+import Algorithms.SimilarityApi;
 import Dao.AccessDataAPI;
 import Dao.Events;
 import Dao.Item;
@@ -26,12 +27,14 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- *
+ *Clase que represinta un modelo para la evaluación de algoritmos 
  * @author bogdan
+ * @version 1.0
  */
 public class EvaluationModel implements InterfaceModel {
     private AccessDataAPI adapi;
     int k;
+    SimilarityApi similarityapi;
     private ArrayList<Events> testBlock0=new ArrayList<>();
     private ArrayList<Events> testBlock1=new ArrayList<>();
     private ArrayList<Events> testBlock2=new ArrayList<>();
@@ -53,23 +56,22 @@ public class EvaluationModel implements InterfaceModel {
     HashMap<Item,ArrayList<Events> > itemsEventsTrainBlock3=new HashMap<>();
     HashMap<Item,ArrayList<Events> > itemsEventsTrainBlock4=new HashMap<>();
     
-    
+    /**
+     *Constructor por defecto
+     */
     public EvaluationModel(){
         
     }
     
-    public EvaluationModel(AccessDataAPI accessData){
+    /**
+     *Constructor por parámetros
+     * @param accessData
+     * @param simapi
+     */
+    public EvaluationModel(AccessDataAPI accessData,SimilarityApi simapi){
         this.adapi=accessData; 
         this.k=0;
-        divideBlocks();
-        loadItemsTrainForTestBlock();
-        loadItemsEventsForTrainBlock();
-        buildModel(); 
-    }
-    
-    public EvaluationModel(AccessDataAPI accessData,int k){
-        this.adapi=accessData; 
-        this.k=k;
+        this.similarityapi=simapi;
         divideBlocks();
         loadItemsTrainForTestBlock();
         loadItemsEventsForTrainBlock();
@@ -77,9 +79,26 @@ public class EvaluationModel implements InterfaceModel {
     }
     
     /**
-     * 
+     *Constructor por parámetros
+     * @param accessData
+     * @param k
+     * @param simapi
+     */
+    public EvaluationModel(AccessDataAPI accessData,int k,SimilarityApi simapi){
+        this.adapi=accessData; 
+        this.k=k;
+        this.similarityapi=simapi;
+        divideBlocks();
+        loadItemsTrainForTestBlock();
+        loadItemsEventsForTrainBlock();
+        buildModel(); 
+    }
+    
+    /**
+     * Método  para elvaluacion del bloque k 
      * @param recapi acceso a los algoritmos de recomendacion 
-     * @return  
+     * @return  una lista de predicciones con valoraciones
+     * @see EvaluationModel#setK(int) 
      */
     public ArrayList<PairEvaluation> evaluationK(RecommenderApi recapi){
         //variables
@@ -126,6 +145,9 @@ public class EvaluationModel implements InterfaceModel {
         
     }
     
+    /**
+     *Método que prepara los k test bloques de la evaluación por validacion cruzada 
+     */
     public void divideBlocks(){
         //System.out.print("entra en build model");
         for(int i=0; i<adapi.getEvents().size()-4;i+=5){
@@ -160,38 +182,90 @@ public class EvaluationModel implements InterfaceModel {
         }  
     }
     
+    /**
+     *Método selectro que devuelve el  bloque para el test número 0 
+     * @return el bloque del test 0
+     */
     public ArrayList<Events> getTestBlock0(){
         return testBlock0;
     }
+
+    /**
+     *Método selectro que devuelve el  bloque para el test número 1 
+     * @return el bloque del test número 0
+     */
     public ArrayList<Events> getTestBlock1(){
         return testBlock1;
     }
+
+    /**
+     *Método selectro que devuelve el  bloque para el test número 2
+     * @return el bloque del test número 2
+     */
     public ArrayList<Events> getTestBlock2(){
         return testBlock2;
     }
+
+    /**
+     *Método selectro que devuelve el  bloque para el test número 3
+     * @return el bloque del test número 3
+     */
     public ArrayList<Events> getTestBlock3(){
         return testBlock3;
     }
+
+    /**
+     *Método selectro que devuelve el  bloque para el test número 4
+     * @return el bloque del test número 4
+     */
     public ArrayList<Events> getTestBlock4(){
         return testBlock4 ;
     }
 
+    /**
+     *Método selectro que devuelve el  bloque para el entrenamiento número 0
+     * @return el bloque del entrenamiento número 0
+     */
     public ArrayList<Events> getTrainBlock0(){
         return trainBlock0;
     }
+
+    /**
+     *Método selectro que devuelve el  bloque para el entrenamiento número 1
+     * @return el bloque del entrenamiento número 1
+     */
     public ArrayList<Events> getTrainBlock1(){
         return trainBlock1;
     }
+
+    /**
+     *Método selectro que devuelve el  bloque para el entrenamiento número 2
+     * @return el bloque del entrenamiento número 2
+     */
     public ArrayList<Events> getTrainBlock2(){
         return trainBlock2;
     }
+
+    /**
+     *Método selectro que devuelve el  bloque para el entrenamiento número 3
+     * @return el bloque del entrenamiento número 3
+     */
     public ArrayList<Events> getTrainBlock3(){
         return trainBlock3;
     }
+
+    /**
+     *Método selectro que devuelve el  bloque para el entrenamiento número 4
+     * @return el bloque del entrenamiento número 4
+     */
     public ArrayList<Events> getTrainBlock4(){
         return trainBlock4;
     }
     
+    /**
+     *Método que devuelve el la matriz del modelo de evaluacion
+     * @return la matriz del modelo 
+     */
     @Override
     public HashMap<Item, ArrayList<Pair> > getItemsUniverse() {
         if (k==0){
@@ -213,8 +287,12 @@ public class EvaluationModel implements InterfaceModel {
         return null;
     }
        
-
-
+    /**
+     *Dado un elemento devuelve una lista de todo los eleemntos 
+     * @param ite elemento
+     * @return lista de elementos similares
+     * @see InterfaceModel#getSimilarItems(Dao.Item) 
+     */
     @Override
     public ArrayList<Pair> getSimilarItems(Item ite) {
        if (k==0){
@@ -236,6 +314,12 @@ public class EvaluationModel implements InterfaceModel {
         return null; 
     }
 
+    /**
+     *Devuelve la valoracion de un usuario a un elemento
+     * @param i elemento
+     * @param u usuario
+     * @return la valoracion
+     */
     @Override
     public double getRatingOfSimilarItemUserVoted(Item i, User u) {
         if (k==0){
@@ -258,6 +342,10 @@ public class EvaluationModel implements InterfaceModel {
          
     }
 
+    /**
+     *Metodo para cargar el modelo
+     * @see InterfaceModel#buildModel() 
+     */
     @Override
     public void buildModel() {
         if (k==0){
@@ -279,6 +367,9 @@ public class EvaluationModel implements InterfaceModel {
         
     }
     
+    /**
+     *Cargar el bloque de entrenamiento el bloque del test 0
+     */
     public void loadIEventsTrainForTestBlock0(){
         //block 1 
         for(int i=0;i<getTestBlock1().size();i++){
@@ -304,6 +395,10 @@ public class EvaluationModel implements InterfaceModel {
         
         
     } 
+
+    /**
+     *Cargar el bloque de entrenamiento el bloque del test 1
+     */
     public void loadIEventsTrainForTestBlock1(){
         
         //block 0 
@@ -329,6 +424,10 @@ public class EvaluationModel implements InterfaceModel {
         
      
     }
+
+    /**
+     *Cargar el bloque de entrenamiento el bloque del test 2
+     */
     public void loadIEventsTrainForTestBlock2(){
          
         //block 0 
@@ -353,6 +452,10 @@ public class EvaluationModel implements InterfaceModel {
         }
         
     }
+
+    /**
+     *Cargar el bloque de entrenamiento el bloque del test 3
+     */
     public void loadIEventsTrainForTestBlock3(){
         
         //block 0 
@@ -377,6 +480,10 @@ public class EvaluationModel implements InterfaceModel {
         }
        
     }
+
+    /**
+     *Cargar el bloque de entrenamiento el bloque del test 4
+     */
     public void loadIEventsTrainForTestBlock4(){
          
         //block 0
@@ -402,6 +509,9 @@ public class EvaluationModel implements InterfaceModel {
        
     }
    
+    /**
+     *Cargar el bloque de entrenamiento el bloque del test 
+     */
     public void loadItemsTrainForTestBlock(){
         if (k==0){
             loadIEventsTrainForTestBlock0();
@@ -422,6 +532,9 @@ public class EvaluationModel implements InterfaceModel {
       
     }
     
+    /**
+     *Carga las calificaciones de los elementos para el train block
+     */
     public void loadItemsEventsForTrainBlock(){
         if (k==0){
             loadItemEventsForTrainBlock0();
@@ -440,6 +553,9 @@ public class EvaluationModel implements InterfaceModel {
         }
     }
     
+    /**
+     *Carga las calificaciones de los elementos para el train block 0
+     */
     public void loadItemEventsForTrainBlock0(){
         try{
            // Iterator<Movie> itMovie = getItemsDAO().iterator();
@@ -465,6 +581,10 @@ public class EvaluationModel implements InterfaceModel {
             System.err.println("e = "+e);
         }
     }
+
+    /**
+     *Carga las calificaciones de los elementos para el train block 1
+     */
     public void loadItemEventsForTrainBlock1(){
         try{
            // Iterator<Movie> itMovie = getItemsDAO().iterator();
@@ -489,6 +609,10 @@ public class EvaluationModel implements InterfaceModel {
             
         }
     }
+
+    /**
+     *Carga las calificaciones de los elementos para el train block 2
+     */
     public void loadItemEventsForTrainBlock2(){
         try{
            // Iterator<Movie> itMovie = getItemsDAO().iterator();
@@ -513,6 +637,10 @@ public class EvaluationModel implements InterfaceModel {
             
         }
     }
+
+    /**
+     *Carga las calificaciones de los elementos para el train block 3
+     */
     public void loadItemEventsForTrainBlock3(){
         try{
            // Iterator<Movie> itMovie = getItemsDAO().iterator();
@@ -537,6 +665,10 @@ public class EvaluationModel implements InterfaceModel {
             
         }
     }
+
+    /**
+     *Carga las calificaciones de los elementos para el train block 4 
+     */
     public void loadItemEventsForTrainBlock4(){
         try{
            // Iterator<Movie> itMovie = getItemsDAO().iterator();
@@ -562,8 +694,11 @@ public class EvaluationModel implements InterfaceModel {
         }
     }
     
+    /**
+     *Construye el modelo para el train block y test block 0
+     */
     public void buildModel0(){
-        CosineSimilarity c=new CosineSimilarity();
+        //CosineSimilarity c=new CosineSimilarity();
         ArrayList<Pair> itemSimilarity;
         //System.out.println("itemSimilarity lo primero en builmodels"+itemSimilarity.size());
         double similitud=0.0;
@@ -590,7 +725,7 @@ public class EvaluationModel implements InterfaceModel {
                         //not calculate the similarity for the same item
                         if(ratingsB.size() >= InterfaceModel.minRatings){
                             //calculate the similarity between items 
-                            similitud=c.determineSimilarity(ratingsA,ratingsB);
+                            similitud=similarityapi.compare(ratingsA,ratingsB);
                             //System.out.println("simiitud ="+similitud);
                             p=new Pair(item2, similitud);
                             itemSimilarity.add(p);
@@ -616,8 +751,12 @@ public class EvaluationModel implements InterfaceModel {
         }
                 */
     }
+
+    /**
+     *Construye el modelo para el train block y test block 1
+     */
     public void buildModel1(){
-        CosineSimilarity c=new CosineSimilarity();
+        //CosineSimilarity c=new CosineSimilarity();
         ArrayList<Pair> itemSimilarity;
         //System.out.println("itemSimilarity lo primero en builmodels"+itemSimilarity.size());
         double similitud=0.0;
@@ -644,7 +783,7 @@ public class EvaluationModel implements InterfaceModel {
                         //not calculate the similarity for the same item
                         if(ratingsB.size() >= InterfaceModel.minRatings){
                             //calculate the similarity between items 
-                            similitud=c.determineSimilarity(ratingsA,ratingsB);
+                            similitud=similarityapi.compare(ratingsA,ratingsB);
                             //System.out.println("simiitud ="+similitud);
                             p=new Pair(item2, similitud);
                             itemSimilarity.add(p);
@@ -657,8 +796,12 @@ public class EvaluationModel implements InterfaceModel {
             }   
         }
     }
+
+    /**
+     *Construye el modelo para el train block y test block 2
+     */
     public void buildModel2(){
-        CosineSimilarity c=new CosineSimilarity();
+        //CosineSimilarity c=new CosineSimilarity();
         ArrayList<Pair> itemSimilarity;
         //System.out.println("itemSimilarity lo primero en builmodels"+itemSimilarity.size());
         double similitud=0.0;
@@ -685,7 +828,7 @@ public class EvaluationModel implements InterfaceModel {
                         //not calculate the similarity for the same item
                         if(ratingsB.size() >= InterfaceModel.minRatings){
                             //calculate the similarity between items 
-                            similitud=c.determineSimilarity(ratingsA,ratingsB);
+                            similitud=similarityapi.compare(ratingsA,ratingsB);
                             //System.out.println("simiitud ="+similitud);
                             p=new Pair(item2, similitud);
                             itemSimilarity.add(p);
@@ -698,8 +841,12 @@ public class EvaluationModel implements InterfaceModel {
             }   
         }
     }
+
+    /**
+     *Construye el modelo para el train block y test block 3
+     */
     public void buildModel3(){
-        CosineSimilarity c=new CosineSimilarity();
+        //CosineSimilarity c=new CosineSimilarity();
         ArrayList<Pair> itemSimilarity;
         //System.out.println("itemSimilarity lo primero en builmodels"+itemSimilarity.size());
         double similitud=0.0;
@@ -726,7 +873,7 @@ public class EvaluationModel implements InterfaceModel {
                         //not calculate the similarity for the same item
                         if(ratingsB.size() >= InterfaceModel.minRatings ){
                             //calculate the similarity between items 
-                            similitud=c.determineSimilarity(ratingsA,ratingsB);
+                            similitud=similarityapi.compare(ratingsA,ratingsB);
                             //System.out.println("simiitud ="+similitud);
                             p=new Pair(item2, similitud);
                             itemSimilarity.add(p);
@@ -739,6 +886,10 @@ public class EvaluationModel implements InterfaceModel {
             }   
         }
     }
+
+    /**
+     *Construye el modelo para el train block y test block 4
+     */
     public void buildModel4(){
         CosineSimilarity c=new CosineSimilarity();
         ArrayList<Pair> itemSimilarity;
@@ -767,7 +918,7 @@ public class EvaluationModel implements InterfaceModel {
                         //not calculate the similarity for the same item
                         if(ratingsB.size() >= InterfaceModel.minRatings && item1.getId()!=item2.getId()){
                             //calculate the similarity between items 
-                            similitud=c.determineSimilarity(ratingsA,ratingsB);
+                            similitud=similarityapi.compare(ratingsA,ratingsB);
                             //System.out.println("simiitud ="+similitud);
                             p=new Pair(item2, similitud);
                             itemSimilarity.add(p);
@@ -781,6 +932,11 @@ public class EvaluationModel implements InterfaceModel {
         }
     }
     
+    /**
+     *Devuelve los elementos similares para un elemnto dado para el bloque de entrenamiento 0
+     * @param ite elemento 
+     * @return lista de elemntos similares
+     */
     public ArrayList<Pair> getSimilarItemsTrainBlock0(Item ite){
         ArrayList<Pair> similarItem=similarityMatrixModel0.get(ite);
         //System.out.println("tam similarItem en getSimilarItem()"+similarItem.size());
@@ -806,6 +962,12 @@ public class EvaluationModel implements InterfaceModel {
         }
         return null;
     }
+
+    /**
+     *Devuelve los elementos similares para un elemnto dado para el bloque de entrenamiento 1
+     * @param ite elemento 
+     * @return lista de elemntos similares
+     */
     public ArrayList<Pair> getSimilarItemsTrainBlock1(Item ite){
         ArrayList<Pair> similarItem=similarityMatrixModel1.get(ite);
         //System.out.println("tam similarItem en getSimilarItem()"+similarItem.size());
@@ -827,6 +989,12 @@ public class EvaluationModel implements InterfaceModel {
         }
         return null;
     }
+
+    /**
+     *Devuelve los elementos similares para un elemnto dado para el bloque de entrenamiento 2
+     * @param ite elemento 
+     * @return lista de elemntos similares
+     */
     public ArrayList<Pair> getSimilarItemsTrainBlock2(Item ite){
         ArrayList<Pair> similarItem=similarityMatrixModel2.get(ite);
         //System.out.println("tam similarItem en getSimilarItem()"+similarItem.size());
@@ -848,6 +1016,12 @@ public class EvaluationModel implements InterfaceModel {
         }
         return null;
     }
+
+    /**
+     *Devuelve los elementos similares para un elemnto dado para el bloque de entrenamiento 3
+     * @param ite elemento 
+     * @return lista de elemntos similares
+     */
     public ArrayList<Pair> getSimilarItemsTrainBlock3(Item ite){
         ArrayList<Pair> similarItem=similarityMatrixModel3.get(ite);
         //System.out.println("tam similarItem en getSimilarItem()"+similarItem.size());
@@ -869,6 +1043,12 @@ public class EvaluationModel implements InterfaceModel {
         }
         return null;
     }
+
+    /**
+     *Devuelve los elementos similares para un elemnto dado para el bloque de entrenamiento 4
+     * @param ite elemento 
+     * @return lista de elemntos similares
+     */
     public ArrayList<Pair> getSimilarItemsTrainBlock4(Item ite){
         ArrayList<Pair> similarItem=similarityMatrixModel4.get(ite);
         //System.out.println("tam similarItem en getSimilarItem()"+similarItem.size());
@@ -891,6 +1071,12 @@ public class EvaluationModel implements InterfaceModel {
         return null;
     }
     
+    /**
+     *Devuelve la valoracion de un usuario a un elemento del bloque de entrenamiento 0
+     * @param i elemento 
+     * @param u usuario
+     * @return valoración
+     */
     public double getRatingsItemUserVotedTrainBlock0(Item i,User u){
         double rating=-99;
         boolean esta =false;
@@ -907,6 +1093,13 @@ public class EvaluationModel implements InterfaceModel {
         else
             return -99;
     }
+
+   /**
+     *Devuelve la valoracion de un usuario a un elemento del bloque de entrenamiento 1
+     * @param i elemento 
+     * @param u usuario
+     * @return valoración
+     */
     public double getRatingsItemUserVotedTrainBlock1(Item i,User u){
         double rating=-99;
         boolean esta =false;
@@ -923,6 +1116,13 @@ public class EvaluationModel implements InterfaceModel {
         else
             return -99;
     }
+
+    /**
+     *Devuelve la valoracion de un usuario a un elemento del bloque de entrenamiento 2
+     * @param i elemento 
+     * @param u usuario
+     * @return valoración
+     */
     public double getRatingsItemUserVotedTrainBlock2(Item i,User u){
         double rating=-99;
         boolean esta =false;
@@ -939,6 +1139,13 @@ public class EvaluationModel implements InterfaceModel {
         else
             return -99;
     }
+
+    /**
+     *Devuelve la valoracion de un usuario a un elemento del bloque de entrenamiento 3
+     * @param i elemento 
+     * @param u usuario
+     * @return valoración
+     */
     public double getRatingsItemUserVotedTrainBlock3(Item i,User u){
         double rating=-99;
         boolean esta =false;
@@ -955,6 +1162,13 @@ public class EvaluationModel implements InterfaceModel {
         else
             return -99;
     }
+
+    /**
+     *Devuelve la valoracion de un usuario a un elemento del bloque de entrenamiento 4
+     * @param i elemento 
+     * @param u usuario
+     * @return valoración
+     */
     public double getRatingsItemUserVotedTrainBlock4(Item i,User u){
         double rating=-99;
         boolean esta =false;
@@ -972,6 +1186,10 @@ public class EvaluationModel implements InterfaceModel {
             return -99;
     }
     
+    /**
+     *Método modificador 
+     * @param i valor que indica que bloque se debe cargar 
+     */
     public void setK(int i){
         this.k=i;
         divideBlocks();
@@ -980,6 +1198,10 @@ public class EvaluationModel implements InterfaceModel {
         buildModel(); 
     }
 
+    /**
+     *Método que devuelve las calificaciones
+     * @return lista de calificaciones
+     */
     @Override
     public ArrayList<Events> getEvents() {
         if (k==0){
@@ -1001,23 +1223,37 @@ public class EvaluationModel implements InterfaceModel {
         return null;
     }
 
+    /**
+     *Método que devuelve los usuarios 
+     * @return lista de usuario
+     */
     @Override
     public Set<User> getUser() {
         return adapi.getUser();
     }
 
+    /**
+     *Método que devuelve los elementos
+     * @return return lista de elementos
+     */
     @Override
     public ArrayList<Item> getItems() {
         return adapi.getItems();
     }
 
-  
-
+    /**
+     *Método que devuelve las calificaciones de los usuario
+     * @return lista de calificacioens de todos los usuarios
+     */
     @Override
     public HashMap<User, ArrayList<Events>> getUserEventDAO() {
         return adapi.getUserEvent();
     }
 
+    /**
+     *Método que devuelve las calificaciones de todos los elementos 
+     * @return
+     */
     @Override
     public HashMap<Item, ArrayList<Events>> getItemEventDAO() {
         return adapi.getItemEvent();

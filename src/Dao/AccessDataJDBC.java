@@ -10,8 +10,8 @@ import java.sql.SQLException;
 /**
  *Clase que proporciona el acceso a una fuente de datos mysql para cargar en memoria
  *los datos
- * 
  * @author bogdan
+ * @version 1.0
  */
 public class AccessDataJDBC extends InterfazCliente {
   
@@ -36,12 +36,6 @@ public class AccessDataJDBC extends InterfazCliente {
     public ResultSet consultaBD(String consulta){
         ResultSet rset=null;
         try{
-             //      "jdbc:mysql://localhost:3306/sistemarecomendaciontfg", "root", ""); // MySQL
-             //String consu=getCadenaConexion();
-            //System.out.println("cadena de conexion:"+getCadenaConexion());
-            //System.out.println("user:"+getUser());
-            //System.out.println("pass:"+getPassword());
-            
             Connection conn=DriverManager.getConnection(getCadenaConexion(),getUser(),getPassword());
             Statement stmt = conn.createStatement();
             rset = stmt.executeQuery(consulta);
@@ -73,7 +67,7 @@ public class AccessDataJDBC extends InterfazCliente {
     }
 
     /**
-     * Carga lo eventos(ratings) de la base de datos en memoria
+     * Carga las calificaciones (ratings) de la base de datos en memoria
      */
     @Override
     public void cargarEventosDAO() {
@@ -99,7 +93,7 @@ public class AccessDataJDBC extends InterfazCliente {
     }
 
     /**
-     *  Carga las peliculas en memoria 
+     *  Carga los elementos en memoria 
      */
     @Override
     public void cargarItemsDAO() {
@@ -144,7 +138,7 @@ public class AccessDataJDBC extends InterfazCliente {
     }
 
     /**
-     * Carga en memoria los eventos(ratings) generados por cada usuario
+     * Carga en memoria las calificaciones(ratings) generados por cada usuario
      */
     @Override
     public void cargarUserEventDAO() {
@@ -164,12 +158,7 @@ public class AccessDataJDBC extends InterfazCliente {
 		} 
                 //System.out.println("user   "+u.getUserId()+"tam events "+resEvent.size());
                 getUserEventDAO().put(u,resEvent);
-                /*
-                ArrayList<Events> res;
-                res=getUserEventDAO().get(u);
                 
-                System.out.println(" "+res.get(0).getUser().getUserId());
-                */
             }
             System.out.println("getUserEventDAO().size()  "+getUserEventDAO().size());
         }catch(Exception e ){
@@ -178,7 +167,7 @@ public class AccessDataJDBC extends InterfazCliente {
     }
 
     /**
-     * Carga en memoria los eventos generados por cada pelicula
+     * Carga en memoria los eventos generados por elemento
      */
     @Override
     public void cargarItemEventDAO() {

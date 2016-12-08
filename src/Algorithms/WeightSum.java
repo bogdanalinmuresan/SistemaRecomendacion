@@ -13,28 +13,55 @@ import Ratings.ModelAPI;
 import java.util.ArrayList;
 
 /**
- *
+ *clase que implementa una medida de calificacion 
  * @author bogdan
+ * @version 1.0
+ * @see ItemScorer
+ * @see ScoreMeasure
  */
 public class WeightSum extends ItemScorer implements ScoreMeasure{
     private ModelAPI modelapi;    
     
+    /**
+     * constructor de la clase
+     */
     public WeightSum(){ 
     }
     
+    /**
+     * constructor con parámetros
+     * @param modelapi acceso al modelo de datos
+     */
     public WeightSum(ModelAPI modelapi){
         this.modelapi=modelapi;
     }
     
+    /**
+     * Método modificador del modelo de datos
+     * @param modelapi  nuevo modelo de datos
+     */
     public void setModelApi(ModelAPI modelapi){
         this.modelapi=modelapi;
     }
 
+    /**
+     * Método que devuelve la calificacion de un elemento dato un usuario
+     * @param u usuario
+     * @param i elemento
+     * @return la calificación
+     */
     @Override
     public double itemscore(User u, Item i) {
        return score(u, i);
     }
 
+    /**
+     * Método que devuelve la calificación 
+     * @param u usuario
+     * @param ite elemento
+     * @return  la calificación
+     * @see WeightSum#itemscore(Dao.User, Dao.Item)
+     */
     @Override
     public double score(User u, Item ite) {
         
