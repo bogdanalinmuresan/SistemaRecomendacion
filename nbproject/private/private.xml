@@ -30,6 +30,7 @@
             <file>file:/Users/bogdan/NetBeansProjects/SistemaRecomendacion/src/Evaluation/PairEvaluation.java</file>
             <file>file:/Users/bogdan/NetBeansProjects/SistemaRecomendacion/src/Dao/InterfazCliente.java</file>
             <file>file:/Users/bogdan/NetBeansProjects/SistemaRecomendacion/src/Dao/Item.java</file>
+            <file>file:/Users/bogdan/NetBeansProjects/SistemaRecomendacion/README.md</file>
             <file>file:/Users/bogdan/NetBeansProjects/SistemaRecomendacion/build.xml</file>
             <file>file:/Users/bogdan/NetBeansProjects/SistemaRecomendacion/src/Dao/Movie.java</file>
             <file>file:/Users/bogdan/NetBeansProjects/SistemaRecomendacion/src/Dao/Pair.java</file>
@@ -44,6 +45,7 @@
             <file>file:/Users/bogdan/NetBeansProjects/SistemaRecomendacion/src/Algorithms/ScoreMeasure.java</file>
             <file>file:/Users/bogdan/NetBeansProjects/SistemaRecomendacion/src/Algorithms/ItemSimilarity.java</file>
             <file>file:/Users/bogdan/NetBeansProjects/SistemaRecomendacion/src/Ratings/ModelAPI.java</file>
+            <file>file:/Users/bogdan/NetBeansProjects/SistemaRecomendacion/LICENSE</file>
             <file>file:/Users/bogdan/NetBeansProjects/SistemaRecomendacion/src/Algorithms/ScoreAPI.java</file>
         </group>
     </open-files>
