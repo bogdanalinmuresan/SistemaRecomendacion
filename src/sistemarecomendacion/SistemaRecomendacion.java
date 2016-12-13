@@ -25,6 +25,9 @@ import Algorithms.SimilarityApi;
 import Algorithms.WeightSum;
 import Dao.AccessDataAPI;
 import Dao.AccessDataJDBC;
+import Dao.AccessDataNOSQL;
+import Dao.Item;
+import Dao.User;
 import org.json.JSONException;
 import Evaluation.EvaluationType;
 import Evaluation.MAE;
@@ -33,6 +36,7 @@ import Evaluation.MetricsAPI;
 import Evaluation.PairEvaluation;
 import Evaluation.RMSE;
 import Ratings.EvaluationModel;
+import Ratings.KnnModel;
 import Ratings.ModelAPI;
 import java.util.ArrayList;
 
@@ -64,18 +68,28 @@ public class SistemaRecomendacion {
         AccessDataJDBC accesoJDBC=new AccessDataJDBC("bogdan","123456",cadenaConexion);
         accesoDataApi.addNewConnection(accesoJDBC);
        
-        
+        /*
+        String cadenaConexion="ds033337.mongolab.com:33337/nosql";
+	String user="bogdan";
+	String pass="ar03pbo";
+	AccessDataAPI accesoDataApi=new AccessDataAPI();
+	AccessDataNOSQL accesoNosql=new AccessDataNOSQL(user,pass,cadenaConexion);
+	accesoDataApi.addNewConnection(accesoNosql);
+        */
+        /*
         //configuramos la medida de similitud
         CosineSimilarity cosine=new CosineSimilarity();
         SimilarityApi similarityApi=new SimilarityApi();
         similarityApi.addSimilarity(cosine);
         
-        //configuramos el modelo
+        7//configuramos el modelo
         EvaluationModel evalModel=new EvaluationModel(accesoDataApi,-1,similarityApi);
         ModelAPI accesoModelo=new ModelAPI(evalModel);
         accesoModelo.setModel(evalModel);
-        
-        
+       
+        KnnModel knn=new KnnModel(accesoDataApi, similarityApi);
+        ModelAPI accesoModelo=new ModelAPI();
+        accesoModelo.setModel(knn);
         
         
         
@@ -83,20 +97,29 @@ public class SistemaRecomendacion {
         /***********************************************************************/
         
         //cpnfiguramos los algoritmos de recoemndacion
-        RecommenderApi recbaseline=new RecommenderApi(accesoModelo);
-        RecommenderApi recItem=new RecommenderApi(accesoModelo);
+        //RecommenderApi recbaseline=new RecommenderApi(accesoModelo);
+        //RecommenderApi recItem=new RecommenderApi(accesoModelo);
         
         //configure baseline predictor
-        BaseLinePredictor baseprediction=new BaseLinePredictor(accesoModelo);
-        recbaseline.addAlgorithm(baseprediction);
-        
+        //BaseLinePredictor baseprediction=new BaseLinePredictor(accesoModelo);
+        //recbaseline.addAlgorithm(baseprediction);
+        /*
         //configure item-based algorithm
         WeightSum weightSum=new WeightSum(accesoModelo);
         ScoreAPI measapi=new ScoreAPI(accesoModelo);
         measapi.setScoreMeasure(weightSum);
         ItemBased itemBased=new ItemBased(measapi,accesoModelo);
         recItem.addAlgorithm(itemBased);
-        
+        double prediction=0;
+        prediction=recItem.prediction(new User(1),new Item(15));
+        System.out.println("prediction "+prediction);
+        User u=new User(1);
+        ArrayList<Item> top10=recItem.topNRecomendation(u, 10);
+        for(Item item:top10){
+            System.out.println(item.getId());
+        }
+       */
+        /*
         //configure metrics
         MetricsAPI accessMetrics=new MetricsAPI();
         
@@ -112,28 +135,60 @@ public class SistemaRecomendacion {
         double resultadoMetricasMse=0;
         double resultadoMetricasRmse=0;
          ArrayList<PairEvaluation> vectorPredictionRatings=new ArrayList<>();
-        /*
-        evalModel.setK(0);
-        resultadoMetricas=evalModel.evaluationK(recItem,accessMetrics);
-        System.out.println("resultado metricas mae block 0  "+resultadoMetricas);
         */
-       
-        evalModel.setK(1);
         
+        /***********************************************************************/
+         /*
+        evalModel.setK(2);
         vectorPredictionRatings=evalModel.evaluationK(recItem);
         
         accessMetrics.setMetric(mae);
         resultadoMetricasMae=accessMetrics.calculate(vectorPredictionRatings);
-        System.out.println("resultado metricas mae block 1  "+resultadoMetricasMae);
+        System.out.println("resultado metricas mae block 2  "+resultadoMetricasMae);
         
         accessMetrics.setMetric(mse);
         resultadoMetricasMse=accessMetrics.calculate(vectorPredictionRatings);
-        System.out.println("resultado metricas mse block 1  "+resultadoMetricasMse);
+        System.out.println("resultado metricas mse block 2  "+resultadoMetricasMse);
        
         accessMetrics.setMetric(rmse);
         resultadoMetricasRmse=accessMetrics.calculate(vectorPredictionRatings);
-        System.out.println("resultado metricas rmae block 1  "+resultadoMetricasRmse);
-      
+        System.out.println("resultado metricas rmae block 2  "+resultadoMetricasRmse);
+         */
+        /***********************************************************************/
+         /*
+        evalModel.setK(3);
+        vectorPredictionRatings=evalModel.evaluationK(recItem);
+        
+        accessMetrics.setMetric(mae);
+        resultadoMetricasMae=accessMetrics.calculate(vectorPredictionRatings);
+        System.out.println("resultado metricas mae block 3  "+resultadoMetricasMae);
+        
+        accessMetrics.setMetric(mse);
+        resultadoMetricasMse=accessMetrics.calculate(vectorPredictionRatings);
+        System.out.println("resultado metricas mae block 3  "+resultadoMetricasMse);
+       
+        accessMetrics.setMetric(rmse);
+        resultadoMetricasRmse=accessMetrics.calculate(vectorPredictionRatings);
+        System.out.println("resultado metricas rmae block 3  "+resultadoMetricasRmse);
+         */
+        /***********************************************************************/
+      /*
+      evalModel.setK(4);
+        vectorPredictionRatings=evalModel.evaluationK(recItem);
+        
+        accessMetrics.setMetric(mae);
+        resultadoMetricasMae=accessMetrics.calculate(vectorPredictionRatings);
+        System.out.println("resultado metricas mae block 4  "+resultadoMetricasMae);
+        
+        accessMetrics.setMetric(mse);
+        resultadoMetricasMse=accessMetrics.calculate(vectorPredictionRatings);
+        System.out.println("resultado metricas mae block 4  "+resultadoMetricasMse);
+       
+        accessMetrics.setMetric(rmse);
+        resultadoMetricasRmse=accessMetrics.calculate(vectorPredictionRatings);
+        System.out.println("resultado metricas rmae block 4  "+resultadoMetricasRmse);
+         */
+        /***********************************************************************/
         
       
       
@@ -158,7 +213,7 @@ public class SistemaRecomendacion {
         //carga el primer bloque 
         ModelAPI modelapi=new ModelAPI(accesoDataApi);
         KnnModel knn=new KnnModel(accesoDataApi);
-       modelapi.setModel(knn);
+        modelapi.setModel(knn);
         modelapi.knnModel();
         RecommenderApi recapi=new RecommenderApi(modelapi);
         
@@ -221,9 +276,9 @@ public class SistemaRecomendacion {
         resultadoMetricas=evalModel.evaluationK(recbaseline,accessMetrics);
         System.out.println("resultado metricas rmse block 4  "+resultadoMetricas);
         */
-        long endTime = System.nanoTime();
-        long duration = (endTime - startTime);
-        System.out.println("duration exacution "+duration/1000000);
+        //long endTime = System.nanoTime();
+        //long duration = (endTime - startTime);
+        //System.out.println("duration exacution "+duration/1000000);
         /**********************************************************************
         //----
         double predictionBaseline=0;

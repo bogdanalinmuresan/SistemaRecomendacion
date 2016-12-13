@@ -131,7 +131,7 @@ public class KnnModel implements InterfaceModel{
                         if(ratingsB.size() >= InterfaceModel.minRatings){
                             //calculate the similarity between items 
                             similitud=similarityapi.compare(ratingsA,ratingsB);
-                            //System.out.println("simiitud ="+similitud);
+                            //System.out.println("similitud= "+similitud);
                             p=new Pair(item2, similitud);
                             itemSimilarity.add(p);
                             //System.out.println("item "+item1.getId()+" itemSimilaritySize() "+itemSimilarity.size());

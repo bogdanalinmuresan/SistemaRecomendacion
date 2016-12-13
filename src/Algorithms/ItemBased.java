@@ -66,8 +66,7 @@ public class ItemBased extends ColaborativeFiltering{
         //first get the items user rate
         ArrayList<Events> userEvents;
         userEvents=mapi.getUserEvent().get(u);
-        if(userEvents==null)
-            System.out.println("es null user events");
+        
             
         
         //mapi.getSimilarItems(eventos.getItem()).get(1);
@@ -81,7 +80,9 @@ public class ItemBased extends ColaborativeFiltering{
                 //get the most similar items only the most 
                 if(mapi.getSimilarItems(item).size()>0 ){
                     Pair mostSimilarItem=new Pair(mapi.getSimilarItems(item).get(0));
+                    //
                     Item itemrecomed=new Item(mostSimilarItem.getItem1());
+                    //System.out.println("item seen "+item.getId()+" "+"item similar"+itemrecomed.getId());
                     res.add(itemrecomed);
                 }
             }

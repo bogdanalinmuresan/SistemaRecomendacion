@@ -53,8 +53,10 @@ public class RMSE extends BasicAcurrancyErrorMetric implements EvaluationType {
         for(PairEvaluation p: predictionRating){
             num+=Math.pow(p.getFirst()-p.getSecond(), 2);
         }
-        
-    return Math.sqrt(num/tam);
+    double res=num/tam;
+    System.out.println("rmse antes de la raiz= "+res); 
+    System.out.println("rmse despues de la raiz= "+Math.sqrt(res));   
+    return Math.sqrt(res);
     }
     
 }

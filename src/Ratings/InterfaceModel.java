@@ -33,11 +33,11 @@ public interface InterfaceModel {
     /**
      * most similar items in similarMatrix model,this is applied for each item to be scored
      */
-    public final int minRatings=30;
+    public static int minRatings=30;
     /**
      * Similar items
      */
-    public final int neighborhoodSize_N=30;
+    public static int neighborhoodSize_N=10;
     
     /**
      *Método que construyo el modelo de datos en memoria

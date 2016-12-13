@@ -19,6 +19,7 @@ package Algorithms;
 import Dao.Pair;
 import Dao.Item;
 import Dao.User;
+import Ratings.InterfaceModel;
 import static Ratings.InterfaceModel.neighborhoodSize_N;
 import Ratings.ModelAPI;
 import java.util.ArrayList;
@@ -36,7 +37,8 @@ public class WeightSum extends ItemScorer implements ScoreMeasure{
     /**
      * constructor de la clase
      */
-    public WeightSum(){ 
+    public WeightSum(){
+        modelapi=new ModelAPI();
     }
     
     /**
@@ -45,6 +47,7 @@ public class WeightSum extends ItemScorer implements ScoreMeasure{
      */
     public WeightSum(ModelAPI modelapi){
         this.modelapi=modelapi;
+        //System.out.println("constructor de WeightSum(ModelAPI modelapi)");
     }
     
     /**
@@ -88,7 +91,7 @@ public class WeightSum extends ItemScorer implements ScoreMeasure{
                 double sumTop=0;
                 double sumBottom=1;    
                 double temp;
-                for(int i=0; i< similarItem.size()&& i<neighborhoodSize_N; i++){
+                for(int i=0; i< similarItem.size(); i++){
                     temp=modelapi.getRatingOfSimilarItemUserVoted(similarItem.get(i).getItem1(), u );
                     //items that user voted ,dont mind
                     if(temp!=-99){
@@ -97,14 +100,15 @@ public class WeightSum extends ItemScorer implements ScoreMeasure{
                     }
                 }
                 res=sumTop/sumBottom;
-               // System.out.println("res dentro ="+res);
+                //System.out.println("res dentro de score en wirghted Sum ="+res);
                 return res;
             }else{
                 //no esta la pelicla en la similarityMatrixModel
-                //System.out.println("devuelve 0 porque no esta en la matrix\n");
+               // System.out.println("devuelve 0 porque no esta en la matrix\n");
                 return res=0;
             }
         }
+        //System.out.println("resultado res en build model "+res);
         return res;
     }
     

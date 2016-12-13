@@ -42,10 +42,12 @@ import java.util.Set;
  * @author bogdan
  * @version 1.0
  */
-public class EvaluationModel implements InterfaceModel {
+public class EvaluationModel implements InterfaceModel 
+{
     private AccessDataAPI adapi;
     int k;
     SimilarityApi similarityapi;
+    RecommenderApi algoritmo;
     private ArrayList<Events> testBlock0=new ArrayList<>();
     private ArrayList<Events> testBlock1=new ArrayList<>();
     private ArrayList<Events> testBlock2=new ArrayList<>();
@@ -139,7 +141,7 @@ public class EvaluationModel implements InterfaceModel {
         //para cade rating del testBlock realizamos una prediccion
         //System.out.println("testBlock.size()= "+testBlock.size());
          for(int i=0; i<testBlock.size();i++){
-             //System.out.println("recorrer test block"+i+"tam test block "+testBlock.size());
+           //System.out.println("recorrer test block"+i+"tam test block "+testBlock.size());
           //System.out.println("item "+testBlock.get(i).getItem().getId()+" user  "+testBlock.get(i).getUser().getUserId()+" rating "+testBlock.get(i).getRating());
             Events evento=new Events(testBlock.get(i));
             prediction=recapi.prediction(evento.getUser(), evento.getItem());
@@ -156,6 +158,8 @@ public class EvaluationModel implements InterfaceModel {
         
     }
     
+   
+   
     /**
      *Método que prepara los k test bloques de la evaluación por validacion cruzada 
      */

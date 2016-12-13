@@ -54,7 +54,7 @@ public class MSE extends BasicAcurrancyErrorMetric implements EvaluationType {
         for(PairEvaluation p: predictionRating){
             num+=Math.pow(p.getFirst()-p.getSecond(), 2);
         }
-        
+    System.out.println("mse= "+num/tam);   
     return num/tam;
     }
     

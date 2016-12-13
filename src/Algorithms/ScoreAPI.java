@@ -37,6 +37,20 @@ public class ScoreAPI {
     public ScoreAPI(ModelAPI mapi){
         this.measurecontext=new ScoreContext();
         this.modelapi=mapi;
+        //System.out.println("Constructor de ScoreAPI(ModelAPI mapi)");
+    }
+    
+    /**
+     * Constructor de la clase
+     * @param mapi acceso al modelo 
+     * @param sc medida de calificación
+     */
+    public ScoreAPI(ModelAPI mapi,ScoreMeasure sc){
+        
+        this.modelapi=mapi;
+        this.measurecontext=new ScoreContext();
+        measurecontext.setScoreMeasure(sc);
+        this.sc=sc;
     }
    
     /**
@@ -50,24 +64,13 @@ public class ScoreAPI {
     }
     
     /**
-     * Constructor de la clase
-     * @param mapi acceso al modelo 
-     * @param sc medida de calificación
-     */
-    public ScoreAPI(ModelAPI mapi,ScoreMeasure sc){
-        
-        this.modelapi=mapi;
-        this.measurecontext=new ScoreContext();
-        measurecontext.setScoreMeasure(sc);
-    }
-    
-    /**
      * Método modificador para establecer nueva medida de calificación
      * @param sc  nueva medida de calificación
      */
     public void setScoreMeasure(ScoreMeasure sc){
         this.sc=sc;
         measurecontext.setScoreMeasure(sc);
+        //System.out.println("setScoreMeasure(ScoreMeasure sc)");
     }
     
     

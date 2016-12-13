@@ -50,7 +50,7 @@ public class ModelAPI {
     
     public ModelAPI(InterfaceModel interfaceModel){
         mc=new ModelContext();
-        //this.accessDataApi=accessDataApi;
+        mc.setModel(interfaceModel);
     }
     
     /**
